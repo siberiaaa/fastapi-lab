@@ -43,3 +43,18 @@ class Metodo_Envio(Base):
     id = Column(Integer, primary_key=True)
     nombre = Column(String, index=True)
     descripcion = Column(String, index=True)
+
+class Estado_Caracteristica(Base): 
+    __tablename__  = "estados_caracteristicas"
+    
+    id = Column(Integer, primary_key=True)
+    nombre = Column(String, index=True)
+    descripcion = Column(String, index=True)
+
+class Estado_Compra(Base): 
+    __tablename__  = "estados_compras"
+    
+    id = Column(Integer, primary_key=True)
+    nombre = Column(String, index=True)
+    descripcion = Column(String, index=True)
+
