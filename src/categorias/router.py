@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from src.database import SessionLocal, engine #!aaaaaaa
-import models
-import schemas
-import service
+from database import SessionLocal, engine #!aaaaaaa
+import categorias.models as models
+import categorias.schemas as schemas
+import categorias.service as service
 
 models.Base.metadata.create_all(bind=engine)
 
