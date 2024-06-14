@@ -1,8 +1,9 @@
 from pydantic import BaseModel
+from typing import Union
 
 class CategoriaBase(BaseModel):
     nombre: str
-    descripcion: str | None = None
+    descripcion: Union[str, None] = None
 
 class CategoriaCrear(CategoriaBase):
     pass
