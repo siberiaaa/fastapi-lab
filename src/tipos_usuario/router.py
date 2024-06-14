@@ -17,11 +17,11 @@ def get_db():
     finally:
         db.close()
 
-@router.get('')
-def home():
-    return {"message":"Hello world desde el router opa"}
+@router.get('', response_model=list[schemas.Tipo_Usuario])
+def listar_tipos_usuarios(db: Session = Depends(get_db)):
+    return service.listar_tipos_usuarios(db=db)
 
 @router.post('', response_model=schemas.Tipo_Usuario)
-def crear_categoria(tipo_usuario: schemas.Tipo_UsuarioCrear, db: Session = Depends(get_db)):
+def crear_tipo_usuario(tipo_usuario: schemas.Tipo_UsuarioCrear, db: Session = Depends(get_db)):
     return service.crear_tipo_usuario(db=db, tipo_usuario=tipo_usuario)
 

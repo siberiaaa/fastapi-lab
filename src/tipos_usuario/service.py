@@ -10,3 +10,6 @@ def crear_tipo_usuario(db: Session, tipo_usuario: schemas.Tipo_UsuarioCrear):
     db.commit()
     db.refresh(db_tipo_usuario)
     return db_tipo_usuario
+
+def listar_tipos_usuarios(db: Session): 
+    return db.query(models.Tipo_Usuario).all()
