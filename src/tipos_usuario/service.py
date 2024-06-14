@@ -13,3 +13,7 @@ def crear_tipo_usuario(db: Session, tipo_usuario: schemas.Tipo_UsuarioCrear):
 
 def listar_tipos_usuarios(db: Session): 
     return db.query(models.Tipo_Usuario).all()
+
+def buscar_tipo_usuario(db: Session, id: int): 
+    tipo_usuario = db.query(models.Tipo_Usuario).filter(models.Tipo_Usuario.id == id).first()
+    return tipo_usuario
