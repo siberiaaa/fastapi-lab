@@ -17,14 +17,14 @@ def get_db():
     finally:
         db.close()
 
-# @router.get('', response_model=list[schemas.Usuario])
-# def listar_usuarios(db: Session = Depends(get_db)):
-#     return service.listar_tipos_usuarios(db=db)
+@router.get('', response_model=list[schemas.Usuario])
+def listar_usuarios(db: Session = Depends(get_db)):
+    return service.listar_tipos_usuarios(db=db)
 
-# @router.post('', response_model=schemas.Usuario)
-# def crear_usuario(usuario: schemas.UsuarioCrear, db: Session = Depends(get_db)):
-#     return service.crear_usuario(db=db, usuario=usuario)
+@router.post('', response_model=schemas.Usuario)
+def crear_usuario(usuario: schemas.UsuarioCrear, db: Session = Depends(get_db)):
+    return service.crear_usuario(db=db, usuario=usuario)
 
-# @router.get('/{id}', response_model=schemas.Usuario)
-# def buscar_usuario(id : int, db: Session = Depends(get_db)): 
-#     return service.buscar_usuario(db=db, id=id)
+@router.get('/{id}', response_model=schemas.Usuario)
+def buscar_usuario(id : int, db: Session = Depends(get_db)): 
+    return service.buscar_usuario(db=db, id=id)
