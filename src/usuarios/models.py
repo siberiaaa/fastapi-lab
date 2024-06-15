@@ -14,4 +14,4 @@ class Usuario(Base):
     contraseña = Column(String, index=True)
     tipo_id = Column(Integer, ForeignKey("tipos_usuarios.id"))
 
-    tipo = relationship('tipos_usuarios', back_populates='usuarios')
+    tipo = relationship('Tipo_Usuario', back_populates='usuarios')

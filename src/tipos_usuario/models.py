@@ -9,4 +9,4 @@ class Tipo_Usuario(Base):
     nombre = Column(String, index=True)
     descripcion = Column(String, index=True)
 
-    usuarios = relationship("usuarios", back_populates='tipo')
+    usuarios = relationship("Usuario", back_populates='tipo')
