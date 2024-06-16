@@ -11,6 +11,7 @@ from tipos_producto import router as tipos_productos
 from usuarios import router as usuarios
 from productos import router as productos
 from calificaciones import router as calificaciones
+from reseñas import router as reseñas
 
 app = FastAPI()
 
@@ -26,6 +27,7 @@ app.include_router(tipos_productos.router, prefix='/tipos_productos')
 app.include_router(usuarios.router, prefix='/usuarios')
 app.include_router(productos.router, prefix='/productos')
 app.include_router(calificaciones.router, prefix='/calificaciones')
+app.include_router(reseñas.router, prefix='/reseñas')
 
 
 @app.get('/')
