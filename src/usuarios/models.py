@@ -15,3 +15,4 @@ class Usuario(Base):
     tipo_id = Column(Integer, ForeignKey("tipos_usuarios.id"))
 
     tipo = relationship('Tipo_Usuario', back_populates='usuarios')
+    productos = relationship('Producto', back_populates='usuario')
