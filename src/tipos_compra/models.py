@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 from database import Base #!aaaaaaa
 
 class Tipo_Compra(Base): 
@@ -8,5 +9,4 @@ class Tipo_Compra(Base):
     nombre = Column(String, index=True)
     descripcion = Column(String, index=True)
 
-
-
+    compras = relationship('Compra', back_populates='tipo_compra')

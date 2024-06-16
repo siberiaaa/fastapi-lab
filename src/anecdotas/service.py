@@ -12,7 +12,7 @@ def crear_anecdota(db: Session, anecdota: schemas.AnecdotaCrear):
     db.refresh(db_anecdota)
     return db_anecdota
 
-def listar_tipos_anecdotas(db: Session): 
+def listar_anecdotas(db: Session): 
     return db.query(models.Anecdota).all()
 
 def buscar_anecdota(db: Session, id: int): 

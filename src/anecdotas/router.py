@@ -19,7 +19,7 @@ def get_db():
 
 @router.get('', response_model=list[schemas.Anecdota])
 def listar_anecdota(db: Session = Depends(get_db)):
-    return service.listar_tipos_anecdota(db=db)
+    return service.listar_anecdotas(db=db)
 
 @router.post('', response_model=schemas.Anecdota)
 def crear_anecdota(anecdota: schemas.AnecdotaCrear, db: Session = Depends(get_db)):

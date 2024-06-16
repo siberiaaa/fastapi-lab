@@ -22,3 +22,4 @@ class Producto(Base):
     categoria = relationship('Categoria', back_populates='productos')
     calificaciones = relationship('Calificacion', back_populates='producto')
     reseñas = relationship('Reseña', back_populates='producto')
+    compras = relationship('Compra', back_populates='producto')
