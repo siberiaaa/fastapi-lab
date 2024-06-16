@@ -12,3 +12,4 @@ class Reseña(Base):
     producto_id = Column(Integer, ForeignKey('productos.id'))
 
     producto = relationship('Producto', back_populates='reseñas')
+    anecdotas = relationship('Anecdota', back_populates='reseña')
