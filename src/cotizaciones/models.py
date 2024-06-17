@@ -8,7 +8,7 @@ class Cotizacion(Base):
     id = Column(Integer, primary_key=True)
     precio = Column(Float, index=True)
     compra_id = Column(Integer, ForeignKey('compras.id'))
-    estado_cotizacion_id = Column(Integer, ForeignKey('estados_compras.id'))
+    estado_cotizacion_id = Column(Integer, ForeignKey('estados_cotizacion.id'))
 
     compra = relationship('Compra', back_populates='cotizaciones')
     estado_cotizacion = relationship('Estado_Cotizacion', back_populates='cotizaciones')

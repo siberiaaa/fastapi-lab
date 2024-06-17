@@ -9,4 +9,4 @@ class Metodo_Pago(Base):
     nombre = Column(String, index=True)
     descripcion = Column(String, index=True)
 
-    factura = relationship('Factura', back_populates='metodo_pago')
+    facturas = relationship('Factura', back_populates='metodo_pago')
