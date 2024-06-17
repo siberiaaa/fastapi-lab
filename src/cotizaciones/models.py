@@ -12,3 +12,4 @@ class Cotizacion(Base):
 
     compra = relationship('Compra', back_populates='cotizaciones')
     estado_cotizacion = relationship('Estado_Cotizacion', back_populates='cotizaciones')
+    factura = relationship('Factura', back_populates='cotizacion')
