@@ -22,7 +22,7 @@ def home():
     return {"message":"Hello world desde el router opa"}
 
 @router.post('', response_model=schemas.Estado_Caracteristica)
-def crear_categoria(estado_caracteristica: schemas.Estado_CaracteristicaCrear, db: Session = Depends(get_db)):
+def crear_estado_caracteristica(estado_caracteristica: schemas.Estado_CaracteristicaCrear, db: Session = Depends(get_db)):
     return service.crear_estado_caracteristica(db=db, estado_caracteristica=estado_caracteristica)
 
 

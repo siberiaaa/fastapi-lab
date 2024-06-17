@@ -22,6 +22,6 @@ def home():
     return {"message":"Hello world desde el router opa"}
 
 @router.post('', response_model=schemas.Metodo_Pago)
-def crear_categoria(metodo_pago: schemas.Metodo_PagoCrear, db: Session = Depends(get_db)):
+def crear_metodo_pago(metodo_pago: schemas.Metodo_PagoCrear, db: Session = Depends(get_db)):
     return service.crear_metodo_pago(db=db, metodo_pago=metodo_pago)
 
