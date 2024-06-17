@@ -18,7 +18,7 @@ def get_db():
         db.close()
 
 @router.get('', response_model=list[schemas.Compra])
-def listar_compra(db: Session = Depends(get_db)):
+def listar_compras(db: Session = Depends(get_db)):
     return service.listar_compras(db=db)
 
 @router.post('', response_model=schemas.Compra)
