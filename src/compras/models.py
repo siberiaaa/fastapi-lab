@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Float, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from database import Base #!aaaaaaa
 
@@ -18,3 +18,4 @@ class Compra(Base):
     tipo_compra = relationship('Tipo_Compra', back_populates='compras')
     estado_compra = relationship('Estado_Compra', back_populates='compras')
     caracteristicas = relationship('Caracteristica', back_populates='encargo')
+    cotizaciones = relationship('Cotizacion', back_populates='compra')
