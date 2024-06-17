@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from schemas import Respuesta
 from database import SessionLocal, engine #!aaaaaaa
 import tipos_usuario.models as models 
 import tipos_usuario.schemas as schemas
@@ -21,7 +22,7 @@ def get_db():
 def listar_tipos_usuarios(db: Session = Depends(get_db)):
     return service.listar_tipos_usuarios(db=db)
 
-@router.post('', response_model=schemas.Tipo_Usuario)
+@router.post('', response_model=Respuesta[schemas.Tipo_Usuario])
 def crear_tipo_usuario(tipo_usuario: schemas.Tipo_UsuarioCrear, db: Session = Depends(get_db)):
     return service.crear_tipo_usuario(db=db, tipo_usuario=tipo_usuario)
 

@@ -1,4 +1,6 @@
 from sqlalchemy.orm import Session
+from schemas import Respuesta
+from utils import transformar
 import calificaciones.models as models
 import calificaciones.schemas as schemas
 
