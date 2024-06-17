@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from schemas import Respuesta
 import usuarios.models as models
 import usuarios.schemas as schemas
 
@@ -21,6 +22,19 @@ def listar_usuarios(db: Session):
     return db.query(models.Usuario).all()
 
 def buscar_usuario(db: Session, cedula: str): 
-    usuario = db.query(models.Usuario).filter(models.Usuario.cedula == cedula).first()
-    return usuario
+    returned = db.query(models.Usuario).filter(models.Usuario.cedula == cedula).first()
+
+    if returned == None:
+        return Respuesta[schemas.Categoria](ok=False, mensaje='Usuario no encontrado')
+
+    usuario = schemas.Usuario(cedula=returned.cedula, 
+        nombres=returned.nombres, 
+        apellidos=returned.apellidos, 
+        direccion=returned.direccion, 
+        nacimiento=returned.nacimiento, 
+        correo=returned.correo, 
+        contraseña=returned.contraseña, 
+        tipo_id=returned.tipo_id) 
+    
+    return Respuesta[schemas.Categoria](ok=True, mensaje='Usuario encontrado', data=usuario)
 

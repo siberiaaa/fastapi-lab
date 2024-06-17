@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from database import Base #!aaaaaaa
+from database import Base
 
 class Compra(Base): 
     __tablename__  = "compras"

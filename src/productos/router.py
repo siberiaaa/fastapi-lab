@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 from schemas import Respuesta
-import productos.models as models 
+import productos.models as models
 import productos.schemas as schemas
 import productos.service as service
 

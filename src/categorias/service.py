@@ -24,8 +24,14 @@ def get_categoria(db: Session, categoria_id: int):
 
 def get_categorias(db: Session):
     returned = db.query(models.Categoria).all()
-    
-    respuesta = Respuesta[list[schemas.Categoria]](ok=True, mensaje='Categorías encontrada', data=returned)
+
+    categorias = []
+
+    for cat in returned:
+        categoria = schemas.Categoria(nombre=cat.nombre, descripcion=cat.descripcion, id=cat.id) 
+        categorias.append(categoria)
+
+    respuesta = Respuesta[list[schemas.Categoria]](ok=True, mensaje='Categorías encontrada', data=categorias)
     return respuesta
 
 def update_categoria(db: Session, categoria_id: int, categoria: schemas.CategoriaCrear):
