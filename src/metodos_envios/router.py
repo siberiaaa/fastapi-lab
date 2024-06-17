@@ -22,6 +22,6 @@ def home():
     return {"message":"Hello world desde el router opa"}
 
 @router.post('', response_model=schemas.Metodo_Envio)
-def crear_categoria(metodo_envio: schemas.Metodo_EnvioCrear, db: Session = Depends(get_db)):
+def crear_metodo_envio(metodo_envio: schemas.Metodo_EnvioCrear, db: Session = Depends(get_db)):
     return service.crear_metodo_envio(db=db, metodo_envio=metodo_envio)
 

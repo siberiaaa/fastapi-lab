@@ -22,7 +22,7 @@ def home():
     return {"message":"Hello world desde el router opa"}
 
 @router.post('', response_model=schemas.Estado_Cotizacion)
-def crear_categoria(estado_cotizacion: schemas.Estado_CotizacionCrear, db: Session = Depends(get_db)):
+def crear_estado_cotizacion(estado_cotizacion: schemas.Estado_CotizacionCrear, db: Session = Depends(get_db)):
     return service.crear_estado_cotizacion(db=db, estado_cotizacion=estado_cotizacion)
 
 
