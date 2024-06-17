@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from schemas import Respuesta
 from database import SessionLocal, engine #!aaaaaaa
 import calificaciones.models as models 
 import calificaciones.schemas as schemas
