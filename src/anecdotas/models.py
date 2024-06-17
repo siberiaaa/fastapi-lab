@@ -10,4 +10,4 @@ class Anecdota(Base):
     descripcion = Column(String, index=True)
     reseña_id = Column(Integer, ForeignKey('reseñas.id'))
 
-    reseña = relationship('Reseña', back_populates='reseñas')
+    reseña = relationship('Reseña', back_populates='anecdotas')
