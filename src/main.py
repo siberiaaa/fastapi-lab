@@ -1,6 +1,4 @@
-from fastapi import FastAPI
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from passlib.context import CryptContext
+from fastapi import FastAPI 
 from categorias import router as categorias
 from estados_compras import router as estados_compras
 from estados_cotizacion import router as estados_cotizacion
@@ -21,14 +19,6 @@ from cotizaciones import router as cotizaciones
 from facturas import router as facturas
 
 app = FastAPI()
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-SECRET_KEY = "27A0D7C4CCCE76E6BE39225B7EEE8BD0EF890DE82D49E459F4C405C583080AB0"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 15
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="iniciar_sesion")
 
 app.include_router(categorias.router, prefix='/categorias')
 app.include_router(estados_compras.router, prefix='/estados_compras')
