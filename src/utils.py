@@ -35,7 +35,7 @@ async def obtener_usuario_actual(token: Annotated[str, Depends(oauth2_scheme)]):
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         nombre_completo: str = payload.get("nombre_completo")
         cedula: str = payload.get('cedula')
-        tipo_usuario_id: str = payload.get('tipo_usuario_id')
+        tipo_usuario_id: int = payload.get('tipo_usuario_id')
         if nombre_completo is None or cedula is None or tipo_usuario_id is None:
             raise credentials_exception
         token_data = DataToken(
