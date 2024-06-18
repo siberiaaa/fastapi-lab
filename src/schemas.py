@@ -16,4 +16,6 @@ class Token(BaseModel):
     tipo_token : str
 
 class DataToken(BaseModel): 
-    usuario: Union[str, None] = None
+    cedula: str
+    nombre_completo: str
+    tipo_usuario_id: int
