@@ -1,10 +1,11 @@
 from pydantic import BaseModel
+from typing import Union
 
 class CaracteristicaBase(BaseModel):
     nombre: str
     explicacion: str
     encargo_id: int
-    estado_caracteristica_id: int
+    estado_caracteristica_id: Union[int, None] = None
 
 class CaracteristicaCrear(CaracteristicaBase):
     pass

@@ -4,6 +4,7 @@ import cotizaciones.models as models
 import cotizaciones.schemas as schemas
 
 import compras.service as compra_service
+import caracteristicas.service as caracteristica_service
 #import estados_cotizacion.service as estado_cotizacion_service
 
 def crear_cotizacion(db: Session, cotizacion: schemas.CotizacionCrear):
@@ -20,10 +21,17 @@ def crear_cotizacion(db: Session, cotizacion: schemas.CotizacionCrear):
     if respuesta_compra.data.estado_compra_id != 2:
         return Respuesta[schemas.Cotizacion](ok=False, mensaje='No se puede crear cotización a una compra que no haya sido previamente aprobada')
 
-    # #Existe estado de cotización
-    # respuesta_estado_cotizacion = estado_cotizacion_service.get_estado_cotizacion(db=db, id=cotizacion.estado_cotizacion_id)
-    # if not respuesta_estado_cotizacion.ok: Respuesta[schemas.Compra](ok=False, mensaje='No existe el estado de compra registrado con el cual se intenta realizar la compra')
+    #Verificar que todas las características tengan estado aprobado o rechazado si la compra es de tipo encargo 
+    if respuesta_compra.data.tipo_compra_id == 2:
+        caracteristicas = caracteristica_service.get_caracteristicas_encargo(db=db, id_encargo=respuesta_compra.data.id)
+        sinrevisar = False
 
+        for caracteristica in caracteristicas:
+            if caracteristica.estado_caracteristica_id != 2 or caracteristica.estado_caracteristica_id != 3:
+                sinrevisar = True
+        
+        if sinrevisar:
+            return Respuesta[schemas.Cotizacion](ok=False, mensaje='Antes de crear la cotización para el encargo se debe haber rechazado o aprobado las características asignadas al encargo')
     ### ------------ ###
 
 
@@ -55,13 +63,7 @@ def aprobar_cotizacion(db: Session, id_cotizacion: int):
     if cotizacion_found == None:
         return Respuesta[schemas.Cotizacion](ok=False, mensaje='Cotización a aprobar no encontrada')
      
-    #Verificar que todas las características tengan estado aprobado o rechazado si la compra es de tipo encargo 
-    respuesta_compra = compra_service.get_compra(db=db, id=cotizacion_found.compra_id)
-    if not respuesta_compra.ok:
-        return Respuesta[schemas.Cotizacion](ok=False, mensaje='No existe el id de la compra de la cotización que se intenta aprobar')
-
-    if respuesta_compra.data.tipo_compra_id == 2:
-        pass #! Hacer 
+    
     ### ------------ ###
 
     cotizacion_found.estado_cotizacion = 2
