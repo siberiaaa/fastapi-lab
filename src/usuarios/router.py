@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine #!aaaaaaa
+from typing import Annotated
+from fastapi.security import OAuth2PasswordRequestForm
 import usuarios.models as models 
 import usuarios.schemas as schemas
 import usuarios.service as service
@@ -23,5 +25,5 @@ def registrar_usuario(usuario: schemas.UsuarioCrear, db: Session = Depends(get_d
     return service.crear_usuario(db=db, usuario=usuario)
 
 @router.post('/iniciar_sesion', response_model=schemas.Usuario)
-def iniciar_sesion(): 
+def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]): 
     return 'holaaaaaaaa'

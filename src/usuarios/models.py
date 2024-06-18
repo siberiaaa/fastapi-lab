@@ -18,3 +18,4 @@ class Usuario(Base):
     productos = relationship('Producto', back_populates='usuario')
     calificaciones = relationship('Calificacion', back_populates='usuario')
     compras = relationship('Compra', back_populates='cliente')
+
