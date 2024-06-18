@@ -11,7 +11,11 @@ def crear_tipo_usuario(db: Session, tipo_usuario: schemas.Tipo_UsuarioCrear):
     db.add(db_tipo_usuario)
     db.commit()
     db.refresh(db_tipo_usuario)
-    tipo_usuario_nuevo = schemas.Tipo_Usuario(**db_tipo_usuario)
+    tipo_usuario_nuevo = schemas.Tipo_Usuario(
+        id=db_tipo_usuario.id, 
+        nombre=db_tipo_usuario.nombre, 
+        descripcion=db_tipo_usuario.descripcion
+    )
     respuesta = Respuesta[schemas.Tipo_Usuario](
         ok = True, 
         mensaje = 'Tipo de usuario creado', 
@@ -24,4 +28,10 @@ def listar_tipos_usuarios(db: Session):
 
 def buscar_tipo_usuario(db: Session, id: int): 
     tipo_usuario = db.query(models.Tipo_Usuario).filter(models.Tipo_Usuario.id == id).first()
+    return tipo_usuario
+
+def eliminar_tipo_usuario(db: Session, id: int): 
+    tipo_usuario = db.query(models.Tipo_Usuario).filter(models.Tipo_Usuario.id == id).first()
+    db.delete(tipo_usuario)
+    db.commit()
     return tipo_usuario

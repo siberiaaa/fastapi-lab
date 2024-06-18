@@ -29,3 +29,7 @@ def crear_tipo_usuario(tipo_usuario: schemas.Tipo_UsuarioCrear, db: Session = De
 @router.get('/{id}', response_model=schemas.Tipo_Usuario)
 def buscar_tipo_usuario(id : int, db: Session = Depends(get_db)): 
     return service.buscar_tipo_usuario(db=db, id=id)
+
+@router.delete('/{id}', response_model=schemas.Tipo_Usuario)
+def eliminar_tipo_usuario(id : int, db: Session = Depends(get_db)): 
+    return service.eliminar_tipo_usuario(db=db, id=id)
