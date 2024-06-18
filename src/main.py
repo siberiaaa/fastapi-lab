@@ -1,5 +1,4 @@
-from fastapi import FastAPI
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import FastAPI 
 from categorias import router as categorias
 from estados_compras import router as estados_compras
 from estados_cotizacion import router as estados_cotizacion
@@ -20,8 +19,6 @@ from cotizaciones import router as cotizaciones
 from facturas import router as facturas
 
 app = FastAPI()
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="iniciar_sesion")
 
 app.include_router(categorias.router, prefix='/categorias')
 app.include_router(estados_compras.router, prefix='/estados_compras')
