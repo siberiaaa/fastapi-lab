@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
+from datetime import timedelta
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine #!aaaaaaa
 from typing import Annotated
@@ -12,8 +13,6 @@ models.Base.metadata.create_all(bind=engine)
 
 router = APIRouter()
 
-SECRET_KEY = "27A0D7C4CCCE76E6BE39225B7EEE8BD0EF890DE82D49E459F4C405C583080AB0"
-ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 15
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="iniciar_sesion")
@@ -31,6 +30,22 @@ def get_db():
 def registrar_usuario(usuario: schemas.UsuarioCrear, db: Session = Depends(get_db)):
     return service.registrar_usuario(db=db, usuario=usuario)
 
-@router.post('/iniciar_sesion', response_model=schemas.Usuario)
+@router.delete('/usuario/{cedula}', response_model=schemas.Usuario)
+def borrar_usuario(cedula : str, db: Session = Depends(get_db)): 
+    return service.eliminar_usuario(db=db, cedula=cedula)
+
+@router.post('/iniciar_sesion', response_model=Token)
 def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]): 
-    return 'holaaaaaaaa'
+    usuario = service.autenticar_usuario(form_data.username, form_data.password)
+    if usuario == False: 
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, 
+            detail='Credenciales incorrectas', 
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+    tiempo_expiracion = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    token_acceso = service.crear_token_acceso(
+        data={'cedula': usuario.cedula}, 
+        expires_delta=tiempo_expiracion
+    )
+    return Token(usuario=f'{usuario.nombres} {usuario.apellidos}', token_acceso=token_acceso, tipo_token='bearer')
