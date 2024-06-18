@@ -35,8 +35,8 @@ def borrar_usuario(cedula : str, db: Session = Depends(get_db)):
     return service.eliminar_usuario(db=db, cedula=cedula)
 
 @router.post('/iniciar_sesion', response_model=Token)
-def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]): 
-    usuario = service.autenticar_usuario(form_data.username, form_data.password)
+def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)): 
+    usuario = service.autenticar_usuario(db, form_data.username, form_data.password)
     if usuario == False: 
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, 

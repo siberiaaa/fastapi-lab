@@ -79,8 +79,8 @@ def obtener_hash(contraseña):
 def verificar_contraseña(contraseña_simple, contraseña_hasheada):
     return pwd_context.verify(contraseña_simple, contraseña_hasheada)
 
-def autenticar_usuario(cedula: str, contraseña: str):
-    usuario = obtener_usuario(cedula)
+def autenticar_usuario(db: Session, cedula: str, contraseña: str):
+    usuario = obtener_usuario(db, cedula)
     print('Obtenido')
     print(usuario)
     if not usuario:
