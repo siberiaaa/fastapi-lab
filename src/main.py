@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from categorias import router as categorias
 from estados_compras import router as estados_compras
 from estados_cotizacion import router as estados_cotizacion
@@ -20,6 +21,8 @@ from facturas import router as facturas
 
 app = FastAPI()
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="iniciar_sesion")
+
 app.include_router(categorias.router, prefix='/categorias')
 app.include_router(estados_compras.router, prefix='/estados_compras')
 app.include_router(estados_cotizacion.router, prefix='/estados_cotizacion')
@@ -29,7 +32,7 @@ app.include_router(metodos_pagos.router, prefix='/metodos_pagos')
 app.include_router(estados_caracteristicas.router, prefix='/estados_caracteristicas')
 app.include_router(tipos_usuario.router, prefix='/tipos_usuarios')
 app.include_router(tipos_productos.router, prefix='/tipos_productos')
-app.include_router(usuarios.router, prefix='/usuarios')
+app.include_router(usuarios.router)
 app.include_router(productos.router, prefix='/productos')
 app.include_router(calificaciones.router, prefix='/calificaciones')
 app.include_router(reseñas.router, prefix='/reseñas')

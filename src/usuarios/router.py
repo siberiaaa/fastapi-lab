@@ -18,6 +18,10 @@ def get_db():
         db.close()
 
 
-@router.post('', response_model=schemas.Usuario)
-def crear_usuario(usuario: schemas.UsuarioCrear, db: Session = Depends(get_db)):
+@router.post('/registrar', response_model=schemas.Usuario)
+def registrar_usuario(usuario: schemas.UsuarioCrear, db: Session = Depends(get_db)):
     return service.crear_usuario(db=db, usuario=usuario)
+
+@router.post('/iniciar_sesion', response_model=schemas.Usuario)
+def iniciar_sesion(): 
+    return 'holaaaaaaaa'
