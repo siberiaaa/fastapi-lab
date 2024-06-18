@@ -17,15 +17,18 @@ def realizar_compra(db: Session, compra: schemas.CompraCrear):
 
     #Existe usuario
     respuesta_usuario = usuario_service.buscar_usuario(db=db, cedula=compra.cliente_cedula)
-    if not respuesta_usuario.ok: Respuesta[schemas.Compra](ok=False, mensaje='No existe cliente registrado con la cédula con que se intenta realizar la compra')
+    if not respuesta_usuario.ok:
+        return Respuesta[schemas.Compra](ok=False, mensaje='No existe cliente registrado con la cédula con que se intenta realizar la compra')
 
     #Existe producto
     respuesta_producto = producto_service.get_producto(db=db, id=compra.producto_id)
-    if not respuesta_producto.ok: Respuesta[schemas.Compra](ok=False, mensaje='No existe producto registrado del que se intenta realizar la compra')
+    if not respuesta_producto.ok:
+        return Respuesta[schemas.Compra](ok=False, mensaje='No existe producto registrado del que se intenta realizar la compra')
 
     #Existe tipo de compra
     respuesta_tipo_compra = tipo_compra_service.get_tipo_compra(db=db, id=compra.tipo_compra_id)
-    if not respuesta_tipo_compra.ok: Respuesta[schemas.Compra](ok=False, mensaje='No existe tipo de compra registrado con el cual se intenta realizar la compra')
+    if not respuesta_tipo_compra.ok:
+        return Respuesta[schemas.Compra](ok=False, mensaje='No existe tipo de compra registrado con el cual se intenta realizar la compra')
 
     ### ------------ ###
 
@@ -93,9 +96,21 @@ def rechazar_compra(db: Session, id_compra: int):
 def listar_compras(db: Session): 
     return db.query(models.Compra).all()
 
-def buscar_compra(db: Session, id: int): 
-    compra = db.query(models.Compra).filter(models.Compra.id == id).first()
-    return compra
+
+def get_compra(db: Session, id: int):
+    returned = db.query(models.Compra).filter(models.Compra.id == id).first()
+
+    if returned == None:
+        return Respuesta[schemas.Compra](ok=False, mensaje='Compra no encontrada')
+
+    compra = schemas.Compra(id=returned.id, 
+                            cantidad=returned.cantidad, 
+                            cliente_cedula=returned.cliente_cedula, 
+                            producto_id=returned.id, 
+                            tipo_compra_id=returned.tipo_compra_id, 
+                            estado_compra_id=returned.estado_compra_id) 
+    return Respuesta[schemas.Compra](ok=True, mensaje='Compra encontrada', data=compra)
+
 
 def modificar_compra(db: Session, id: int, compra: schemas.CompraCrear): 
     lista = db.query(models.Compra).all()
