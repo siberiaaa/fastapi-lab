@@ -20,6 +20,9 @@ def crear_calificacion(db: Session, calificacion: schemas.CalificacionCrear):
 def listar_calificaciones(db: Session): 
     return db.query(models.Calificacion).all()
 
+def listar_calificaciones_productos(db: Session, id: int): 
+    return db.query(models.Calificacion).filter(models.Calificacion.producto_id == id).all()
+
 def buscar_calificacion(db: Session, id: int): 
     calificacion = db.query(models.Calificacion).filter(models.Calificacion.id == id).first()
     return calificacion

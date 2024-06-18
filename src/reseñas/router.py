@@ -24,8 +24,8 @@ def listar_reseñas(db: Session = Depends(get_db)):
     return service.listar_reseñas(db=db)
 
 @router.get('/producto/{id}', response_model=list[schemas.Reseña])
-def listar_reseñas(token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
-    return service.listar_reseñas_productos(db=db)
+def listar_reseñas(id: int, token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
+    return service.listar_reseñas_productos(db=db, id=id)
 
 @router.post('', response_model=schemas.Reseña)
 def crear_reseña(token: Annotated[str, Depends(oauth2_scheme)], reseña: schemas.ReseñaCrear, db: Session = Depends(get_db)):
