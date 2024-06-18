@@ -13,8 +13,11 @@ def crear_reseña(db: Session, reseña: schemas.ReseñaCrear):
     db.refresh(db_reseña)
     return db_reseña
 
-def listar_tipos_reseñas(db: Session): 
+def listar_reseñas(db: Session): 
     return db.query(models.Reseña).all()
+
+def listar_reseñas_productos(db: Session, id: int): 
+    return db.query(models.Reseña).filter(models.Reseña.producto_id == id).all()
 
 def buscar_reseña(db: Session, id: int): 
     reseña = db.query(models.Reseña).filter(models.Reseña.id == id).first()
