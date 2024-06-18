@@ -14,4 +14,3 @@ class Categoria(CategoriaBase):
     class Config:
         orm_mode = True
 
-
