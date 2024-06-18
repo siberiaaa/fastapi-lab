@@ -44,8 +44,11 @@ def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], d
             headers={"WWW-Authenticate": "Bearer"}
         )
     tiempo_expiracion = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    nombre_completo = f'{usuario.nombres} {usuario.apellidos}'
     token_acceso = service.crear_token_acceso(
-        data={'cedula': usuario.cedula}, 
+        data={'cedula': usuario.cedula, 
+              'nombre_completo': nombre_completo, 
+              'tipo_usuario': usuario.tipo_id}, 
         expires_delta=tiempo_expiracion
     )
-    return Token(usuario=f'{usuario.nombres} {usuario.apellidos}', token_acceso=token_acceso, tipo_token='bearer')
+    return Token(usuario=nombre_completo, token_acceso=token_acceso, tipo_token='bearer')
