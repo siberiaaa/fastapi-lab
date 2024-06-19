@@ -20,7 +20,7 @@ def get_db():
         db.close()
 
 @router.get('', response_model=list[schemas.Anecdota])
-def listar_anecdotas(db: Session = Depends(get_db)):
+def listar_anecdotas(token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
     return service.listar_anecdotas(db=db)
 
 @router.get('/reseña/{id}', response_model=list[schemas.Anecdota])
