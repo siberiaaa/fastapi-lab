@@ -5,6 +5,7 @@ from database import SessionLocal, engine #!aaaaaaa
 from typing import Annotated
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 
 from schemas import Token, Respuesta
 import usuarios.models as models 
@@ -30,10 +31,17 @@ def get_db():
     finally:
         db.close()
 
+@router.get("/tests")
+def tests(request: Request):
+    return templates.TemplateResponse(request=request, name="registrar.html")
 
-@router.get('/registrar', response_model=Respuesta[schemas.Usuario])
+@router.post('/registrar', response_model=Respuesta[schemas.Usuario])
 def registrar_usuario(request: Request, usuario: schemas.UsuarioCrear, db: Session = Depends(get_db)):
     respuesta = service.registrar_usuario(db=db, usuario=usuario)
+    return templates.TemplateResponse(request=request, name="registrar.html", context={"items": 'a'})
+
+@router.get('/registrar')
+def registrar_usuario(request: Request):
     return templates.TemplateResponse(request=request, name="registrar.html", context={"items": 'a'})
 
 @router.delete('/usuario/{cedula}', response_model=schemas.Usuario)

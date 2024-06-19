@@ -23,7 +23,7 @@ from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 
-#app.mount("./../static", StaticFiles(directory="./../static"), name="static")
+app.mount("/static", StaticFiles(directory="./../static"), name="static")
 
 #templates = Jinja2Templates(directory="../templates")
 
@@ -54,5 +54,6 @@ def home():
 
 #https://fastapi.tiangolo.com/tutorial/bigger-applications/
 #https://github.com/zhanymkanov/fastapi-best-practices#1-project-structure-consistent--predictable
+#https://rummanahmar.medium.com/master-fastapi-build-a-full-stack-todo-application-8efe01fb761f
 
 # prueba
