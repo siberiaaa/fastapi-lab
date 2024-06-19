@@ -64,13 +64,14 @@ def registrar_usuario(request: Request,
     return RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
 
 
-@router.delete('/usuario/{cedula}', response_model=schemas.Usuario)
-def borrar_usuario(cedula : str, db: Session = Depends(get_db)): 
-    return service.eliminar_usuario(db=db, cedula=cedula)
+@router.get('/iniciar_sesion', response_class=HTMLResponse)
+def registrar_usuario(request: Request):
+    return templates.TemplateResponse(request=request, name="iniciarsesion.html")      
 
-@router.post('/iniciar_sesion', response_model=Token)
-def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)): 
-    usuario = service.autenticar_usuario(db, form_data.username, form_data.password)
+#def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)): 
+@router.post('/iniciar_sesion', response_class=HTMLResponse)
+def iniciar_sesion(cedula: str = Form(...), contraseña: str = Form(...),db: Session = Depends(get_db)): 
+    usuario = service.autenticar_usuario(db, cedula, contraseña)
     if usuario == False: 
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, 
@@ -85,4 +86,12 @@ def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], d
               'tipo_usuario_id': usuario.tipo_id}, 
         expires_delta=tiempo_expiracion
     )
-    return Token(usuario=nombre_completo, token_acceso=token_acceso, tipo_token='bearer')
+    print(token_acceso)
+    return RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
+    #return Token(usuario=nombre_completo, token_acceso=token_acceso, tipo_token='bearer')
+
+
+@router.delete('/usuario/{cedula}', response_model=schemas.Usuario)
+def borrar_usuario(cedula : str, db: Session = Depends(get_db)): 
+    return service.eliminar_usuario(db=db, cedula=cedula)
+
