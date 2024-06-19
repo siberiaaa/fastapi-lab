@@ -15,6 +15,9 @@ def crear_anecdota(db: Session, anecdota: schemas.AnecdotaCrear):
 def listar_anecdotas(db: Session): 
     return db.query(models.Anecdota).all()
 
+def listar_anecdotas_reseñas(db: Session, id: int): 
+    return db.query(models.Anecdota).filter(models.Anecdota.reseña_id == id).all()
+
 def buscar_anecdota(db: Session, id: int): 
     anecdota = db.query(models.Anecdota).filter(models.Anecdota.id == id).first()
     return anecdota
