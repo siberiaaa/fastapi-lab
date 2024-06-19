@@ -1,11 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, status, Request, Form
 from datetime import timedelta
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine #!aaaaaaa
 from typing import Annotated
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import RedirectResponse
+from datetime import datetime
+
+from fastapi.responses import RedirectResponse, HTMLResponse
+
 
 from schemas import Token, Respuesta
 import usuarios.models as models 
@@ -31,18 +34,35 @@ def get_db():
     finally:
         db.close()
 
-@router.get("/tests")
-def tests(request: Request):
-    return templates.TemplateResponse(request=request, name="registrar.html")
-
-@router.post('/registrar', response_model=Respuesta[schemas.Usuario])
-def registrar_usuario(request: Request, usuario: schemas.UsuarioCrear, db: Session = Depends(get_db)):
-    respuesta = service.registrar_usuario(db=db, usuario=usuario)
-    return templates.TemplateResponse(request=request, name="registrar.html", context={"items": 'a'})
-
-@router.get('/registrar')
+@router.get('/registrar', response_class=HTMLResponse)
 def registrar_usuario(request: Request):
-    return templates.TemplateResponse(request=request, name="registrar.html", context={"items": 'a'})
+    return templates.TemplateResponse(request=request, name="registrar.html")      
+
+@router.post('/registrar', response_class=HTMLResponse)
+def registrar_usuario(request: Request, 
+                      cedula: str = Form(...), 
+                      nombres: str = Form(...), 
+                      apellidos: str = Form(...), 
+                      direccion: str = Form(...), 
+                      nacimiento: datetime = Form(...), 
+                      correo: str = Form(...), 
+                      contraseña: str = Form(...), 
+                      tipo_id: int = Form(...), 
+                      db: Session = Depends(get_db)):
+
+    usuario = schemas.Usuario(
+        cedula=cedula, 
+        nombres=nombres, 
+        apellidos=apellidos, 
+        direccion=direccion, 
+        nacimiento=nacimiento, 
+        correo=correo, 
+        contraseña=contraseña, 
+        tipo_id=tipo_id
+    )
+    service.registrar_usuario(db=db, usuario=usuario)
+    return RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
+
 
 @router.delete('/usuario/{cedula}', response_model=schemas.Usuario)
 def borrar_usuario(cedula : str, db: Session = Depends(get_db)): 
