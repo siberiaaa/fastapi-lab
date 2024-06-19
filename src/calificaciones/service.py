@@ -23,6 +23,9 @@ def listar_calificaciones(db: Session):
 def listar_calificaciones_productos(db: Session, id: int): 
     return db.query(models.Calificacion).filter(models.Calificacion.producto_id == id).all()
 
+def listar_calificaciones_clientes(db: Session, cedula: str): 
+    return db.query(models.Calificacion).filter(models.Calificacion.usuario_cedula == cedula).all()
+
 def buscar_calificacion(db: Session, id: int): 
     calificacion = db.query(models.Calificacion).filter(models.Calificacion.id == id).first()
     return calificacion

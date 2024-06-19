@@ -28,6 +28,10 @@ def listar_calificaciones(db: Session = Depends(get_db)):
 def listar_calificaciones_producto(id: int, token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
     return service.listar_calificaciones_productos(db=db, id=id)
 
+@router.get('/cliente/{cedula}', response_model=list[schemas.Calificacion])
+def listar_calificaciones_cliente(cedula: str, token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
+    return service.listar_calificaciones_clientes(db=db, cedula=cedula)
+
 @router.post('', response_model=schemas.Calificacion)
 def crear_calificacion(calificacion: schemas.CalificacionCrear, token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
     return service.crear_calificacion(db=db, calificacion=calificacion)
