@@ -1,13 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from datetime import timedelta
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine #!aaaaaaa
 from typing import Annotated
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+from fastapi.templating import Jinja2Templates
+
 from schemas import Token, Respuesta
 import usuarios.models as models 
 import usuarios.schemas as schemas
 import usuarios.service as service
+
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -16,6 +19,8 @@ router = APIRouter()
 ACCESS_TOKEN_EXPIRE_MINUTES = 15
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="iniciar_sesion")
+
+templates = Jinja2Templates(directory="../templates/usuarios")
 
 # Dependency
 def get_db():
@@ -26,9 +31,10 @@ def get_db():
         db.close()
 
 
-@router.post('/registrar', response_model=Respuesta[schemas.Usuario])
-def registrar_usuario(usuario: schemas.UsuarioCrear, db: Session = Depends(get_db)):
-    return service.registrar_usuario(db=db, usuario=usuario)
+@router.get('/registrar', response_model=Respuesta[schemas.Usuario])
+def registrar_usuario(request: Request, usuario: schemas.UsuarioCrear, db: Session = Depends(get_db)):
+    respuesta = service.registrar_usuario(db=db, usuario=usuario)
+    return templates.TemplateResponse(request=request, name="registrar.html", context={"items": 'a'})
 
 @router.delete('/usuario/{cedula}', response_model=schemas.Usuario)
 def borrar_usuario(cedula : str, db: Session = Depends(get_db)): 

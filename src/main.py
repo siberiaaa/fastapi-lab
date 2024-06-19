@@ -18,7 +18,15 @@ from caracteristicas import router as caracteristicas
 from cotizaciones import router as cotizaciones
 from facturas import router as facturas
 
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+
 app = FastAPI()
+
+#app.mount("./../static", StaticFiles(directory="./../static"), name="static")
+
+#templates = Jinja2Templates(directory="../templates")
+
 
 app.include_router(categorias.router, prefix='/categorias')
 app.include_router(estados_compras.router, prefix='/estados_compras')
