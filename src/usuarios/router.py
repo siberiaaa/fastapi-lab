@@ -62,6 +62,10 @@ async def obtener_usuario_actual(token: Annotated[str, Depends(oauth2_scheme)]):
 def registrar_usuario(request: Request):
     return templates.TemplateResponse(request=request, name="registrar.html")      
 
+@router.get('/iniciar_sesion', response_class=HTMLResponse)
+def ver_iniciar_sesion(request: Request):
+    return templates.TemplateResponse(request=request, name="iniciarsesion.html")   
+
 @router.post('/registrar', response_class=HTMLResponse)
 def registrar_usuario(request: Request, 
                       cedula: str = Form(...), 
@@ -116,8 +120,11 @@ def listar_anecdotas(token: Annotated[str, Depends(oauth2_scheme)]):
 
 #el oficial para uso en las vistas 
 @router.post('/iniciar_sesion2', response_class=HTMLResponse)
-def iniciar_sesion(cedula: str = Form(...), contraseña: str = Form(...),db: Session = Depends(get_db)): 
+def iniciar_sesion2(cedula: str = Form(...), contraseña: str = Form(...),db: Session = Depends(get_db)) -> Token: 
+    print(cedula)
+    print(contraseña)
     usuario = service.autenticar_usuario(db, cedula, contraseña)
+    print(usuario)
     if usuario == False: 
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, 
@@ -133,7 +140,8 @@ def iniciar_sesion(cedula: str = Form(...), contraseña: str = Form(...),db: Ses
         expires_delta=tiempo_expiracion
     )
     print(token_acceso)
-    return RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
+    return Token(access_token=token_acceso, token_type='bearer')
+    # return RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
     #return Token(usuario=nombre_completo, token_acceso=token_acceso, tipo_token='bearer')
 
 
