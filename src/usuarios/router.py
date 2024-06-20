@@ -94,6 +94,10 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
         data["client_secret"] = form_data.client_secret
     return data
 
+@router.get('/lista_prueba')
+def listar_anecdotas(token: Annotated[str, Depends(oauth2_scheme)]):
+    return ['hola', 'mundo']
+
 #el oficial para uso en las vistas 
 @router.post('/iniciar_sesion2', response_class=HTMLResponse)
 def iniciar_sesion(cedula: str = Form(...), contraseña: str = Form(...),db: Session = Depends(get_db)): 
