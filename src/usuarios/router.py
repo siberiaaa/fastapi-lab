@@ -69,8 +69,8 @@ def registrar_usuario(request: Request):
     return templates.TemplateResponse(request=request, name="iniciarsesion.html")      
 
 #def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)): 
-@router.post('/iniciar_sesion', response_class=HTMLResponse)
-def iniciar_sesion(cedula: str = Form(...), contraseña: str = Form(...),db: Session = Depends(get_db)): 
+@router.post('/iniciar_sesion')
+def iniciar_sesion(cedula: str = Form(...), contraseña: str = Form(...),db: Session = Depends(get_db)) -> Token: 
     usuario = service.autenticar_usuario(db, cedula, contraseña)
     if usuario == False: 
         raise HTTPException(
@@ -87,8 +87,8 @@ def iniciar_sesion(cedula: str = Form(...), contraseña: str = Form(...),db: Ses
         expires_delta=tiempo_expiracion
     )
     print(token_acceso)
-    return RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
-    #return Token(usuario=nombre_completo, token_acceso=token_acceso, tipo_token='bearer')
+    RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
+    return Token(access_token=token_acceso, token_type='bearer')
 
 
 @router.delete('/usuario/{cedula}', response_model=schemas.Usuario)
