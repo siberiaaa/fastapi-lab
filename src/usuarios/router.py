@@ -106,7 +106,7 @@ async def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends
     )
     return Token(access_token=token_acceso, token_type='bearer')
 
-@router.get('/obtecion_usuario')
+@router.get('/obtencion_usuario')
 def listar_anecdotas(actual: Annotated[DataToken, Depends(obtener_usuario_actual)]):
     return actual
 
