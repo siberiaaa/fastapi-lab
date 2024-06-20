@@ -91,24 +91,25 @@ def registrar_usuario(request: Request,
     service.registrar_usuario(db=db, usuario=usuario)
     return RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
 
-@router.post('/iniciar_sesion', response_model=Token)
-async def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)) -> Token: 
-    usuario = service.autenticar_usuario(db, form_data.username, form_data.password)
-    if usuario == False: 
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, 
-            detail='Credenciales incorrectas', 
-            headers={"WWW-Authenticate": "Bearer"}
-        )
-    tiempo_expiracion = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    nombre_completo = f'{usuario.nombres} {usuario.apellidos}'
-    token_acceso = service.crear_token_acceso(
-        data={'cedula': usuario.cedula, 
-              'nombre_completo': nombre_completo, 
-              'tipo_usuario_id': usuario.tipo_id}, 
-        expires_delta=tiempo_expiracion
-    )
-    return Token(access_token=token_acceso, token_type='bearer')
+# original de la documentación y funciona en swagger
+# @router.post('/iniciar_sesion', response_model=Token)
+# async def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)) -> Token: 
+#     usuario = service.autenticar_usuario(db, form_data.username, form_data.password)
+#     if usuario == False: 
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED, 
+#             detail='Credenciales incorrectas', 
+#             headers={"WWW-Authenticate": "Bearer"}
+#         )
+#     tiempo_expiracion = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+#     nombre_completo = f'{usuario.nombres} {usuario.apellidos}'
+#     token_acceso = service.crear_token_acceso(
+#         data={'cedula': usuario.cedula, 
+#               'nombre_completo': nombre_completo, 
+#               'tipo_usuario_id': usuario.tipo_id}, 
+#         expires_delta=tiempo_expiracion
+#     )
+#     return Token(access_token=token_acceso, token_type='bearer')
 
 @router.get('/obtencion_usuario')
 def listar_anecdotas(actual: Annotated[DataToken, Depends(obtener_usuario_actual)]):
@@ -119,8 +120,8 @@ def listar_anecdotas(token: Annotated[str, Depends(oauth2_scheme)]):
     return ['hola', 'mundo']
 
 #el oficial para uso en las vistas 
-@router.post('/iniciar_sesion2', response_class=HTMLResponse)
-def iniciar_sesion2(cedula: str = Form(...), contraseña: str = Form(...),db: Session = Depends(get_db)) -> Token: 
+@router.post('/iniciar_sesion')
+def iniciar_sesion(cedula: str = Form(...), contraseña: str = Form(...),db: Session = Depends(get_db)) -> Token: 
     print(cedula)
     print(contraseña)
     usuario = service.autenticar_usuario(db, cedula, contraseña)
