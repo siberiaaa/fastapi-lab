@@ -63,13 +63,39 @@ def registrar_usuario(request: Request,
     service.registrar_usuario(db=db, usuario=usuario)
     return RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
 
+@router.post('/iniciar_sesion', response_model=Token)
+def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)): 
+    usuario = service.autenticar_usuario(db, form_data.username, form_data.password)
+    if usuario == False: 
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, 
+            detail='Credenciales incorrectas', 
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+    tiempo_expiracion = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    nombre_completo = f'{usuario.nombres} {usuario.apellidos}'
+    token_acceso = service.crear_token_acceso(
+        data={'cedula': usuario.cedula, 
+              'nombre_completo': nombre_completo, 
+              'tipo_usuario_id': usuario.tipo_id}, 
+        expires_delta=tiempo_expiracion
+    )
+    return Token(usuario=nombre_completo, token_acceso=token_acceso, tipo_token='bearer')
 
-@router.get('/iniciar_sesion', response_class=HTMLResponse)
-def registrar_usuario(request: Request):
-    return templates.TemplateResponse(request=request, name="iniciarsesion.html")      
+@router.post("/login")
+def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+    data = {}
+    data["scopes"] = []
+    for scope in form_data.scopes:
+        data["scopes"].append(scope)
+    if form_data.client_id:
+        data["client_id"] = form_data.client_id
+    if form_data.client_secret:
+        data["client_secret"] = form_data.client_secret
+    return data
 
-#def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)): 
-@router.post('/iniciar_sesion', response_class=HTMLResponse)
+#el oficial para uso en las vistas 
+@router.post('/iniciar_sesion2', response_class=HTMLResponse)
 def iniciar_sesion(cedula: str = Form(...), contraseña: str = Form(...),db: Session = Depends(get_db)): 
     usuario = service.autenticar_usuario(db, cedula, contraseña)
     if usuario == False: 
