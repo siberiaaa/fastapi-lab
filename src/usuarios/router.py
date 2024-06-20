@@ -6,6 +6,8 @@ from typing import Annotated
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from fastapi.templating import Jinja2Templates
 from datetime import datetime
+from schemas import DataToken
+from jose import JWTError, jwt
 
 from fastapi.responses import RedirectResponse, HTMLResponse
 
@@ -33,6 +35,28 @@ def get_db():
         yield db
     finally:
         db.close()
+
+async def obtener_usuario_actual(token: Annotated[str, Depends(oauth2_scheme)]):
+    credentials_exception = HTTPException(
+        status_code= status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid authentication credentials",
+        headers={"WWW-Authenticate": "Bearer"}
+    )
+    try:
+        payload = jwt.decode(token, service.SECRET_KEY, algorithms=[service.ALGORITHM])
+        nombre_completo: str = payload.get("nombre_completo")
+        cedula: str = payload.get('cedula')
+        tipo_usuario_id: int = payload.get('tipo_usuario_id')
+        if nombre_completo is None or cedula is None or tipo_usuario_id is None:
+            raise credentials_exception
+        token_data = DataToken(
+            nombre_completo=nombre_completo, 
+            cedula=cedula, 
+            tipo_usuario_id=tipo_usuario_id
+            )
+        return token_data
+    except JWTError:
+        raise credentials_exception
 
 @router.get('/registrar', response_class=HTMLResponse)
 def registrar_usuario(request: Request):
@@ -64,7 +88,7 @@ def registrar_usuario(request: Request,
     return RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
 
 @router.post('/iniciar_sesion', response_model=Token)
-def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)): 
+async def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)) -> Token: 
     usuario = service.autenticar_usuario(db, form_data.username, form_data.password)
     if usuario == False: 
         raise HTTPException(
@@ -80,19 +104,11 @@ def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], d
               'tipo_usuario_id': usuario.tipo_id}, 
         expires_delta=tiempo_expiracion
     )
-    return Token(usuario=nombre_completo, token_acceso=token_acceso, tipo_token='bearer')
+    return Token(access_token=token_acceso, token_type='bearer')
 
-@router.post("/login")
-def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
-    data = {}
-    data["scopes"] = []
-    for scope in form_data.scopes:
-        data["scopes"].append(scope)
-    if form_data.client_id:
-        data["client_id"] = form_data.client_id
-    if form_data.client_secret:
-        data["client_secret"] = form_data.client_secret
-    return data
+@router.get('/obtecion_usuario')
+def listar_anecdotas(actual: Annotated[DataToken, Depends(obtener_usuario_actual)]):
+    return actual
 
 @router.get('/lista_prueba')
 def listar_anecdotas(token: Annotated[str, Depends(oauth2_scheme)]):

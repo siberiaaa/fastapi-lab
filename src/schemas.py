@@ -11,9 +11,8 @@ class Respuesta(GenericModel, Generic[DataT]):
     data: Optional[DataT] = None
 
 class Token(BaseModel): 
-    usuario : str
-    token_acceso : str
-    tipo_token : str
+    access_token : str
+    token_type : str
 
 class DataToken(BaseModel): 
     cedula: str
