@@ -134,8 +134,7 @@ async def iniciar_sesion(request: Request, response: Response, cedula: str = For
 @router.get("/private", response_class=HTMLResponse)
 async def private(request: Request, info=Depends(auth_handler.auth_wrapper)):
     try:
-        return templates.TemplateResponse("private.html",
-            {"request": request})
+        return templates.TemplateResponse("private.html", {"request": request, "info": info})
     except:
         raise RequiresLoginException() 
     

@@ -1,11 +1,14 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from jose import jwt
 from database import SessionLocal, engine
 from schemas import Respuesta
 import categorias.models as models
 import categorias.schemas as schemas
 import categorias.service as service
 
+from usuarios.service import AuthHandler
+auth_handler = AuthHandler()
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -20,8 +23,8 @@ def get_db():
         db.close()
 
 @router.get('', response_model=Respuesta[list[schemas.Categoria]])
-def get_categorias(db: Session = Depends(get_db)):
-    return service.get_categorias(db=db)
+def get_categorias(db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
+        return service.get_categorias(db=db)
 
 @router.post('', response_model=Respuesta[schemas.Categoria])
 def crear_categoria(categoria: schemas.CategoriaCrear, db: Session = Depends(get_db)):

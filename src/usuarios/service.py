@@ -19,13 +19,14 @@ class AuthHandler():
     def decode_token(self, token):
         try:
             payload = jwt.decode(token, self.SECRET_KEY, algorithms=self.ALGORITHM)
-            return payload['sub']
+            return payload
         except jwt.ExpiredSignatureError:
             raise RequiresLoginException()
         except jwt.JWTError as e:
             raise RequiresLoginException()
-        except Exception as e:
-            raise RequiresLoginException()
+        # except Exception as e:
+        #     raise RequiresLoginException()
+        #!comentado esto de arriba para no morir en el intento de debbugear
             
     
     def auth_wrapper(self, auth: HTTPAuthorizationCredentials = Security(security)):
