@@ -1,4 +1,7 @@
-from fastapi import FastAPI 
+import uvicorn
+
+from fastapi import FastAPI, Request
+
 from categorias import router as categorias
 from estados_compras import router as estados_compras
 from estados_cotizacion import router as estados_cotizacion
@@ -18,8 +21,13 @@ from caracteristicas import router as caracteristicas
 from cotizaciones import router as cotizaciones
 from facturas import router as facturas
 
+from usuarios.service import RequiresLoginException
+
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse, Response
+
+
 
 app = FastAPI()
 
@@ -52,8 +60,50 @@ app.include_router(facturas.router, prefix='/facturas')
 def home():
     return {"message": "Hello world"}
 
+@app.exception_handler(RequiresLoginException)
+async def exception_handler(request: Request, exc: RequiresLoginException) -> Response:
+    return RedirectResponse(url='/iniciar_sesion') 
+
+@app.middleware("http")
+async def create_auth_header(request: Request, call_next,):
+    '''
+    Check if there are cookies set for authorization. If so, construct the
+    Authorization header and modify the request (unless the header already
+    exists!)
+    '''
+    if ("Authorization" not in request.headers 
+        and "Authorization" in request.cookies
+        ):
+        access_token = request.cookies["Authorization"]
+        
+        request.headers.__dict__["_list"].append(
+            (
+                "authorization".encode(),
+                 f"Bearer {access_token}".encode(),
+            )
+        )
+    elif ("Authorization" not in request.headers 
+        and "Authorization" not in request.cookies
+        ): 
+        request.headers.__dict__["_list"].append(
+            (
+                "authorization".encode(),
+                 f"Bearer 12345".encode(),
+            )
+        )
+        
+    response = await call_next(request)
+    return response    
+
+
+
 #https://fastapi.tiangolo.com/tutorial/bigger-applications/
 #https://github.com/zhanymkanov/fastapi-best-practices#1-project-structure-consistent--predictable
 #https://rummanahmar.medium.com/master-fastapi-build-a-full-stack-todo-application-8efe01fb761f
 
 # prueba
+
+
+#Para debbugear :(
+# if __name__ == "__main__":
+#     uvicorn.run(app, host="127.0.0.1", port=8000)
