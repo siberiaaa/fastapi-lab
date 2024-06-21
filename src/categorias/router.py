@@ -27,19 +27,19 @@ def get_categorias(db: Session = Depends(get_db), info=Depends(auth_handler.auth
         return service.get_categorias(db=db)
 
 @router.post('', response_model=Respuesta[schemas.Categoria])
-def crear_categoria(categoria: schemas.CategoriaCrear, db: Session = Depends(get_db)):
+def crear_categoria(categoria: schemas.CategoriaCrear, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
     return service.create_categoria(db=db, categoria=categoria)
 
 @router.get('/{categoria_id}', response_model=Respuesta[schemas.Categoria])
-def get_categoria(categoria_id: int, db: Session = Depends(get_db)):
+def get_categoria(categoria_id: int, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
     return service.get_categoria(db=db, categoria_id=categoria_id)
 
 @router.put('/{categoria_id}', response_model=Respuesta[schemas.Categoria])
-def update_categoria(categoria_id: int, categoria: schemas.CategoriaCrear, db: Session = Depends(get_db)):
+def update_categoria(categoria_id: int, categoria: schemas.CategoriaCrear, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
     return service.update_categoria(db=db, categoria_id=categoria_id, categoria=categoria)
 
 @router.delete('/{categoria_id}', response_model=Respuesta[schemas.Categoria])
-def delete_categoria(categoria_id: int, db: Session = Depends(get_db)):
+def delete_categoria(categoria_id: int, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
     return service.delete_categoria(db=db, categoria_id=categoria_id)
 
 
