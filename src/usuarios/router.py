@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Request, Form
+from fastapi import APIRouter, Depends, HTTPException, status, Request, Form, Response
 from datetime import timedelta
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine #!aaaaaaa
@@ -8,12 +8,15 @@ from fastapi.templating import Jinja2Templates
 from datetime import datetime
 
 from fastapi.responses import RedirectResponse, HTMLResponse
+from fastapi_login import LoginManager
 
 
-from schemas import Token, Respuesta
+from schemas import Token, Respuesta, DataToken
 import usuarios.models as models 
 import usuarios.schemas as schemas
 import usuarios.service as service
+from utils import obtener_usuario_actual
+from jose import JWTError, jwt
 
 
 models.Base.metadata.create_all(bind=engine)
@@ -24,7 +27,31 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 15
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="iniciar_sesion")
 
+manegador = LoginManager('secret', '/iniciar_sesion', use_cookie=True, default_expiry=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+
 templates = Jinja2Templates(directory="../templates/usuarios")
+
+def obtener_usuario_actual(token: str):
+    credentials_exception = HTTPException(
+        status_code= status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid authentication credentials",
+        headers={"WWW-Authenticate": "Bearer"}
+    )
+    try:
+        payload = jwt.decode(token, service.SECRET_KEY, algorithms=[service.ALGORITHM])
+        nombre_completo: str = payload.get("nombre_completo")
+        cedula: str = payload.get('cedula')
+        tipo_usuario_id: int = payload.get('tipo_usuario_id')
+        if nombre_completo is None or cedula is None or tipo_usuario_id is None:
+            raise credentials_exception
+        token_data = DataToken(
+            nombre_completo=nombre_completo, 
+            cedula=cedula, 
+            tipo_usuario_id=tipo_usuario_id
+            )
+        return token_data
+    except JWTError:
+        raise credentials_exception
 
 # Dependency
 def get_db():
@@ -70,7 +97,7 @@ def registrar_usuario(request: Request):
 
 #def iniciar_sesion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)): 
 @router.post('/iniciar_sesion')
-def iniciar_sesion(cedula: str = Form(...), contraseña: str = Form(...),db: Session = Depends(get_db)) -> Token: 
+async def iniciar_sesion(cedula: str = Form(...), contraseña: str = Form(...), db: Session = Depends(get_db)) -> Token: 
     usuario = service.autenticar_usuario(db, cedula, contraseña)
     if usuario == False: 
         raise HTTPException(
@@ -87,9 +114,20 @@ def iniciar_sesion(cedula: str = Form(...), contraseña: str = Form(...),db: Ses
         expires_delta=tiempo_expiracion
     )
     print(token_acceso)
-    RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
-    return Token(access_token=token_acceso, token_type='bearer')
+    token = manegador.create_access_token(
+        data={'cedula': usuario.cedula, 
+              'nombre_completo': nombre_completo, 
+              'tipo_usuario_id': usuario.tipo_id})
+    response = Response(content=token, media_type='application/json')
+    manegador.set_cookie(response, token)
+    # real = await obtener_usuario_actual(token=request.cookies.get('access-token'))
+    # print(real.cedula)
+    # RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
+    return Token(access_token=token, token_type='bearer')
 
+@router.get('/obtener_usuario')
+def obtener_algo(token: Annotated[str, Depends(oauth2_scheme)]): 
+    return obtener_usuario_actual(token)
 
 @router.delete('/usuario/{cedula}', response_model=schemas.Usuario)
 def borrar_usuario(cedula : str, db: Session = Depends(get_db)): 

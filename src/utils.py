@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException, status
 from jose import JWTError, jwt
 from typing import Annotated
-from usuarios.router import oauth2_scheme
+# from usuarios.router import oauth2_scheme
 from usuarios.service import SECRET_KEY, ALGORITHM
 from schemas import DataToken
 
@@ -25,7 +25,7 @@ def transformar(modelo : object, schema : object):
     return schema
 
 # Si sirve (✿◡‿◡)
-async def obtener_usuario_actual(token: Annotated[str, Depends(oauth2_scheme)]):
+def obtener_usuario_actual(token: str):
     credentials_exception = HTTPException(
         status_code= status.HTTP_401_UNAUTHORIZED,
         detail="Invalid authentication credentials",
