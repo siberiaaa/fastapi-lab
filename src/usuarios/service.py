@@ -59,9 +59,12 @@ class AuthHandler():
             usuario = obtener_usuario(db, cedula)
             if usuario: 
                 password_check = self.verify_password(contraseña, usuario.contraseña)
+                if password_check: 
+                    return usuario
+                else: 
+                    return False
                 #return password_check #Nuestro código original retornaba el usuario (?)
                 #por una buena razon lo retornaba
-                return usuario
             else: 
                 return False
         except:
