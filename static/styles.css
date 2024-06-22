@@ -3,6 +3,11 @@ fieldset {
     grid-template-columns: 1;
     margin-left: 30%;
     margin-right: 30%;
+    border: none;
+}
+
+fieldset legend {
+    color: grey;
 }
 
 fieldset label {
@@ -19,6 +24,7 @@ fieldset button {
     border-radius: 5px;
 }
 
-p {
+fieldset p {
     text-align: center;
+    color: grey;
 }
