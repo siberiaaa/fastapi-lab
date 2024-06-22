@@ -5,25 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    <link href="{{url_for('static', path='/hola.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
 </head>
 <body>
     <h1 class="nosabe">no viva</h1>
 
     <form action="/iniciar_sesion" method="post">
-
-        <label for="cedula">
-            <span>Cedula</span>
-            <input type="text" name="cedula" placeholder="Cedula" required>
-        </label>
-
-        <label for="contraseña">
-            <span>contraseña</span>
-            <input type="text" name="contraseña" placeholder="contraseña" required>
-        </label>
-
-        <button type="submit">iniciarsesion</button>
-        
+        <fieldset>
+            <legend>Inicia sesión</legend>
+            <label for="cedula">
+                <span>Cédula</span>
+                <input type="text" name="cedula" placeholder="Cédula" required>
+            </label>
+    
+            <label for="contraseña">
+                <span>Contraseña</span>
+                <input type="text" name="contraseña" placeholder="Contraseña" required>
+            </label>
+    
+            <button type="submit">Iniciar sesión</button>
+        </fieldset>
         <br>
     </form>
 </body>

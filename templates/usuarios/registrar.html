@@ -5,56 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    <link href="{{url_for('static', path='/hola.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
 </head>
 <body>
     <h1 class="nosabe">no viva</h1>
 
     <form action="/registrar" method="post">
-
-        <label for="cedula">
-            <span>Cedula</span>
-            <input type="text" name="cedula" placeholder="Cedula" required>
-        </label>
-
-        <label for="correo">
-            <span>Correo</span>
-            <input type="text" name="correo" placeholder="Correo" required>
-        </label>
-
-        <label for="nombres">
-            <span>nombres</span>
-            <input type="text" name="nombres" placeholder="nombres" required>
-        </label>
-
-        <label for="apellidos">
-            <span>apellidos</span>
-            <input type="text" name="apellidos" placeholder="apellidos" required>
-        </label>
-
-        <label for="direccion">
-            <span>direccion</span>
-            <input type="text" name="direccion" placeholder="direccion" required>
-        </label>
-
-        <label for="nacimiento">
-            <span>fechanacimiento</span>
-            <input type="date" name="nacimiento" placeholder="fechanacimiento" required>
-        </label>
-        
-        <label for="tipo_id">
-            <span>id</span>
-            <input type="number" name="tipo_id" placeholder="id" required>
-        </label>
-
-        <label for="contraseña">
-            <span>contraseña</span>
-            <input type="text" name="contraseña" placeholder="contraseña" required>
-        </label>
-
-        <button type="submit">registrar</button>
-        
-        <br>
+        <fieldset>
+            <legend>Registrar usuario</legend>
+            <label for="cedula">
+                <span>Cédula</span>
+                <input type="text" name="cedula" placeholder="Cedula" required>
+            </label>
+    
+            <label for="correo">
+                <span>Correo</span>
+                <input type="text" name="correo" placeholder="Correo" required>
+            </label>
+    
+            <label for="nombres">
+                <span>Nombres</span>
+                <input type="text" name="nombres" placeholder="nombres" required>
+            </label>
+    
+            <label for="apellidos">
+                <span>Apellidos</span>
+                <input type="text" name="apellidos" placeholder="apellidos" required>
+            </label>
+    
+            <label for="direccion">
+                <span>Dirección</span>
+                <input type="text" name="direccion" placeholder="direccion" required>
+            </label>
+    
+            <label for="nacimiento">
+                <span>Fecha de nacimiento</span>
+                <input type="date" name="nacimiento" placeholder="fechanacimiento" required>
+            </label>
+            
+            <label for="tipo_id">
+                <span>Tipo de usuario</span>
+                <input type="number" name="tipo_id" placeholder="id" min="1" max="2" step="1" required>
+            </label>
+    
+            <label for="contraseña">
+                <span>Contraseña</span>
+                <input type="password" name="contraseña" placeholder="contraseña" required>
+            </label>
+    
+            <button type="submit">registrar</button>
+        </fieldset>
     </form>
 </body>
 </html>
