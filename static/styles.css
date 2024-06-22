@@ -14,4 +14,11 @@ fieldset label {
 fieldset button {
     background-color: chocolate;
     color: aliceblue;
+    padding: 1%;
+    margin: 2%;
+    border-radius: 5px;
+}
+
+p {
+    text-align: center;
 }
