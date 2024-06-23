@@ -29,11 +29,15 @@ def listar_cotizaciones(db: Session = Depends(get_db)):
 def listar_cotizaciones(id: int, db: Session = Depends(get_db)):
     return service.listar_cotizaciones_compras(db=db, id=id)
 
-@router.post('', response_model=schemas.Cotizacion)
-def crear_cotizacion(cotizacion: schemas.CotizacionCrear, db: Session = Depends(get_db)):
-    return service.crear_cotizacion(db=db, cotizacion=cotizacion)
+@router.post('/aprobar/{id}', response_model=Respuesta[schemas.Cotizacion])
+def aprobar_cotizacion(id: int, db: Session = Depends(get_db)):
+    return service.aprobar_cotizacion(db=db, id=id)
 
-@router.get('/{id}', response_model=schemas.Cotizacion)
+@router.post('/rechazar/{id}', response_model=Respuesta[schemas.Cotizacion])
+def rechazar_cotizacion(id: int, db: Session = Depends(get_db)):
+    return service.rechazar_cotizacion(db=db, id=id)
+
+@router.get('/{id}', response_model=Respuesta[schemas.Cotizacion])
 def buscar_cotizacion(id : int, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 
     return service.buscar_cotizacion(db=db, id=id)
 
