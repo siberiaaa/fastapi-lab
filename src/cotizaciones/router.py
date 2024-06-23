@@ -4,6 +4,10 @@ from database import SessionLocal, engine #!aaaaaaa
 import cotizaciones.models as models 
 import cotizaciones.schemas as schemas
 import cotizaciones.service as service
+from schemas import Respuesta
+
+from usuarios.service import AuthHandler
+auth_handler = AuthHandler()
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -21,16 +25,20 @@ def get_db():
 def listar_cotizaciones(db: Session = Depends(get_db)):
     return service.listar_cotizaciones(db=db)
 
+@router.get('/compra/{id}', response_model=Respuesta[list[schemas.Cotizacion]])
+def listar_cotizaciones(id: int, db: Session = Depends(get_db)):
+    return service.listar_cotizaciones_compras(db=db, id=id)
+
 @router.post('', response_model=schemas.Cotizacion)
 def crear_cotizacion(cotizacion: schemas.CotizacionCrear, db: Session = Depends(get_db)):
     return service.crear_cotizacion(db=db, cotizacion=cotizacion)
 
 @router.get('/{id}', response_model=schemas.Cotizacion)
-def buscar_cotizacion(id : int, db: Session = Depends(get_db)): 
+def buscar_cotizacion(id : int, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 
     return service.buscar_cotizacion(db=db, id=id)
 
 @router.put('/{id}', response_model=schemas.Cotizacion)
-def modificar_cotizacion(id : int, cotizacion: schemas.CotizacionCrear, db: Session = Depends(get_db)): 
+def modificar_cotizacion(id : int, cotizacion: schemas.CotizacionCrear, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 
     return service.modificar_cotizacion(db=db, id=id, cotizacion=cotizacion)
 
 @router.delete('/{id}', response_model=schemas.Cotizacion)
