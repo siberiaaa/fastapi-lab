@@ -142,7 +142,6 @@ async def private(request: Request, info=Depends(auth_handler.auth_wrapper)):
     # return Token(access_token=token_acceso, token_type='bearer')
 
 
-    
 
 @router.delete('/usuario/{cedula}', response_model=schemas.Usuario)
 def borrar_usuario(cedula : str, db: Session = Depends(get_db)): 
