@@ -2,6 +2,10 @@ body {
     margin: 0%;
 }
 
+h1 {
+    text-align: center;
+}
+
 fieldset {
     display: grid;
     grid-template-columns: 1;
@@ -39,4 +43,12 @@ nav {
 
 header, footer {
     background-color: darkgoldenrod;
+    padding: 2%;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }
