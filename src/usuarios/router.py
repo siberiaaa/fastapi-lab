@@ -115,9 +115,18 @@ async def iniciar_sesion(request: Request, response: Response, cedula: str = For
         if usuario: 
             nombre_completo = f'{usuario.nombres} {usuario.apellidos}'
             atoken = auth_handler.create_access_token(data={'cedula': usuario.cedula, 'nombre_completo': nombre_completo, 'tipo_usuario_id': usuario.tipo_id})
-            response = templates.TemplateResponse("success.html", 
-                {"request": request, "nombre_completo": nombre_completo, "success_msg": "Welcome back! ",
-                "path_route": '/private', "path_msg": "Go to your private page!"})
+            if usuario.tipo_id == 1: 
+                response = templates.TemplateResponse("success.html", 
+                    {"request": request, "nombre_completo": nombre_completo, "success_msg": "Welcome back! ",
+                    "path_route": '/private', "path_msg": "Go to your private page!"})
+            elif usuario.tipo_id == 2: 
+                response = templates.TemplateResponse("success.html", 
+                    {"request": request, "nombre_completo": nombre_completo, "success_msg": "Welcome back! ",
+                    "path_route": '/private', "path_msg": "Go to your private page!"})
+            else: 
+                response = templates.TemplateResponse("success.html", 
+                    {"request": request, "nombre_completo": nombre_completo, "success_msg": "Welcome back! ",
+                    "path_route": '/private', "path_msg": "Go to your private page!"})
             
             response.set_cookie(key="Authorization", value= f"{atoken}", httponly=True)
             return response

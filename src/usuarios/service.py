@@ -118,6 +118,12 @@ def eliminar_usuario(db: Session, cedula: str):
 def listar_usuarios(db: Session): 
     return db.query(models.Usuario).all()
 
+def listar_artesanos(db: Session): 
+    return db.query(models.Usuario).filter(models.Usuario.tipo_id == 1).all()
+
+def listar_clientes(db: Session): 
+    return db.query(models.Usuario).filter(models.Usuario.tipo_id == 2).all()
+
 def buscar_usuario(db: Session, cedula: str): 
     retornado = db.query(models.Usuario).filter(models.Usuario.cedula == cedula).first()
 

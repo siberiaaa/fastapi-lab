@@ -3,9 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
     <title>Document</title>
 </head>
 <body>
-    
+    <h1>Lista de productos</h1> 
+    <h2>Estos son tus productos {{ info.nombre_completo }}</h2>
+    <section>
+        {% for esto in lista.data %}
+        <div>
+            <p>{{ esto.nombre }}</p>
+        </div>
+        {% endfor %}
+    </section>
 </body>
 </html>

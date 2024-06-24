@@ -1,6 +1,6 @@
 import uvicorn
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 
 from categorias import router as categorias
 from estados_compras import router as estados_compras
@@ -20,20 +20,30 @@ from compras import router as compras
 from caracteristicas import router as caracteristicas
 from cotizaciones import router as cotizaciones
 from facturas import router as facturas
+from productos.service import get_productos_por_artesano
 
-from usuarios.service import RequiresLoginException
+from usuarios.service import RequiresLoginException, AuthHandler, listar_artesanos
 
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import RedirectResponse, Response
+from fastapi.responses import RedirectResponse, Response, HTMLResponse
+from database import SessionLocal, engine 
+from sqlalchemy.orm import Session
 
-
+auth_handler = AuthHandler()
 
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="./../static"), name="static")
 
 templates = Jinja2Templates(directory="./../templates")
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 app.include_router(categorias.router, prefix='/categorias')
@@ -56,9 +66,23 @@ app.include_router(cotizaciones.router, prefix='/cotizaciones')
 app.include_router(facturas.router, prefix='/facturas')
 
 
-@app.get('/')
-def home():
-    return {"message": "Hello world"}
+@app.get('/home')
+async def home(request: Request, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
+        print(info)
+        if info["tipo_usuario_id"] == 1: 
+            lista = get_productos_por_artesano(db=db, cedula_artesano=info['cedula'])
+            return templates.TemplateResponse('/homes/artesanos.html', 
+                                              {'request': request, 
+                                               "info": info, 
+                                               'lista': lista})
+        elif info["tipo_usuario_id"] == 2: 
+            lista = listar_artesanos(db=db)
+            return templates.TemplateResponse('/homes/clientes.html', 
+                                              {'request': request, 
+                                               "info": info, 
+                                               'lista': lista})
+        else: 
+            return {'hola': info}
 
 @app.exception_handler(RequiresLoginException)
 async def exception_handler(request: Request, exc: RequiresLoginException) -> Response:
