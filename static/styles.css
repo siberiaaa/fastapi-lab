@@ -41,6 +41,10 @@ nav {
     background-color: burlywood;
 }
 
+nav a {
+    border: 1px solid black;
+}
+
 header, footer {
     background-color: darkgoldenrod;
     padding: 2%;
