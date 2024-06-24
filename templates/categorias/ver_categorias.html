@@ -1,15 +1,19 @@
 <h1>
     Categorias
 </h1>
+
+<button onclick="location.href='/categorias/crear'">Crear categoría</button>
 <table style="width:100%">
     <tr>
-        <td>Name</td>
-        <td>Details</td>
+        <td>Nombre</td>
+        <td>Opciones</td>
     </tr>
-{% for item in items %}
+{% for categoria in categorias %}
     <tr>
-        <td>{{ item.name }}</td>
-        <td> <a href="/items/{{ item.id }}">View more details</a></td>
+        <td>{{ categoria.nombre }}</td>
+        <td> <a href="/categorias/eliminar/{{ categoria.id }}">Eliminar</a></td>
+
     </tr>
     <div style="margin-bottom: 10px;"></div>
 {% endfor %}
+

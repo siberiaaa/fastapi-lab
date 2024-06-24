@@ -102,7 +102,7 @@ def update_producto(db: Session, id: int, producto: schemas.ProductoCrear):
         tipo_producto_id=returned.tipo_producto_id, 
         categoria_id=returned.categoria_id, 
         ) 
-
+ 
     respuesta = Respuesta[schemas.Producto](ok=True, mensaje='Producto actualizado', data=producto)
     return respuesta
 

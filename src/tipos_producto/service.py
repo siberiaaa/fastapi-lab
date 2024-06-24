@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from schemas import Respuesta
 import tipos_producto.models as models
 import tipos_producto.schemas as schemas
+import productos.models as producto_models
 
 def create_tipo_producto(db: Session, tipo_producto: schemas.Tipo_ProductoCrear):
     db_tipo_producto = models.Tipo_Producto(nombre=tipo_producto.nombre, descripcion=tipo_producto.descripcion, funcionalidad=tipo_producto.funcionalidad)
@@ -51,6 +52,13 @@ def delete_tipo_producto(db: Session, id: int):
 
     if tipo_productoFound == None:
         return Respuesta[schemas.Tipo_Producto](ok=False, mensaje='Tipo de producto a eliminar no encontrado')
+
+     #Validamos que no exista algún producto registrado con esta categoría porque sino nao se puede eliminar la cat
+    productos = db.query(producto_models.Producto).filter(producto_models.Producto.tipo_producto_id == id).first()
+
+    if productos:
+        return Respuesta[schemas.Categoria](ok=False, mensaje='No se puede eliminar una categoría que esté siendo usada por un producto.')
+    
 
 
     db.query(models.Tipo_Producto).filter(models.Tipo_Producto.id == id).delete()

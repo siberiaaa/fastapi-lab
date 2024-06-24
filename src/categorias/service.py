@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from schemas import Respuesta
 import categorias.models as models
 import categorias.schemas as schemas
+import productos.models as producto_models
 
 def create_categoria(db: Session, categoria: schemas.CategoriaCrear):
     db_categoria = models.Categoria(nombre=categoria.nombre, descripcion=categoria.descripcion)
@@ -55,6 +56,12 @@ def delete_categoria(db: Session, categoria_id: int):
 
     if categoriaFound == None:
         return Respuesta[schemas.Categoria](ok=False, mensaje='Categoría a eliminar no encontrada')
+    
+    #Validamos que no exista algún producto registrado con esta categoría porque sino nao se puede eliminar la cat
+    productos = db.query(producto_models.Producto).filter(producto_models.Producto.categoria_id == categoria_id).first()
+
+    if productos:
+        return Respuesta[schemas.Categoria](ok=False, mensaje='No se puede eliminar una categoría que esté siendo usada por un producto.')
     
     db.query(models.Categoria).filter(models.Categoria.id == categoria_id).delete()
     db.commit()
