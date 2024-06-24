@@ -8,6 +8,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 import usuarios.models as models
 import usuarios.schemas as schemas
 from passlib.context import CryptContext
+from usuarios.exceptions import LoginExpired, RequiresLoginException
 
 class AuthHandler():
     security = HTTPBearer()
@@ -21,7 +22,7 @@ class AuthHandler():
             payload = jwt.decode(token, self.SECRET_KEY, algorithms=self.ALGORITHM)
             return payload
         except jwt.ExpiredSignatureError:
-            raise RequiresLoginException()
+            raise LoginExpired()
         except jwt.JWTError as e:
             raise RequiresLoginException()
         # except Exception as e:
@@ -99,13 +100,6 @@ class AuthHandler():
             data = actual
         )
         return respuesta            
-
-
-class RequiresLoginException(Exception):
-    pass
-
-
-
 
 
 #Métodos principalmente para interactuar con la base de datos que por ahora no pondremos en la clase de arriba

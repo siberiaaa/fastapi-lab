@@ -22,6 +22,7 @@ from cotizaciones import router as cotizaciones
 from facturas import router as facturas
 
 from usuarios.service import RequiresLoginException
+from usuarios.service import LoginExpired
 
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -62,7 +63,11 @@ def home():
 
 @app.exception_handler(RequiresLoginException)
 async def exception_handler(request: Request, exc: RequiresLoginException) -> Response:
-    return RedirectResponse(url='/iniciar_sesion') 
+    return templates.TemplateResponse("message-redirection.html", {"request": request, "message": exc.message, "path_route": exc.path_route, "path_message": exc.path_message})
+
+@app.exception_handler(LoginExpired)
+async def exception_handler(request: Request, exc: RequiresLoginException) -> Response:
+    return templates.TemplateResponse("message-redirection.html", {"request": request, "message": exc.message, "path_route": exc.path_route, "path_message": exc.path_message})
 
 @app.middleware("http")
 async def create_auth_header(request: Request, call_next,):
