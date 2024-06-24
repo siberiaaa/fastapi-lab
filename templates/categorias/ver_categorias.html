@@ -1,0 +1,15 @@
+<h1>
+    Categorias
+</h1>
+<table style="width:100%">
+    <tr>
+        <td>Name</td>
+        <td>Details</td>
+    </tr>
+{% for item in items %}
+    <tr>
+        <td>{{ item.name }}</td>
+        <td> <a href="/items/{{ item.id }}">View more details</a></td>
+    </tr>
+    <div style="margin-bottom: 10px;"></div>
+{% endfor %}

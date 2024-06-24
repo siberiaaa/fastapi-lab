@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from jose import jwt
 from database import SessionLocal, engine
@@ -8,13 +10,15 @@ import categorias.schemas as schemas
 import categorias.service as service
 
 from usuarios.service import AuthHandler
+from exceptions import No_Artesano_Exception
 auth_handler = AuthHandler()
 
 models.Base.metadata.create_all(bind=engine)
 
 router = APIRouter()
 
-# Dependency
+templates = Jinja2Templates(directory="../templates/categorias")
+
 def get_db():
     db = SessionLocal()
     try:
@@ -22,9 +26,12 @@ def get_db():
     finally:
         db.close()
 
-@router.get('', response_model=Respuesta[list[schemas.Categoria]])
-def get_categorias(db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
-        return service.get_categorias(db=db)
+@router.get('', response_class=HTMLResponse)
+def get_categorias(request: Request, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
+        if info["tipo_usuario_id"] != 1: 
+             raise No_Artesano_Exception()
+        lista_categorias_respuesta = service.get_categorias(db=db)
+        return templates.TemplateResponse(request=request, name="ver_categorias.html", categorias=lista_categorias_respuesta.data)
 
 @router.post('', response_model=Respuesta[schemas.Categoria])
 def crear_categoria(categoria: schemas.CategoriaCrear, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
