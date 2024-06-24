@@ -1,9 +1,17 @@
+body {
+    margin: 0%;
+}
+
+h1 {
+    text-align: center;
+}
+
 fieldset {
     display: grid;
     grid-template-columns: 1;
     margin-left: 30%;
     margin-right: 30%;
-    border: none;
+    /* border: none; */
 }
 
 fieldset legend {
@@ -27,4 +35,40 @@ fieldset button {
 fieldset p {
     text-align: center;
     color: grey;
+}
+
+main {
+    padding: 1%;
+}
+
+nav {
+    background-color: burlywood;
+    padding: 1%;
+}
+
+nav span {
+    border: 1px solid black;
+    font-size: x-large;
+}
+
+header, footer {
+    background-color: darkgoldenrod;
+    padding: 1%;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header img {
+    border-radius: 50%;
+    width: 20%;
+}
+
+footer img {
+    border-radius: 50%;
+    width: 4%;
 }
