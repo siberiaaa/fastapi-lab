@@ -1,9 +1,13 @@
+body {
+    margin: 0%;
+}
+
 fieldset {
     display: grid;
     grid-template-columns: 1;
     margin-left: 30%;
     margin-right: 30%;
-    border: none;
+    /* border: none; */
 }
 
 fieldset legend {
@@ -27,4 +31,12 @@ fieldset button {
 fieldset p {
     text-align: center;
     color: grey;
+}
+
+nav {
+    background-color: burlywood;
+}
+
+header, footer {
+    background-color: darkgoldenrod;
 }
