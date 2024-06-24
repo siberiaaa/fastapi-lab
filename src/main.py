@@ -1,6 +1,7 @@
-import uvicorn
-
 from fastapi import FastAPI, Request, Depends
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import Response
 
 from categorias import router as categorias
 from estados_compras import router as estados_compras
@@ -22,11 +23,11 @@ from cotizaciones import router as cotizaciones
 from facturas import router as facturas
 from homes import router as homes
 
-from usuarios.service import RequiresLoginException, AuthHandler, LoginExpired
+from usuarios.service import AuthHandler, listar_artesanos, LoginExpired, RequiresLoginException
+from exceptions import No_Artesano_Exception
 
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from fastapi.responses import Response
+from database import SessionLocal, engine 
+from sqlalchemy.orm import Session
 
 auth_handler = AuthHandler()
 
@@ -68,6 +69,12 @@ async def exception_handler(request: Request, exc: RequiresLoginException) -> Re
 @app.exception_handler(LoginExpired)
 async def exception_handler(request: Request, exc: RequiresLoginException) -> Response:
     return templates.TemplateResponse("message-redirection.html", {"request": request, "message": exc.message, "path_route": exc.path_route, "path_message": exc.path_message})
+
+@app.exception_handler(No_Artesano_Exception)
+async def exception_handler(request: Request, exc: RequiresLoginException) -> Response:
+    return templates.TemplateResponse("message-redirection.html", {"request": request, "message": exc.message, "path_route": exc.path_route, "path_message": exc.path_message})
+
+
 
 @app.middleware("http")
 async def create_auth_header(request: Request, call_next,):
