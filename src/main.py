@@ -21,7 +21,7 @@ from compras import router as compras
 from caracteristicas import router as caracteristicas
 from cotizaciones import router as cotizaciones
 from facturas import router as facturas
-from productos.service import get_productos_por_artesano
+from homes import router as homes
 
 from usuarios.service import AuthHandler, listar_artesanos, LoginExpired, RequiresLoginException
 from exceptions import No_Artesano_Exception
@@ -36,14 +36,6 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="./../static"), name="static")
 
 templates = Jinja2Templates(directory="./../templates")
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 
 app.include_router(categorias.router, prefix='/categorias')
 app.include_router(estados_compras.router, prefix='/estados_compras')
@@ -63,28 +55,13 @@ app.include_router(compras.router, prefix='/compras')
 app.include_router(caracteristicas.router, prefix='/caracteristicas')
 app.include_router(cotizaciones.router, prefix='/cotizaciones')
 app.include_router(facturas.router, prefix='/facturas')
+app.include_router(homes.router)
 
 
-@app.get('/home')
-async def home(request: Request, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
-        print(info)
-        if info["tipo_usuario_id"] == 1: 
-            lista = get_productos_por_artesano(db=db, cedula_artesano=info['cedula'])
-            return templates.TemplateResponse('/homes/artesanos.html', 
-                                              {'request': request, 
-                                               "info": info, 
-                                               'lista': lista})
-        elif info["tipo_usuario_id"] == 2: 
-            lista = listar_artesanos(db=db)
-            return templates.TemplateResponse('/homes/clientes.html', 
-                                              {'request': request, 
-                                               "info": info, 
-                                               'lista': lista})
-        else: 
-            return {'hola': info}
-        
+@app.get('/')
+async def home():
+    return {'hola': 'mundo :3'}
 
-#exception handlers~
 @app.exception_handler(RequiresLoginException)
 async def exception_handler(request: Request, exc: RequiresLoginException) -> Response:
     return templates.TemplateResponse("message-redirection.html", {"request": request, "message": exc.message, "path_route": exc.path_route, "path_message": exc.path_message})
