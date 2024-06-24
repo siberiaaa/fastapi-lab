@@ -37,17 +37,23 @@ fieldset p {
     color: grey;
 }
 
-nav {
-    background-color: burlywood;
+main {
+    padding: 1%;
 }
 
-nav a {
+nav {
+    background-color: burlywood;
+    padding: 1%;
+}
+
+nav span {
     border: 1px solid black;
+    font-size: x-large;
 }
 
 header, footer {
     background-color: darkgoldenrod;
-    padding: 2%;
+    padding: 1%;
 }
 
 header {
