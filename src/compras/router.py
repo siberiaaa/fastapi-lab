@@ -24,14 +24,14 @@ def get_db():
 def listar_compras(db: Session = Depends(get_db)):
     return service.listar_compras(db=db)
 
-# :v
-# @router.post('', response_model=schemas.Compra)
-# def crear_compra(compra: schemas.CompraCrear, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
-#     return service.crear_compra(db=db, compra=compra)
 
-# @router.get('/{id}', response_model=schemas.Compra)
-# def buscar_compra(id : int, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 
-#     return service.buscar_compra(db=db, id=id)
+@router.post('', response_model=schemas.Compra)
+def crear_compra(compra: schemas.CompraCrear, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
+    return service.realizar_compra(db=db, compra=compra)
+
+@router.get('/{id}', response_model=schemas.Compra)
+def buscar_compra(id : int, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 
+    return service.get_compra(db=db, id=id)
 
 @router.put('/{id}', response_model=schemas.Compra)
 def modificar_compra(id : int, compra: schemas.CompraCrear, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 
