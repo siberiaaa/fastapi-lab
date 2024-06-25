@@ -1,15 +1,16 @@
 from fastapi import Request, Depends, APIRouter
 from database import SessionLocal 
 from fastapi.templating import Jinja2Templates
-from usuarios.service import buscar_usuario, AuthHandler
-from compras.service import listar_compras
+from usuarios.service import AuthHandler
 from sqlalchemy.orm import Session
+from usuarios.service import buscar_usuario
+import perfiles.service as service
 
 auth_handler = AuthHandler()
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory="../templates/homes")
+templates = Jinja2Templates(directory="../templates")
 
 def get_db():
     db = SessionLocal()
@@ -19,19 +20,19 @@ def get_db():
         db.close()
 
 @router.get('/perfil')
-async def home(request: Request, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
+def perfil(request: Request, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
         print(info)
+        usuario = buscar_usuario(db=db, cedula=info['cedula'])
+        print(usuario)
         if info["tipo_usuario_id"] == 1: 
-            lista = get_productos_por_artesano(db=db, cedula_artesano=info['cedula'])
-            return templates.TemplateResponse('artesanos.html', 
+            lista = service.listar_compras_cliente(db=db, cedula=info['cedula'])
+            return templates.TemplateResponse('/perfiles/clientes.html', 
                                               {'request': request, 
-                                               "info": info, 
+                                               "usuario": usuario.data, 
                                                'lista': lista})
         elif info["tipo_usuario_id"] == 2: 
-            lista = listar_artesanos(db=db)
-            return templates.TemplateResponse('clientes.html', 
+            return templates.TemplateResponse('/perfiles/artesanos.html', 
                                               {'request': request, 
-                                               "info": info, 
-                                               'lista': lista})
+                                               "usuario": usuario.data})
         else: 
             return {'hola': info}

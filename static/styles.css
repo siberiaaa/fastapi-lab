@@ -2,8 +2,23 @@ body {
     margin: 0%;
 }
 
-h1 {
+h1, h2, h3 {
     text-align: center;
+}
+
+section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    text-align: right;
+}
+
+section input {
+    width: 50%;
+}
+
+table {
+    margin-right: auto;
+    margin-left: auto;
 }
 
 fieldset {
