@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request, Form, status
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine #!aaaaaaa
 import cotizaciones.models as models 
@@ -6,6 +8,7 @@ import cotizaciones.schemas as schemas
 import cotizaciones.service as service
 from schemas import Respuesta
 
+from exceptions import No_Artesano_Exception, No_Cliente_Exception, Message_Redirection_Exception
 from usuarios.service import AuthHandler
 auth_handler = AuthHandler()
 
@@ -33,10 +36,28 @@ def listar_cotizaciones(id: int, db: Session = Depends(get_db), info=Depends(aut
 def aprobar_cotizacion(id: int, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
     return service.aprobar_cotizacion(db=db, id=id)
 
-# Estoy dudosa de este :v
-# @router.post('', response_model=Respuesta[schemas.Cotizacion])
-# def crear_cotizacion(cotizacion=schemas.CotizacionCrear, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
-#     return service.crear_cotizacion(db=db, cotizacion=cotizacion)
+@router.get('/solicitar/{id}')
+def solicitar_cotizacion(request: Request, 
+                    nombre: str = Form(...), 
+                    descripcion: str = Form(...), 
+                    db: Session = Depends(get_db),
+                    info=Depends(auth_handler.auth_wrapper)):
+    
+    if info["tipo_usuario_id"] != 2: 
+             raise No_Cliente_Exception()
+    
+    # categoria = schemas.CotizacionCrear(nombre=nombre, descripcion=descripcion) 
+    # respuesta = service.create_categoria(db=db, categoria=categoria)
+
+    # if (respuesta.ok):
+    #     return RedirectResponse(url='/categorias', status_code=status.HTTP_303_SEE_OTHER)
+    # else:
+    #      raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a categorias', path_route='/categorias')
+
+
+@router.post('', response_model=Respuesta[schemas.Cotizacion])
+def solicitar_cotizacion(cotizacion=schemas.CotizacionCrear, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
+    return service.crear_cotizacion(db=db, cotizacion=cotizacion)
 
 @router.post('/rechazar/{id}', response_model=Respuesta[schemas.Cotizacion])
 def rechazar_cotizacion(id: int, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):

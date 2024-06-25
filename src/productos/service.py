@@ -38,7 +38,25 @@ def create_producto(db: Session, producto: schemas.ProductoCrear):
 def get_productos(db: Session): 
     returned = db.query(models.Producto).all()
 
-    respuesta = Respuesta[list[schemas.Producto]](ok=True, mensaje='Productos encontrados', data=returned)
+    productos = []
+
+    for prod in returned:
+        producto = schemas.Producto(
+        id=prod.id,
+        nombre=prod.nombre, 
+        descripcion=prod.descripcion, 
+        altura_cm=prod.altura_cm, 
+        anchura_cm=prod.anchura_cm, 
+        altura_profundidad_cm=prod.profundidad_cm, 
+        imagen=prod.imagen, 
+        peso_gramo=prod.peso_gramo, 
+        usuario_cedula=prod.usuario_cedula, 
+        tipo_producto_id=prod.tipo_producto_id, 
+        categoria_id=prod.categoria_id)
+        
+        productos.append(producto)
+
+    respuesta = Respuesta[list[schemas.Producto]](ok=True, mensaje='Productos encontrados', data=productos)
     return respuesta
 
 def get_productos_por_artesano(db: Session, cedula_artesano: int): 

@@ -7,3 +7,7 @@ class Message_Redirection_Exception(Exception):
 class No_Artesano_Exception(Message_Redirection_Exception):
     def __init__(self, message='Para acceder a esta función debes ser otro tipo de usuario.', path_route='/home', path_message='Volver a home.'):
         super().__init__(message, path_route, path_message)
+
+class No_Cliente_Exception(Message_Redirection_Exception):
+    def __init__(self, message='Para acceder a esta función debes ser otro tipo de usuario.', path_route='/home', path_message='Volver a home.'):
+        super().__init__(message, path_route, path_message)
