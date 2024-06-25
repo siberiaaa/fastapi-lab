@@ -62,7 +62,17 @@ def crear_categoria(request: Request,
     else:
          raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a categorias', path_route='/categorias')
 
-@router.get('/eliminar/{categoria_id}')
+# @router.get('/eliminar/{categoria_id}')
+# def delete_categoria(categoria_id: int, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
+#     if info["tipo_usuario_id"] != 1: 
+#              raise No_Artesano_Exception()
+#     respuesta = service.delete_categoria(db=db, categoria_id=categoria_id)
+#     if (respuesta.ok):
+#         return RedirectResponse(url='/categorias', status_code=status.HTTP_303_SEE_OTHER)
+#     else:
+#          raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a categorias', path_route='/categorias')
+
+@router.delete('/{categoria_id}', response_model=Respuesta[schemas.Categoria])
 def delete_categoria(categoria_id: int, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
     if info["tipo_usuario_id"] != 1: 
              raise No_Artesano_Exception()
@@ -71,6 +81,9 @@ def delete_categoria(categoria_id: int, db: Session = Depends(get_db), info=Depe
         return RedirectResponse(url='/categorias', status_code=status.HTTP_303_SEE_OTHER)
     else:
          raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a categorias', path_route='/categorias')
+
+
+
 
 
 # Uso interno #

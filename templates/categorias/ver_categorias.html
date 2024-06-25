@@ -8,12 +8,34 @@
         <td>Nombre</td>
         <td>Opciones</td>
     </tr>
+
 {% for categoria in categorias %}
     <tr>
         <td>{{ categoria.nombre }}</td>
-        <td> <a href="/categorias/eliminar/{{ categoria.id }}">Eliminar</a></td>
+    
+        <td> <button id={{ categoria.id }} onclick=delete_categoria(id)>Eliminar</button></td>
+        
+        <!-- <td> <a href="/categorias/eliminar/{{ categoria.id }}">Eliminar</a></td> -->
 
     </tr>
     <div style="margin-bottom: 10px;"></div>
 {% endfor %}
 
+{% block scripts %}
+<script type="text/javascript">
+    // function delete_categoria(id){
+    //     fetch('/categorias/'+id,{method:'DELETE'})
+    //     .then(response => response.json())
+    //     .then(document.getElementById('result').innerHTML = "Refreshing...")
+    //     .then(data => document.getElementById('result').innerHTML = data.detail);
+    // }
+    // function delete_categoria(id){
+    //     fetch('/categorias/'+id,{method:'DELETE'})
+    //     .then(location.reload(true));
+    // }
+    function delete_categoria(id){
+        fetch('/categorias/'+id,{method:'DELETE'})
+        .then(location.reload(true));
+    }
+</script>
+{% endblock %}
