@@ -22,10 +22,6 @@
         <label for="correo">Correo: </label>
         <input type="email" name="correo" id="correo" value="{{ usuario.correo }}" readonly>
     </div>
-    <!-- <div>
-        <label for="telefono">Teléfono: </label>
-        <input type="tel" name="telefono" id="telefono" value="{{ usuario.telefono }}" readonly>
-    </div> -->
     <div>
         <label for="direccion">Dirección: </label>
         <input type="text" name="direccion" id="direccion" value="{{ usuario.direccion }}" readonly>
@@ -43,5 +39,13 @@
         <th>Vendedor</th>
         <th>Monto total</th>
     </tr>
+    {% for esto in lista %}
+    <tr>
+        <td> {{ esto['producto'].nombre }} </td>
+        <td> {{ esto['cantidad'] }} </td>
+        <td> {{ esto['vendedor'].nombres }} {{ esto['vendedor'].apellidos }} </td>
+        <td> {{ esto['monto_total'] }} </td>
+    </tr>
+    {% endfor %}
 </table>
 {% endblock %}
