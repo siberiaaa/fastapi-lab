@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+
+    {% block headblock %} {% endblock %}
+    
     <title>Document</title>
 </head>
 <body>
@@ -38,6 +41,7 @@
             <span>Facturas</span>
         </a>
     </nav>
+
     <main>
         {% block content %} {% endblock %}
     </main>
