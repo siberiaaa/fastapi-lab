@@ -9,7 +9,7 @@ auth_handler = AuthHandler()
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory="../templates/homes")
+templates = Jinja2Templates(directory="../templates")
 
 def get_db():
     db = SessionLocal()
@@ -19,17 +19,17 @@ def get_db():
         db.close()
 
 @router.get('/home')
-async def home(request: Request, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
+async def homes(request: Request, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
         print(info)
         if info["tipo_usuario_id"] == 1: 
             lista = get_productos_por_artesano(db=db, cedula_artesano=info['cedula'])
-            return templates.TemplateResponse('artesanos.html', 
+            return templates.TemplateResponse('/homes/artesanos.html', 
                                               {'request': request, 
                                                "info": info, 
                                                'lista': lista})
         elif info["tipo_usuario_id"] == 2: 
             lista = listar_artesanos(db=db)
-            return templates.TemplateResponse('clientes.html', 
+            return templates.TemplateResponse('/homes/clientes.html', 
                                               {'request': request, 
                                                "info": info, 
                                                'lista': lista})
