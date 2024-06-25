@@ -1,11 +1,11 @@
 {% extends "base.html" %} 
 
 {% block content %}
-<h1>Crear categoría</h1>
+<h1>Crear tipo de producto</h1>
 
-    <form action="/categorias/crear" method="post">
+    <form action="/tipos_productos/crear" method="post">
         <fieldset>
-            <legend>Datos categoría</legend>
+            <legend>Datos tipo producto</legend>
             <label for="nombre">
                 <span>Nombre:</span>
                 <input type="text" name="nombre" placeholder="Nombre" required>
@@ -15,6 +15,11 @@
                 <span>Descripción:</span>
                 <input type="text" name="descripcion" placeholder="Descripcion" required>
             </label>
+
+            <select name="funcionalidad">
+                <option value=True>Funcional</option>
+                <option value=False>Decorativo</option>
+            </select>
     
             <button type="submit">Crear</button>
         </fieldset>

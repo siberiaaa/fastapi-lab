@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends, Request, Form, status
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
-from jose import jwt
 from database import SessionLocal, engine
 from schemas import Respuesta
 import categorias.models as models

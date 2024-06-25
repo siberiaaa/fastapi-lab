@@ -26,7 +26,13 @@ def get_tipo_producto(db: Session, id: int):
 def get_tipos_producto(db: Session): 
     returned = db.query(models.Tipo_Producto).all()
 
-    respuesta = Respuesta[list[schemas.Tipo_Producto]](ok=True, mensaje='Tipos de producto encontrados', data=returned)
+    tipos = []
+
+    for tipo in returned:
+        tip = schemas.Tipo_Producto(nombre=tipo.nombre, descripcion=tipo.descripcion,  funcionalidad=tipo.funcionalidad, id=tipo.id)
+        tipos.append(tip)
+
+    respuesta = Respuesta[list[schemas.Tipo_Producto]](ok=True, mensaje='Tipos de producto encontrados', data=tipos)
     return respuesta
 
 

@@ -15,14 +15,15 @@
 <table style="width:100%">
     <tr>
         <td>Nombre</td>
+        <td>Descripcion</td>
         <td>Opciones</td>
     </tr>
 
 {% for categoria in categorias %}
     <tr>
         <td>{{ categoria.nombre }}</td>
-    
-        <td> <button onclick="delete_categoria( {{ categoria.id }} )">Eliminar</button></td>
+        <td>{{ categoria.descripcion }}</td>
+        <td> <button onclick="delete_categoria({{ categoria.id }})">Eliminar</button></td>
     </tr>
     
     <div style="margin-bottom: 10px;"></div>
