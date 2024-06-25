@@ -31,8 +31,10 @@ def perfil(request: Request, db: Session = Depends(get_db), info=Depends(auth_ha
                                                "usuario": usuario.data, 
                                                'lista': lista})
         elif info["tipo_usuario_id"] == 2: 
+            lista = service.listar_compras_cliente(db=db, cedula=info['cedula'])
             return templates.TemplateResponse('/perfiles/artesanos.html', 
                                               {'request': request, 
-                                               "usuario": usuario.data})
+                                               "usuario": usuario.data, 
+                                               'lista': lista})
         else: 
             return {'hola': info}

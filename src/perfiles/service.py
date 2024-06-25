@@ -25,3 +25,14 @@ def listar_compras_cliente(db: Session, cedula: str):
         except Exception: 
             continue
     return lista_final
+
+def listar_compras_artesano(db: Session, cedula: str): 
+    lista = db.query(Factura).all()
+    lista_final = []
+    for esto in lista: 
+        try: 
+            cotizacion = db.query(Cotizacion).filter(Cotizacion.id == esto.cotizacion_id).first()
+            compra = d
+        except Exception: 
+            continue
+    return lista_final
