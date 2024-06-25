@@ -1,41 +1,32 @@
+{% extends "base.html" %} 
+
+{% block headblock %}
+<script src="{{ url_for('static', path='js/index.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
 <h1>
     Categorias
 </h1>
 
 <button onclick="location.href='/categorias/crear'">Crear categoría</button>
+
+
 <table style="width:100%">
     <tr>
         <td>Nombre</td>
+        <td>Descripcion</td>
         <td>Opciones</td>
     </tr>
 
 {% for categoria in categorias %}
     <tr>
         <td>{{ categoria.nombre }}</td>
-    
-        <td> <button id={{ categoria.id }} onclick=delete_categoria(id)>Eliminar</button></td>
-        
-        <!-- <td> <a href="/categorias/eliminar/{{ categoria.id }}">Eliminar</a></td> -->
-
+        <td>{{ categoria.descripcion }}</td>
+        <td> <button onclick="delete_categoria({{ categoria.id }})">Eliminar</button></td>
     </tr>
+    
     <div style="margin-bottom: 10px;"></div>
 {% endfor %}
 
-{% block scripts %}
-<script type="text/javascript">
-    // function delete_categoria(id){
-    //     fetch('/categorias/'+id,{method:'DELETE'})
-    //     .then(response => response.json())
-    //     .then(document.getElementById('result').innerHTML = "Refreshing...")
-    //     .then(data => document.getElementById('result').innerHTML = data.detail);
-    // }
-    // function delete_categoria(id){
-    //     fetch('/categorias/'+id,{method:'DELETE'})
-    //     .then(location.reload(true));
-    // }
-    function delete_categoria(id){
-        fetch('/categorias/'+id,{method:'DELETE'})
-        .then(location.reload(true));
-    }
-</script>
 {% endblock %}
