@@ -25,7 +25,7 @@ from homes import router as homes
 from perfiles import router as perfiles
 
 from usuarios.service import AuthHandler, listar_artesanos, LoginExpired, RequiresLoginException
-from exceptions import No_Artesano_Exception
+from exceptions import No_Artesano_Exception, No_Cliente_Exception
 
 from database import SessionLocal, engine 
 from sqlalchemy.orm import Session
@@ -73,6 +73,10 @@ async def exception_handler(request: Request, exc: RequiresLoginException) -> Re
     return templates.TemplateResponse("message-redirection.html", {"request": request, "message": exc.message, "path_route": exc.path_route, "path_message": exc.path_message})
 
 @app.exception_handler(No_Artesano_Exception)
+async def exception_handler(request: Request, exc: RequiresLoginException) -> Response:
+    return templates.TemplateResponse("message-redirection.html", {"request": request, "message": exc.message, "path_route": exc.path_route, "path_message": exc.path_message})
+
+@app.exception_handler(No_Cliente_Exception)
 async def exception_handler(request: Request, exc: RequiresLoginException) -> Response:
     return templates.TemplateResponse("message-redirection.html", {"request": request, "message": exc.message, "path_route": exc.path_route, "path_message": exc.path_message})
 

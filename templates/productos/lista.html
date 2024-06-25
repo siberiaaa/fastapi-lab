@@ -1,11 +1,18 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Esto es una lista</h1>
-</body>
-</html>
+{% extends "base.html" %} 
+
+{% block headblock %}
+<script src="{{ url_for('static', path='js/index.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
+    {% if artesano %}
+        <h2>Productos del artesano {{ nombre }}</h2>
+    {% endif %}
+
+    {% for producto in productos %}
+        <img src=""> <!-- img vacía mientras se ve como implementarlo -->
+        <h3> {{ producto.nombre }}</h3>
+        <button onclick="consultar_producto({{ producto.id }})">Ver producto</button>
+    {% endfor %}
+    
+{% endblock %}
