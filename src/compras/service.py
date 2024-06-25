@@ -96,7 +96,6 @@ def rechazar_compra(db: Session, id_compra: int):
 def listar_compras(db: Session): 
     return db.query(models.Compra).all()
 
-
 def get_compra(db: Session, id: int):
     returned = db.query(models.Compra).filter(models.Compra.id == id).first()
 

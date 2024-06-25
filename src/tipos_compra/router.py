@@ -17,9 +17,9 @@ def get_db():
     finally:
         db.close()
 
-@router.get('')
-def home():
-    return {"message":"Hello world desde el router opa"}
+@router.get('', response_model=list[schemas.Tipo_Compra])
+def listar_tipos_compras(db: Session = Depends(get_db)):
+    return service.listar_tipos_compras(db=db)
 
 @router.post('', response_model=schemas.Tipo_Compra)
 def crear_tipo_compra(tipo_compra: schemas.Tipo_CompraCrear, db: Session = Depends(get_db)):
