@@ -33,7 +33,7 @@ def get_productos(request: Request, db: Session = Depends(get_db)):
     lista_productos_respuesta = service.get_productos(db=db)
 
     if (lista_productos_respuesta.ok):
-            return templates.TemplateResponse(request=request, name="productos/lista.html", context={"productos":lista_productos_respuesta.data, "artesano":True})
+        return templates.TemplateResponse(request=request, name="productos/lista.html", context={"productos":lista_productos_respuesta.data, "artesano":False})
     else:
         raise Message_Redirection_Exception(message=lista_productos_respuesta.mensaje, path_message='Volver a inicio', path_route='/')
 
@@ -78,9 +78,16 @@ def get_productos_artesano(request: Request, cedula_artesano : int, db: Session 
 
 
 # Uso interno por ahora mientras aún no se ha implementado visualmente #
-@router.post('', response_model=Respuesta[schemas.Producto])
-def create_producto(producto: schemas.ProductoCrear, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
-    return service.create_producto(db=db, producto=producto)
+@router.post('')
+def create_producto(cedula: str = Form(...), 
+                    nombres: str = Form(...), 
+                    apellidos: str = Form(...), 
+                    correo: str = Form(...), 
+                    contraseña: str = Form(...), 
+                    tipo_id: int = Form(...), 
+                    db: Session = Depends(get_db), 
+                    info=Depends(auth_handler.auth_wrapper)):
+    return service.get_productos(db=db)
 
 @router.put('/{id}', response_model=Respuesta[schemas.Producto])
 def update_producto(id : int, producto: schemas.ProductoCrear, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 
