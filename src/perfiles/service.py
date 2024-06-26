@@ -32,7 +32,16 @@ def listar_compras_artesano(db: Session, cedula: str):
     for esto in lista: 
         try: 
             cotizacion = db.query(Cotizacion).filter(Cotizacion.id == esto.cotizacion_id).first()
-            compra = d
+            compra = db.query(Compra).filter(Compra.id == cotizacion.compra_id).first()
+            producto = db.query(Producto).filter(Producto.id == compra.producto_id).first()
+            usuario = db.query(Usuario).filter(Usuario.cedula == producto.usuario_cedula).first()
+            if usuario.cedula == cedula: 
+                final = {}
+                final['producto'] = producto
+                final['cantidad'] = compra.cantidad
+                final['estado'] = db.query(Estado_Compra).filter(Estado_Compra.id == compra.estado_compra_id).first()
+                final['monto_total'] = final['cantidad'] * cotizacion.precio
+                lista_final.append(final)
         except Exception: 
             continue
     return lista_final

@@ -33,7 +33,7 @@ def get_productos(request: Request, db: Session = Depends(get_db)):
     lista_productos_respuesta = service.get_productos(db=db)
 
     if (lista_productos_respuesta.ok):
-            return templates.TemplateResponse(request=request, name="productos/lista.html", context={"productos":lista_productos_respuesta.data, "artesano":False})
+            return templates.TemplateResponse(request=request, name="productos/lista.html", context={"productos":lista_productos_respuesta.data, "artesano":True})
     else:
         raise Message_Redirection_Exception(message=lista_productos_respuesta.mensaje, path_message='Volver a inicio', path_route='/')
 

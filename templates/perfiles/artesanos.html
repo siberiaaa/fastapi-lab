@@ -1,7 +1,7 @@
 {% extends "base.html" %} 
 {% block content %}
 <h1>Tu perfil</h1> 
-<section>
+<section class="perfil">
     <div>
         <label for="nombres">Nombres: </label>
         <input type="text" name="nombres" id="nombres" value="{{ usuario.nombres }}" readonly>
@@ -39,5 +39,13 @@
         <th>Estado</th>
         <th>Monto total</th>
     </tr>
+    {% for esto in lista %}
+    <tr>
+        <td> {{ esto['producto'].nombre }} </td>
+        <td> {{ esto['cantidad'] }} </td>
+        <td> {{ esto['estado'].nombres }} {{ esto['vendedor'].nombre }} </td>
+        <td> {{ esto['monto_total'] }} </td>
+    </tr>
+    {% endfor %}
 </table>
 {% endblock %}
