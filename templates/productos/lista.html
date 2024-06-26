@@ -7,12 +7,58 @@
 {% block content %}
     {% if artesano %}
         <h2>Productos del artesano {{ nombre }}</h2>
+        <details>
+            <summary>Crear producto</summary>
+            <form action="/productos" method="post">
+                <fieldset>
+                    <legend>Crear productos</legend>
+                    <label for="nombre">
+                        <span>Nombre: </span>
+                        <input type="text" name="nombre" id="nombre" required>
+                    </label>
+                    <label for="descripcion">
+                        <span>Descripción: </span>
+                        <input type="text" name="descripcion" id="descripcion">
+                    </label>
+                    <label for="altura_cm">
+                        <span>Altura (en centímetros): </span>
+                        <input type="number" name="altura_cm" id="altura_cm" min="0.5" required>
+                    </label>
+                    <label for="anchura_cm">
+                        <span>Anchura (en centímetros): </span>
+                        <input type="number" name="anchura_cm" id="anchura_cm" min="0.5" required>
+                    </label>
+                    <label for="profundidad_cm">
+                        <span>Profundidad (en centímetros): </span>
+                        <input type="number" name="profundidad_cm" id="profundidad_cm" min="0.5" required>
+                    </label>
+                    <label for="imagen">
+                        <span>Imagen: </span>
+                        <input type="file" name="imagen" id="imagen" accept="image/*" required>
+                    </label>
+                    <label for="categoria">
+                        <span>Categoría: </span>
+                        <select name="categoria" id="categoria" required></select>
+                    </label>
+                    <label for="tipo">
+                        <span>Tipo: </span>
+                        <select name="tipo" id="tipo" required></select>
+                    </label>
+                    <label for="peso_gramo">
+                        <span>Peso (en gramos): </span>
+                        <input type="number" name="peso_gramo" id="peso_gramo" required>
+                    </label>
+                    <button type="submit">Crear producto</button>
+                </fieldset>
+            </form>
+        </details>
     {% endif %}
-
     {% for producto in productos %}
+    <div>
         <img src=""> <!-- img vacía mientras se ve como implementarlo -->
         <h3> {{ producto.nombre }}</h3>
         <button onclick="consultar_producto({{ producto.id }})">Ver producto</button>
+    </div>
     {% endfor %}
     
 {% endblock %}
