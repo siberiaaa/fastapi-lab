@@ -9,7 +9,7 @@ function delete_tipo_producto(id) {
 }
 
 function consultar_producto(id){
-    fetch('/productos/'+id,{method:'GET'})
+    fetch('/productos/' + id, {method:'GET'})
     .then(location.reload(true));
 }
 
