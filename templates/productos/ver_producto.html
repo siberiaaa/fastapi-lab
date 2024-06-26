@@ -22,8 +22,8 @@
 
         <a href="/productos/artesano/{{ usuario_cedula }}'"> Ver más productos del artesano {{ artesano }}</a>
 
-        <button onclick="location.href='/compras/pedido/crear'">Realizar pedido</button>
-        <button onclick="location.href='/compras/encargo/crear'">Realizar encargo</button>
+        <button onclick="location.href='/compras/pedido/crear?product_id={{ producto.id }}'">Realizar pedido</button>
+        <button onclick="location.href='/compras/encargo/crear?product_id={{ producto.id }}'">Realizar encargo</button>
         <br>
 
         <h2>Calificaciones</h2>

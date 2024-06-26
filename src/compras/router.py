@@ -3,6 +3,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
+from datetime import datetime
 import compras.models as models 
 import compras.schemas as schemas
 import compras.service as service
@@ -28,24 +29,75 @@ def get_db():
 
 
 @router.get('/pedido/crear')
-def crear_pedido(request: Request, info=Depends(auth_handler.auth_wrapper)):
+def crear_pedido(request: Request, product_id: int = -1, info=Depends(auth_handler.auth_wrapper)):
+    if product_id == -1:
+         raise Message_Redirection_Exception(message='Link de compra inválido', path_message='Volver a inicio', path_route='/')
     if info["tipo_usuario_id"] != 2: 
              raise No_Cliente_Exception()
-    return templates.TemplateResponse(request=request, name="pedidos/crear_pedidos.html")  
+    
+    return templates.TemplateResponse(request=request, name="compras/crear_pedidos.html")  
+
+@router.post('/pedido/crear')
+def crear_encargo(request: Request, db: Session = Depends(get_db),
+                      cedula: str = Form(...), 
+                      id_producto: int = Form(...), 
+                      cantidad: int = Form(...), 
+                      fecha: datetime = Form(...), 
+                      info=Depends(auth_handler.auth_wrapper)):
+    
+    if info["tipo_usuario_id"] != 2: 
+             raise No_Cliente_Exception()
+    
+    compra = schemas.CompraCrear(
+                            fecha = datetime.now(),
+                            cantidad=cantidad, 
+                            cliente_cedula=cedula, 
+                            producto_id=id_producto, 
+                            tipo_compra_id=1, 
+                            estado_compra_id=1) 
+    
+    respuesta = service.realizar_compra(db=db, compra=compra)
+    
+    if (respuesta.ok):
+        return templates.TemplateResponse("message-redirection.html", {"request": request, "message": 'Pedido realizado correctamente', "path_route": '/home', "path_message": 'Volver a home'})
+    else:
+        raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
+
 
 @router.get('/encargo/crear')
-def crear_encargo(request: Request, info=Depends(auth_handler.auth_wrapper)):
+def crear_encargo(request: Request, product_id: int = -1, info=Depends(auth_handler.auth_wrapper)):
+    if product_id == -1:
+         raise Message_Redirection_Exception(message='Link de compra inválido', path_message='Volver a inicio', path_route='/')
     if info["tipo_usuario_id"] != 2: 
              raise No_Cliente_Exception()
-    return templates.TemplateResponse(request=request, name="encargos/crear_pedidos.html")  
+    
+    return templates.TemplateResponse(request=request, name="compras/crear_encargos.html", context={'cedula_cliente':info['cedula'], 'producto_id': product_id, 'fecha': datetime.now()})  
 
-# cantidad: int
-#     fecha: Union[datetime, None] = None
-#     cliente_cedula: str
-#     producto_id: int
-#     tipo_compra_id: int
-#     estado_compra_id: Union[int, None] = None
-# --------------------
+@router.post('/encargo/crear')
+def crear_encargo(request: Request, db: Session = Depends(get_db),
+                      cedula: str = Form(...), 
+                      id_producto: int = Form(...), 
+                      cantidad: int = Form(...), 
+                      fecha: datetime = Form(...), 
+                      info=Depends(auth_handler.auth_wrapper)):
+    
+    if info["tipo_usuario_id"] != 2: 
+             raise No_Cliente_Exception()
+    
+    compra = schemas.CompraCrear(
+                            fecha = datetime.now(),
+                            cantidad=cantidad, 
+                            cliente_cedula=cedula, 
+                            producto_id=id_producto, 
+                            tipo_compra_id=2, 
+                            estado_compra_id=1) 
+    
+    respuesta = service.realizar_compra(db=db, compra=compra)
+
+    if (respuesta.ok):
+        return templates.TemplateResponse("message-redirection.html", {"request": request, "message": 'Encargo realizado correctamente', "path_route": '/home', "path_message": 'Volver a home'})
+    else:
+        raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
 
 
 @router.get('', response_model=list[schemas.Compra])

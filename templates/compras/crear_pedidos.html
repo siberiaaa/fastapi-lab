@@ -1,0 +1,38 @@
+{% extends "base.html" %} 
+
+
+{% block content %}
+<h1 class="nosabe">Realizar pedido</h1>
+
+
+<form action="/pedido/crear" method="post">
+    <fieldset>
+        <legend>Datos del pedido</legend>
+
+        <label for="cedula">
+            <span>Cédula</span>
+            <input type="text" name="cedula" value="{{ cedula_cliente }}" required readonly>
+        </label>
+
+        <label for="id_producto">
+            <span>Id del producto</span>
+            <input type="number" name="id_producto" value="{{ producto_id }}" required readonly>
+        </label>
+
+        <label for="cantidad">
+            <span>Cantidad</span>
+            <input type="number" name="cantidad" required >
+        </label>>
+
+        <label for="fecha">
+            <span>Fecha del pedido</span>
+            <input type="date" name="fecha" value="{{ fecha }}" required readonly>
+        </label>
+        
+        <button type="submit">Realizar pedido</button>
+
+    </fieldset>
+</form>
+
+
+{% endblock %}
