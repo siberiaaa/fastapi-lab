@@ -34,7 +34,12 @@
                     </label>
                     <label for="imagen">
                         <span>Imagen</span>
-                        <input type="file" name="imagen" id="imagen" accept="image/*" required>
+                        <div>
+                            <input type="file" name="extraccion" id="extraccion" accept="image/*" oninput="mostrar_imagen();" required>
+                            <button type="button" onclick="deimaginar();">Quitar imagen</button>
+                        </div>
+                        <img id="externa" src="" alt="Si ves esto, no tienes una imagen">
+                        <input type="hidden" name="imagen" id="imagen">
                     </label>
                     <label for="categoria">
                         <span>Categoría</span>
