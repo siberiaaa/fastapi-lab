@@ -99,6 +99,32 @@ def crear_encargo(request: Request, db: Session = Depends(get_db),
     else:
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
 
+@router.get('/artesano')
+def ver_compras_artesano(request: Request, info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):
+    if info["tipo_usuario_id"] != 1: 
+             raise No_Artesano_Exception
+    
+    respuesta = service.listar_compras_para_artesano(db=db, cedula=info['cedula'])
+
+    if (respuesta.ok):
+        return templates.TemplateResponse(request=request, name="compras/ver_compras_artesano.html", context={'compras':respuesta.data})  
+    else:
+        raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
+    
+@router.get('/artesano/{id_compra}')
+def ver_compras_artesano(request: Request, info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):
+    if info["tipo_usuario_id"] != 1: 
+             raise No_Artesano_Exception
+    
+    respuesta = service.listar_compras_para_artesano(db=db, cedula=info['cedula'])
+
+    if (respuesta.ok):
+        return templates.TemplateResponse(request=request, name="compras/ver_compras_artesano.html", context={'compras':respuesta.data})  
+    else:
+        raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
+    
+
+
 
 @router.get('', response_model=list[schemas.Compra])
 def listar_compras(db: Session = Depends(get_db)):

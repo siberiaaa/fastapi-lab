@@ -163,13 +163,15 @@ def listar_compras_para_artesano(db: Session, cedula: int):
 
     compras = []
 
+    #ver si asignar producto no explota
     for com in returned:
-        compra = schemas.Compra(id=returned.id, 
-                            cantidad=returned.cantidad, 
-                            cliente_cedula=returned.cliente_cedula, 
-                            producto_id=returned.id, 
-                            tipo_compra_id=returned.tipo_compra_id, 
-                            estado_compra_id=returned.estado_compra_id) 
+        compra = schemas.CompraInfo(producto=com.producto,
+                            id=com.id, 
+                            cantidad=com.cantidad, 
+                            cliente_cedula=com.cliente_cedula, 
+                            producto_id=com.id, 
+                            tipo_compra_id=com.tipo_compra_id, 
+                            estado_compra_id=com.estado_compra_id) 
         compras.append(compra)
 
     respuesta = Respuesta[list[schemas.Compra]](ok=True, mensaje='Lista de las compras realizadas al artesano encontrada', data=compras)

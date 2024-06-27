@@ -10,7 +10,7 @@
 <table style="width:100%">
     <tr>
         <td>Producto</td>
-        <td>Descripcion</td>
+        <td>Fecha</td>
         <td>Cantidad</td>
         <td>Tipo de compra</td>
         <td>Estado de la compra</td>
@@ -20,9 +20,31 @@
 
 {% for compra in compras %}
     <tr>
-        <td>{{ categoria.nombre }}</td>
-        <td>{{ categoria.descripcion }}</td>
-        <td> <button onclick="revisar_compra({{ categoria.id }})">Revisar</button></td>
+        <td>{{ compra.producto.nombre }}</td>
+        <td>{{ compra.fecha }}</td>
+        <td>{{ compra.cantidad }}</td>
+
+        <td>{{ compra.fecha }}</td>
+
+        {% if compra.tipo_compra_id == 1 %}
+        <td>Pedido</td>
+        {% elif compra.tipo_compra_id == 2 %}
+        <td>Encargo</td>
+        {% endif %}
+        
+
+        {% if compra.estado_compra_id == 1 %}
+        <td>Pendiente</td>
+        <td><button onclick="location.href='/artesano/{{ compra.id }}'">Revisar</button></td>
+        {% elif compra.estado_compra_id == 2 %}
+        <td>Aprobado</td>
+        <td>Opciones no disponibles</td>
+        {% elif compra.estado_compra_id == 3 %}
+        <td>Rechazado</td>
+        <td>Opciones no disponibles</td>
+        {% endif %}
+
+
     </tr>
     
     <div style="margin-bottom: 10px;"></div>
