@@ -73,6 +73,20 @@ def aprobar_compra(db: Session, id_compra: int):
 
     return Respuesta[schemas.Compra](ok=True, mensaje='Compra aprobada exitosamente')
 
+def modificar_cantidad_compra(db: Session, id_compra: int, cantidad: int):
+
+    # Existe la compra
+    compra_found = db.query(models.Compra).filter(models.Compra.id == id_compra).first()
+
+    if compra_found == None:
+        return Respuesta[schemas.Compra](ok=False, mensaje='Compra a modificar no encontrada')
+    ### ------------ ###
+
+    compra_found.cantidad = cantidad
+    db.commit()
+
+    return Respuesta[schemas.Compra](ok=True, mensaje='Compra modificada exitosamente')
+
 
 def rechazar_compra(db: Session, id_compra: int):
     ### Validaciones ###

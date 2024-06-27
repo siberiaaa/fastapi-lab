@@ -1,12 +1,16 @@
 from fastapi import APIRouter, Depends, Request, Form, status
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 from datetime import datetime
 import compras.models as models 
 import compras.schemas as schemas
 import compras.service as service
+
+import cotizaciones.service as cotizacion_service
+import cotizaciones.schemas as cotizacion_schema
 
 from usuarios.service import AuthHandler
 from exceptions import No_Cliente_Exception, No_Artesano_Exception, Message_Redirection_Exception
@@ -99,6 +103,8 @@ def crear_encargo(request: Request, db: Session = Depends(get_db),
     else:
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
 
+
+# artesano gestion compra #
 @router.get('/artesano')
 def ver_compras_artesano(request: Request, info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):
     if info["tipo_usuario_id"] != 1: 
@@ -107,23 +113,65 @@ def ver_compras_artesano(request: Request, info=Depends(auth_handler.auth_wrappe
     respuesta = service.listar_compras_para_artesano(db=db, cedula=info['cedula'])
 
     if (respuesta.ok):
-        return templates.TemplateResponse(request=request, name="compras/ver_compras_artesano.html", context={'compras':respuesta.data})  
+        return templates.TemplateResponse(request=request, name="compras/ver_compras_artesano.html", context={'compras':respuesta.data, 'caracteristicas':'ja'})  
     else:
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
     
 @router.get('/artesano/{id_compra}')
-def ver_compras_artesano(request: Request, info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):
+def revisar_compra_artesano(id_compra: int, request: Request, info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):
     if info["tipo_usuario_id"] != 1: 
              raise No_Artesano_Exception
     
-    respuesta = service.listar_compras_para_artesano(db=db, cedula=info['cedula'])
+    respuesta = service.get_compra(db=db, id=id_compra)
 
     if (respuesta.ok):
-        return templates.TemplateResponse(request=request, name="compras/ver_compras_artesano.html", context={'compras':respuesta.data})  
+        return templates.TemplateResponse(request=request, name="compras/revisar_compra_artesano.html", context={'compra':respuesta.data})  
     else:
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
     
+@router.post('/artesano/{id_compra}')
+def revisar_compra_artesano_cotizar(request: Request, id_compra: int,  cotizar: float = Form(...), precio: float = Form(...), cantidad: int = Form(...), info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):
+    if info["tipo_usuario_id"] != 1: 
+             raise No_Artesano_Exception
+    
+    #
+    #!Validacion del form para encargos no implementado (y mucho menos la aprobacion de caracteristicas)
+    #
+    if not cotizar:
+         respuesta =  service.rechazar_compra(db=db, id_compra=id_compra)
+         if (respuesta.ok):
+            return templates.TemplateResponse("message-redirection.html", {"request": request, "message": 'Compra rechazada correctamente', "path_route": '/home', "path_message": 'Volver a home'})
+         else:
+            raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
+        
+    #modificar a aprobar
+    respuesta_aprobar =  service.aprobar_compra(db=db, id_compra=id_compra)
+    if not respuesta_aprobar.ok:
+         raise Message_Redirection_Exception(message=respuesta_aprobar.mensaje, path_message='Volver a home', path_route='/home')
 
+    #modificar la cantidad de la compra
+    compra = schemas.CompraCrear(
+                            compra_id=id_compra,
+                            precio=precio, 
+                            estado_cotizacion_id=1) 
+    
+    respuesta_modificar = service.modificar_cantidad_compra(db=db, id=id_compra, cantidad=cantidad)
+    if not respuesta_modificar.ok:
+         raise Message_Redirection_Exception(message=respuesta_modificar.mensaje, path_message='Volver a home', path_route='/home')
+
+    #resto de flujo de cosas que deberían suceder
+    cotizacion = cotizacion_schema.CotizacionCrear(
+                            compra_id=id_compra,
+                            precio=precio, 
+                            estado_cotizacion_id=1) 
+    
+    respuesta = cotizacion_service.crear_cotizacion(db=db, cotizacion=cotizacion)
+
+    if (respuesta.ok):
+        return templates.TemplateResponse("message-redirection.html", {"request": request, "message": 'Respuesta registrada correctamente', "path_route": '/home', "path_message": 'Volver a home'})
+    else:
+        raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
+    
 
 
 @router.get('', response_model=list[schemas.Compra])
@@ -146,3 +194,11 @@ def modificar_compra(id : int, compra: schemas.CompraCrear, db: Session = Depend
 @router.delete('/{id}', response_model=schemas.Compra)
 def eliminar_compra(id : int, db: Session = Depends(get_db)): 
     return service.eliminar_compra(db=db, id=id)
+
+#aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa prueba prueba
+@router.post('/check')
+async def check(request: Request):
+    da = await request.form()
+    da = jsonable_encoder(da)
+    print(da)
+    return da

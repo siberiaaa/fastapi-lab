@@ -1,0 +1,81 @@
+{% extends "base.html" %} 
+
+
+{% block content %}
+<h1 class="nosabe">Enviar cotización</h1>
+
+
+<form action="" method="post">
+    <fieldset>
+
+        {% if compra.tipo_compra_id == 1 %}
+        <legend>Datos del Pedido</legend>
+        {% elif compra.tipo_compra_id == 2 %}
+        <legend>Datos del Encargo</legend>
+        {% endif %}
+
+        
+        <label for="cedula">
+            <span>Cédula del cliente</span>
+            <input type="text" name="cedula" value="{{ compra }}" required readonly>
+        </label>
+
+        <label for="id_producto">
+            <span>Id del producto</span>
+            <input type="number" name="id_producto" value="{{ compra }}" required readonly>
+        </label>
+
+        <label for="cantidad">
+            <span>Cantidad </span>
+            <input type="number" name="cantidad" value="{{ compra }}" required >
+            <span>Puedes editar la cantidad para cotizar una cantidad diferente a la que pidió el cliente</span>
+        </label>>
+
+        <label for="precio">
+            <span>Precio total:</span>
+            <input type="number" name="precio" min="0.5" required>
+        </label>
+
+        
+
+        {% if compra.tipo_compra_id == 2 %}
+        <!-- tabla con las caracteristicas y checkboxes -->
+        <table style="width:100%">
+            <tr>
+                <td>Nombre</td>
+                <td>Aceptar característica</td>
+            </tr>
+        
+        {% for caracteristica in caracteristicas %}
+            <tr>
+                <td>{{ caracteristica.nombre }}</td>
+
+                <label for="aprobar">
+                    <input type="checkbox" name="{{ caracteristica.id }}" value=True>
+                </label>
+        
+            </tr>
+            
+            <div style="margin-bottom: 10px;"></div>
+        {% endfor %}
+            
+        {% endif %}
+
+
+        <label for="aprobar">
+            <span>Aprobar y enviar cotización</span>
+            <input type="radio" id="aprobar" name="cotizar" value=True required>
+        </label>
+        <br>
+        <label for="rechazar">
+            <span>Rechazar</span>
+            <input type="radio" id="rechazar" name="cotizar" value=False required>
+        </label>
+
+        <button type="submit">Enviar respuesta</button>
+
+    </fieldset>
+</form>
+
+
+{% endblock %}
