@@ -1,0 +1,31 @@
+{% extends "base.html" %} 
+
+
+{% block content %}
+<h1>
+    Compras que te han realizado
+</h1>
+
+
+<table style="width:100%">
+    <tr>
+        <td>Producto</td>
+        <td>Descripcion</td>
+        <td>Cantidad</td>
+        <td>Tipo de compra</td>
+        <td>Estado de la compra</td>
+        
+        <td>Opciones</td>
+    </tr>
+
+{% for compra in compras %}
+    <tr>
+        <td>{{ categoria.nombre }}</td>
+        <td>{{ categoria.descripcion }}</td>
+        <td> <button onclick="revisar_compra({{ categoria.id }})">Revisar</button></td>
+    </tr>
+    
+    <div style="margin-bottom: 10px;"></div>
+{% endfor %}
+
+{% endblock %}

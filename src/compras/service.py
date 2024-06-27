@@ -4,7 +4,7 @@ from schemas import Respuesta
 import compras.models as models
 import compras.schemas as schemas
 
-
+import productos.models as producto_models
 import usuarios.service as usuario_service
 import productos.service as producto_service
 import tipos_compra.service as tipo_compra_service
@@ -94,7 +94,24 @@ def rechazar_compra(db: Session, id_compra: int):
     return Respuesta[schemas.Compra](ok=True, mensaje='Compra rechazada exitosamente')
 
 def listar_compras(db: Session): 
-    return db.query(models.Compra).all()
+    returned = db.query(models.Compra).all()
+
+    compras = []
+
+    for com in returned:
+        compra = schemas.Compra(id=returned.id, 
+                            cantidad=returned.cantidad, 
+                            cliente_cedula=returned.cliente_cedula, 
+                            producto_id=returned.id, 
+                            tipo_compra_id=returned.tipo_compra_id, 
+                            estado_compra_id=returned.estado_compra_id) 
+        compras.append(compra)
+
+    respuesta = Respuesta[list[schemas.Compra]](ok=True, mensaje='Compras encontrada', data=compras)
+    return respuesta
+    
+
+
 
 def get_compra(db: Session, id: int):
     returned = db.query(models.Compra).filter(models.Compra.id == id).first()
@@ -130,3 +147,30 @@ def eliminar_compra(db: Session, id: int):
     db.delete(compra)
     db.commit()
     return compra
+
+
+
+
+
+
+
+def listar_compras_para_artesano(db: Session, cedula: int): 
+    #super duper query con join
+    returned = db.query(models.Compra, producto_models.Producto).\
+        join(producto_models.Producto, models.Compra.producto_id == producto_models.Producto.id).\
+        filter(producto_models.Producto.usuario_cedula == cedula).all()
+    
+
+    compras = []
+
+    for com in returned:
+        compra = schemas.Compra(id=returned.id, 
+                            cantidad=returned.cantidad, 
+                            cliente_cedula=returned.cliente_cedula, 
+                            producto_id=returned.id, 
+                            tipo_compra_id=returned.tipo_compra_id, 
+                            estado_compra_id=returned.estado_compra_id) 
+        compras.append(compra)
+
+    respuesta = Respuesta[list[schemas.Compra]](ok=True, mensaje='Lista de las compras realizadas al artesano encontrada', data=compras)
+    return respuesta
