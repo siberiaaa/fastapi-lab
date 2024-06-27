@@ -10,3 +10,6 @@ def crear_metodo_envio(db: Session, metodo_envio: schemas.Metodo_EnvioCrear):
     db.commit()
     db.refresh(db_metodo_envio)
     return db_metodo_envio
+
+def listar_metodos_envios(db: Session): 
+    return db.query(models.Metodo_Envio).all()

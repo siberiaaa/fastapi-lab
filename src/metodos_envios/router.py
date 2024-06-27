@@ -17,9 +17,9 @@ def get_db():
     finally:
         db.close()
 
-@router.get('')
-def home():
-    return {"message":"Hello world desde el router opa"}
+@router.get('', response_model=list[schemas.Metodo_Envio])
+def listar_metodos_envios(db: Session = Depends(get_db)):
+    return service.listar_metodos_envios(db=db)
 
 @router.post('', response_model=schemas.Metodo_Envio)
 def crear_metodo_envio(metodo_envio: schemas.Metodo_EnvioCrear, db: Session = Depends(get_db)):
