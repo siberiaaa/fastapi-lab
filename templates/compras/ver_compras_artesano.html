@@ -35,7 +35,7 @@
 
         {% if compra.estado_compra_id == 1 %}
         <td>Pendiente</td>
-        <td><button onclick="location.href='/artesano/{{ compra.id }}'">Revisar</button></td>
+        <td><button onclick="location.href='/compras/artesano/{{ compra.id }}'">Revisar</button></td>
         {% elif compra.estado_compra_id == 2 %}
         <td>Aprobado</td>
         <td>Opciones no disponibles</td>

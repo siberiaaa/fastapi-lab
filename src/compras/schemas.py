@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Union
 from datetime import datetime
 
-from productos import schemas as producto_schema
+import productos.schemas as producto_schema
 class CompraBase(BaseModel):
     cantidad: int
     fecha: Union[datetime, None] = None
