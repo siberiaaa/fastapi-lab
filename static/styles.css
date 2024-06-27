@@ -1,5 +1,6 @@
 body {
     margin: 0%;
+    background-color: #ebebeb;
 }
 
 h1, h2, h3 {
@@ -10,10 +11,29 @@ h1, h2, h3 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     text-align: right;
+    margin-right: 20%;
 }
 
 .perfil input {
     width: 50%;
+}
+
+.perfil div {
+    margin: 2%;
+}
+
+.titulo {
+    background-color: #f9d387;
+    background-image: url('ciudad_pequeña.png');
+    background-size: contain;
+    background-position-x: right;
+    background-repeat: no-repeat;
+    padding: 0.5%;
+    margin-bottom: 5%;
+}
+
+.titulo h1 {
+    font-size: xx-large;
 }
 
 table, td, th {
@@ -58,7 +78,7 @@ main {
 }
 
 nav {
-    background-color: burlywood;
+    background-color: #ffbd59;
     padding: 1%;
     display: flex;
     flex-direction: row;
@@ -70,13 +90,20 @@ nav span {
     font-size: x-large;
 }
 
-nav a {
+nav a, header a {
     text-decoration: none;
 }
 
+nav a {
+    color: #9c7c3b;
+}
+
 header, footer {
-    background-color: darkgoldenrod;
     padding: 1%;
+}
+
+footer {
+    background-color: #ffbd59;
 }
 
 header {
@@ -86,12 +113,34 @@ header {
     justify-content: space-between;
 }
 
+header input {
+    font-size: large;
+}
+
+header input::placeholder {
+    color: #e7d4b7;
+    opacity: 0.5; /* Firefox */
+}
+
+header::-ms-input-placeholder { 
+    color: #e7d4b7;
+}
+
+header button {
+    background-color: #d96e2a;
+    font-size: large;
+    width: 110%;
+    border-radius: 5px;
+}
+
+header span {
+    font-size: large;
+}
+
 header img {
-    border-radius: 50%;
-    width: 20%;
+    width: 5%;
 }
 
 footer img {
-    border-radius: 50%;
     width: 4%;
 }

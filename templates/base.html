@@ -10,17 +10,22 @@
 </head>
 <body>
     <header>
+        <img src="{{ url_for('static', path='artesanal.png') }}" alt="Ícono bonito">
         <div>
-            <a href="/">
-                <img src="{{ url_for('static', path='artesanal.png') }}" alt="Ícono bonito">
+            <input type="search" name="buscar" id="buscar" placeholder="🔍 BUSCAR PRODUCTO">
+        </div>
+        <div>
+            <a href="/principal">
+                <h1>ARTESANOS</h1>
             </a>
         </div>
         <div>
-            <input type="search" name="" id="">
+            <button>Invitar amigos</button>
         </div>
         <div>
-            <button>Invitar amigos</button>
-            <a href="">Cerrar sesión</a>
+            <a href="">
+                <span>Cerrar sesión</span>
+            </a>
         </div>
     </header>
     <nav>
