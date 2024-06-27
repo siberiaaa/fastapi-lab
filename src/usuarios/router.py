@@ -7,6 +7,7 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from fastapi.templating import Jinja2Templates
 from datetime import datetime
 from fastapi.responses import RedirectResponse, HTMLResponse, Response
+from tipos_usuario.service import listar_tipos_usuarios
 
 from schemas import Token, Respuesta
 
@@ -74,8 +75,9 @@ def get_db():
 
 
 @router.get('/registrar', response_class=HTMLResponse)
-def registrar_usuario(request: Request):
-    return templates.TemplateResponse(request=request, name="registrar.html")      
+def registrar_usuario(request: Request, db: Session = Depends(get_db)):
+    lista = listar_tipos_usuarios(db=db)
+    return templates.TemplateResponse("registrar.html", {'request': request, 'lista': lista})      
 
 @router.post('/registrar', response_class=HTMLResponse)
 def registrar_usuario(request: Request, 

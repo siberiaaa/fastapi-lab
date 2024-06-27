@@ -42,10 +42,13 @@
                 <span>Fecha de nacimiento</span>
                 <input type="date" name="nacimiento" placeholder="fechanacimiento" required>
             </label>
-            
             <label for="tipo_id">
                 <span>Tipo de usuario</span>
-                <input type="number" name="tipo_id" placeholder="id" min="1" max="2" step="1" required>
+                <select name="tipo_id" id="tipo_id" required>
+                    {% for esto in lista %}
+                    <option value="{{ esto.id }}">{{ esto.nombre }}</option>
+                    {% endfor %}
+                </select>
             </label>
     
             <label for="contraseña">

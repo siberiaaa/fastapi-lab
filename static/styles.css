@@ -16,9 +16,10 @@ h1, h2, h3 {
     width: 50%;
 }
 
-table {
+table, td, th {
     margin-right: auto;
     margin-left: auto;
+    text-align: center;
 }
 
 fieldset {
@@ -59,11 +60,18 @@ main {
 nav {
     background-color: burlywood;
     padding: 1%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
 }
 
 nav span {
-    border: 1px solid black;
     font-size: x-large;
+}
+
+nav a {
+    text-decoration: none;
 }
 
 header, footer {
