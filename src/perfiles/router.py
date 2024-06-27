@@ -24,13 +24,13 @@ def perfil(request: Request, db: Session = Depends(get_db), info=Depends(auth_ha
         print(info)
         usuario = buscar_usuario(db=db, cedula=info['cedula'])
         print(usuario)
-        if info["tipo_usuario_id"] == 1: 
+        if info["tipo_usuario_id"] == 2: 
             lista = service.listar_compras_cliente(db=db, cedula=info['cedula'])
             return templates.TemplateResponse('/perfiles/clientes.html', 
                                               {'request': request, 
                                                "usuario": usuario.data, 
                                                'lista': lista})
-        elif info["tipo_usuario_id"] == 2: 
+        elif info["tipo_usuario_id"] == 1: 
             lista = service.listar_compras_artesano(db=db, cedula=info['cedula'])
             return templates.TemplateResponse('/perfiles/artesanos.html', 
                                               {'request': request, 

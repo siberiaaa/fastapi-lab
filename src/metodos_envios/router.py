@@ -24,4 +24,3 @@ def listar_metodos_envios(db: Session = Depends(get_db)):
 @router.post('', response_model=schemas.Metodo_Envio)
 def crear_metodo_envio(metodo_envio: schemas.Metodo_EnvioCrear, db: Session = Depends(get_db)):
     return service.crear_metodo_envio(db=db, metodo_envio=metodo_envio)
-
