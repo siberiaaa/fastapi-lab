@@ -103,6 +103,19 @@ def crear_encargo(request: Request, db: Session = Depends(get_db),
     else:
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
 
+# cliente gestion compra #
+@router.get('/cliente')
+def ver_compras_artesano(request: Request, info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):
+    if info["tipo_usuario_id"] != 2: 
+             raise No_Cliente_Exception
+    
+    respuesta = service.listar_compras_para_cliente(db=db, cedula=info['cedula'])
+
+    if (respuesta.ok):
+        return templates.TemplateResponse(request=request, name="compras/ver_compras_cliente.html", context={'compras':respuesta.data})  
+    else:
+        raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
+    
 
 # artesano gestion compra #
 @router.get('/artesano')
@@ -113,7 +126,7 @@ def ver_compras_artesano(request: Request, info=Depends(auth_handler.auth_wrappe
     respuesta = service.listar_compras_para_artesano(db=db, cedula=info['cedula'])
 
     if (respuesta.ok):
-        return templates.TemplateResponse(request=request, name="compras/ver_compras_artesano.html", context={'compras':respuesta.data, 'caracteristicas':'ja'})  
+        return templates.TemplateResponse(request=request, name="compras/ver_compras_artesano.html", context={'compras':respuesta.data})  
     else:
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
     
@@ -125,7 +138,7 @@ def revisar_compra_artesano(id_compra: int, request: Request, info=Depends(auth_
     respuesta = service.get_compra(db=db, id=id_compra)
 
     if (respuesta.ok):
-        return templates.TemplateResponse(request=request, name="compras/revisar_compra_artesano.html", context={'compra':respuesta.data})  
+        return templates.TemplateResponse(request=request, name="compras/revisar_compra_artesano.html", context={'compra':respuesta.data, 'caracteristicas':'ja'})  
     else:
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
     

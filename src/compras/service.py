@@ -188,5 +188,25 @@ def listar_compras_para_artesano(db: Session, cedula: int):
                             estado_compra_id=com.estado_compra_id) 
         compras.append(compra)
 
-    respuesta = Respuesta[list[schemas.Compra]](ok=True, mensaje='Lista de las compras realizadas al artesano encontrada', data=compras)
+    respuesta = Respuesta[list[schemas.CompraInfo]](ok=True, mensaje='Lista de las compras solicitadas al artesano encontrada', data=compras)
+    return respuesta
+
+
+def listar_compras_para_cliente(db: Session, cedula: int): 
+    returned = db.query(models.Compra).filter(models.Compra.cliente_cedula == cedula).all()
+    
+    compras = []
+
+    #ver que no explote asignacion de producto x2
+    for com in returned:
+        compra = schemas.CompraInfo(producto=com.producto,
+                            id=com.id, 
+                            cantidad=com.cantidad, 
+                            cliente_cedula=com.cliente_cedula, 
+                            producto_id=com.id, 
+                            tipo_compra_id=com.tipo_compra_id, 
+                            estado_compra_id=com.estado_compra_id) 
+        compras.append(compra)
+
+    respuesta = Respuesta[list[schemas.CompraInfo]](ok=True, mensaje='Lista de las compras solicitadas por el cliente encontrada', data=compras)
     return respuesta
