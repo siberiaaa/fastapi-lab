@@ -19,14 +19,20 @@ def get_db():
         db.close()
 
 @router.get('/home')
-async def homes(request: Request, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
+def homes(request: Request, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
         print(info)
         if info["tipo_usuario_id"] == 1: 
             lista = get_productos_por_artesano(db=db, cedula_artesano=info['cedula'])
+            print(lista)
+            lista_imagenes = []
+            for esto in lista: 
+                real = bytes(esto.imagen).decode()
+                lista_imagenes.append(real)
             return templates.TemplateResponse('/homes/artesanos.html', 
                                               {'request': request, 
                                                "info": info, 
-                                               'lista': lista})
+                                               'lista': lista, 
+                                               'imagenes': lista_imagenes})
         elif info["tipo_usuario_id"] == 2: 
             lista = listar_artesanos(db=db)
             return templates.TemplateResponse('/homes/clientes.html', 

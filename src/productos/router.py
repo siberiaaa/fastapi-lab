@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, Request, Form, status
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
@@ -29,11 +30,30 @@ def get_db():
         db.close()
 
 @router.get('')
-def get_productos(request: Request, db: Session = Depends(get_db)):
+def get_productos(request: Request, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
     lista_productos_respuesta = service.get_productos(db=db)
-
-    if (lista_productos_respuesta.ok):
-        return templates.TemplateResponse(request=request, name="productos/lista.html", context={"productos":lista_productos_respuesta.data, "artesano":False})
+    categorias = categoria_service.get_categorias(db=db)
+    print(categorias.data)
+    tipos = tipo_producto_service.get_tipos_producto(db=db)
+    print(tipos.data)
+    print(info)
+    if (lista_productos_respuesta.ok and
+        categorias.ok and tipos.ok and 
+        info['tipo_usuario_id'] == 1): 
+        print('Eres artesano :D')
+        return templates.TemplateResponse(request=request, name="productos/lista.html", context={
+            "productos":lista_productos_respuesta.data, 
+            "artesano": True, 
+            'categorias': categorias.data, 
+            'tipos': tipos.data})
+    elif (lista_productos_respuesta.ok and
+        info['tipo_usuario_id'] == 2): 
+        print('Eres cliente :D')
+        return templates.TemplateResponse(request=request, name="productos/lista.html", context={
+            "productos":lista_productos_respuesta.data, 
+            "artesano": False, 
+            'categorias': [], 
+            'tipos': []})
     else:
         raise Message_Redirection_Exception(message=lista_productos_respuesta.mensaje, path_message='Volver a inicio', path_route='/')
 
@@ -79,15 +99,26 @@ def get_productos_artesano(request: Request, cedula_artesano : int, db: Session 
 
 # Uso interno por ahora mientras aún no se ha implementado visualmente #
 @router.post('')
-def create_producto(cedula: str = Form(...), 
-                    nombres: str = Form(...), 
-                    apellidos: str = Form(...), 
-                    correo: str = Form(...), 
-                    contraseña: str = Form(...), 
-                    tipo_id: int = Form(...), 
+def create_producto(nombre: str = Form(...), 
+                    descripcion: str = Form(...), 
+                    altura_cm: float = Form(...), 
+                    anchura_cm: float = Form(...), 
+                    profundidad_cm: float = Form(...), 
+                    imagen: bytes = Form(...), 
+                    peso_gramo: float = Form(...), 
+                    categoria: int = Form(...), 
+                    tipo: int = Form(...), 
                     db: Session = Depends(get_db), 
-                    info=Depends(auth_handler.auth_wrapper)):
-    return service.get_productos(db=db)
+                    info = Depends(auth_handler.auth_wrapper)):
+    nuevo = schemas.ProductoCrear(
+        nombre=nombre, descripcion=descripcion, 
+        altura_cm=altura_cm, anchura_cm=anchura_cm, 
+        profundidad_cm=profundidad_cm, imagen=imagen, 
+        peso_gramo=peso_gramo, usuario_cedula=info['cedula'], 
+        tipo_producto_id=tipo, categoria_id=categoria
+    )
+    service.create_producto(db=db, producto=nuevo)
+    return RedirectResponse(url='/productos', status_code=status.HTTP_303_SEE_OTHER)
 
 @router.put('/{id}', response_model=Respuesta[schemas.Producto])
 def update_producto(id : int, producto: schemas.ProductoCrear, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 

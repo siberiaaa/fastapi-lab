@@ -47,7 +47,7 @@ def get_productos(db: Session):
         descripcion=prod.descripcion, 
         altura_cm=prod.altura_cm, 
         anchura_cm=prod.anchura_cm, 
-        altura_profundidad_cm=prod.profundidad_cm, 
+        profundidad_cm=prod.profundidad_cm, 
         imagen=prod.imagen, 
         peso_gramo=prod.peso_gramo, 
         usuario_cedula=prod.usuario_cedula, 
@@ -59,11 +59,12 @@ def get_productos(db: Session):
     respuesta = Respuesta[list[schemas.Producto]](ok=True, mensaje='Productos encontrados', data=productos)
     return respuesta
 
-def get_productos_por_artesano(db: Session, cedula_artesano: int): 
+def get_productos_por_artesano(db: Session, cedula_artesano: str): 
     returned = db.query(models.Producto).filter(models.Producto.usuario_cedula == cedula_artesano).all()
 
-    respuesta = Respuesta[list[schemas.Producto]](ok=True, mensaje='Productos encontrados', data=returned)
-    return respuesta
+    # respuesta = Respuesta[list[schemas.Producto]](ok=True, mensaje='Productos encontrados', data=returned)
+
+    return returned
 
 def get_producto(db: Session, id: int): 
     returned = db.query(models.Producto).filter(models.Producto.id == id).first()

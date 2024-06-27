@@ -43,15 +43,23 @@
                     </label>
                     <label for="categoria">
                         <span>Categoría</span>
-                        <select name="categoria" id="categoria" required></select>
+                        <select name="categoria" id="categoria" required>
+                            {% for esto in categorias %}
+                            <option value="{{ esto.id }}">{{ esto.nombre }}</option>
+                            {% endfor %}
+                        </select>
                     </label>
                     <label for="tipo">
                         <span>Tipo</span>
-                        <select name="tipo" id="tipo" required></select>
+                        <select name="tipo" id="tipo" required>
+                            {% for esto in tipos %}
+                            <option value="{{ esto.id }}">{{ esto.nombre }}</option>
+                            {% endfor %}
+                        </select>
                     </label>
                     <label for="peso_gramo">
                         <span>Peso (en gramos)</span>
-                        <input type="number" name="peso_gramo" id="peso_gramo" required>
+                        <input type="number" name="peso_gramo" id="peso_gramo" min="0.5" required>
                     </label>
                     <button type="submit">Crear producto</button>
                 </fieldset>

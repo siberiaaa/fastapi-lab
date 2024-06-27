@@ -3,9 +3,10 @@
 <h1>Lista de productos</h1> 
 <h2>Estos son tus productos {{ info.nombre_completo }}</h2>
 <section>
-    {% for esto in lista.data %}
+    {% for i in range(lista.__len__()) %}
     <div>
-        <p>{{ esto.nombre }}</p>
+        <img src="{{ imagenes[i] }}" alt="{{ lista[i].nombre }}">
+        <p>{{ lista[i].nombre }}</p>
     </div>
     {% endfor %}
 </section>
