@@ -1,0 +1,46 @@
+{% extends "base.html" %} 
+
+
+{% block content %}
+<h1>
+    Cotizaciones que has solicitado
+</h1>
+
+
+<table style="width:100%">
+    <tr>
+        <td>Producto</td>
+        <td>Cantidad</td>
+        <td>Precio</td>
+        <td>Estado de la cotizacion</td>
+        
+        <td>Opciones</td>
+    </tr>
+
+{% for cotizacion in cotizaciones %}
+    <tr> 
+        <!--  -->
+        <td>{{ cotizacion.compra.producto.nombre }}</td>
+        <td>{{ cotizacion.cantidad }}</td>
+        <td>{{ cotizacion.precio }}</td>
+        
+
+
+        {% if cotizacion.estado_cotizacion_id == 1 %}
+        <td>Pendiente</td>
+        <td><button onclick="location.href='/cotizaciones/clientes/{{ cotizacion.id }}'">Revisar</button></td>
+        {% elif cotizacion.estado_cotizacion_id == 2 %}
+        <td>Aprobado</td>
+        <td>Opciones no disponibles</td>
+        {% elif cotizacion.estado_cotizacion_id == 3 %}
+        <td>Rechazado</td>
+        <td>Opciones no disponibles</td>
+        {% endif %}
+
+
+    </tr>
+    
+    <div style="margin-bottom: 10px;"></div>
+{% endfor %}
+
+{% endblock %}

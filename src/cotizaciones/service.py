@@ -44,10 +44,11 @@ def crear_cotizacion(db: Session, cotizacion: schemas.CotizacionCrear):
     db.commit()
     db.refresh(db_cotizacion)
 
-    compra = schemas.Compra(id=db_cotizacion.id, 
+    cotizacion = schemas.Cotizacion(id=db_cotizacion.id, 
+                            compra_id=db_cotizacion.compra_id,
                             precio=db_cotizacion.precio, 
                             estado_cotizacion_id=db_cotizacion.estado_cotizacion_id) 
-    respuesta = Respuesta[schemas.Cotizacion](ok=True, mensaje='Cotización realizada', data=compra)
+    respuesta = Respuesta[schemas.Cotizacion](ok=True, mensaje='Cotización realizada', data=cotizacion)
     return respuesta
 
 def aprobar_cotizacion(db: Session, id_cotizacion: int):

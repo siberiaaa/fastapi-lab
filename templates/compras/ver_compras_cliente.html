@@ -3,7 +3,7 @@
 
 {% block content %}
 <h1>
-    Compras que te han solicitado
+    Compras que has solicitado
 </h1>
 
 
@@ -14,8 +14,6 @@
         <td>Cantidad</td>
         <td>Tipo de compra</td>
         <td>Estado de la compra</td>
-        
-        <td>Opciones</td>
     </tr>
 
 {% for compra in compras %}
@@ -31,11 +29,9 @@
         {% elif compra.tipo_compra_id == 2 %}
         <td>Encargo</td>
         {% endif %}
-        
 
         {% if compra.estado_compra_id == 1 %}
         <td>Pendiente</td>
-        <td><button onclick="location.href='/compras/artesano/{{ compra.id }}'">Revisar</button></td>
         {% elif compra.estado_compra_id == 2 %}
         <td>Aprobado</td>
         <td>Opciones no disponibles</td>
@@ -43,7 +39,6 @@
         <td>Rechazado</td>
         <td>Opciones no disponibles</td>
         {% endif %}
-
 
     </tr>
     
