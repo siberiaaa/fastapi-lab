@@ -10,3 +10,6 @@ def crear_metodo_pago(db: Session, metodo_pago: schemas.Metodo_PagoCrear):
     db.commit()
     db.refresh(db_metodo_pago)
     return db_metodo_pago
+
+def listar_metodos_pagos(db: Session): 
+    return db.query(models.Metodo_Pago).all()

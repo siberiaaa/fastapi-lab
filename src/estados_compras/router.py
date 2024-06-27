@@ -17,9 +17,9 @@ def get_db():
     finally:
         db.close()
 
-@router.get('')
-def home():
-    return {"message":"Hello world desde el router opa"}
+@router.get('', response_model=list[schemas.Estado_Compra])
+def listar_estados_compras(db: Session = Depends(get_db)):
+    return service.listar_estado_compra(db=db)
 
 @router.post('', response_model=schemas.Estado_Compra)
 def crear_estado_compra(estado_compra: schemas.Estado_CompraCrear, db: Session = Depends(get_db)):

@@ -10,3 +10,6 @@ def crear_estado_compra(db: Session, estado_compra: schemas.Estado_CompraCrear):
     db.commit()
     db.refresh(db_estado_compra)
     return db_estado_compra
+
+def listar_estado_compra(db: Session): 
+    return db.query(models.Estado_Compra).all()

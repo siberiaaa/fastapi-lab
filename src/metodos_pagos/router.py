@@ -17,9 +17,9 @@ def get_db():
     finally:
         db.close()
 
-@router.get('')
-def home():
-    return {"message":"Hello world desde el router opa"}
+@router.get('', response_model=list[schemas.Metodo_Pago])
+def home(db: Session = Depends(get_db)):
+    return service.listar_metodos_pagos(db=db)
 
 @router.post('', response_model=schemas.Metodo_Pago)
 def crear_metodo_pago(metodo_pago: schemas.Metodo_PagoCrear, db: Session = Depends(get_db)):
