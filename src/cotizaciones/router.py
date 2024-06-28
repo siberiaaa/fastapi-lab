@@ -65,7 +65,7 @@ def revisar_compra_cliente(id_cotizacion: int, request: Request, info=Depends(au
     return templates.TemplateResponse(request=request, name="cotizaciones/revisar_cotizacion_cliente.html", context={'cotizacion':cotizacion_respuesta.data, 'compra':compra_respuesta.data, 'producto':producto_respuesta.data})  
    
 @router.post('/cliente/{id_cotizacion}')
-def revisar_compra_cliente_facturar(request: Request, id_cotizacion: int,  pedir_factura: float = Form(...), info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):
+def revisar_compra_cliente_facturar(request: Request, id_cotizacion: int,  pedir_factura: bool = Form(...), info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):
     if info["tipo_usuario_id"] != 2: 
              raise No_Cliente_Exception
     
@@ -82,7 +82,16 @@ def revisar_compra_cliente_facturar(request: Request, id_cotizacion: int,  pedir
     else:
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
     
+
+@router.get('')
+def ver_cotizaciones(request: Request, info=Depends(auth_handler.auth_wrapper)):
+    if info["tipo_usuario_id"] == 1:
+         return RedirectResponse(url='/cotizaciones/artesano', status_code=status.HTTP_303_SEE_OTHER)
     
+    if info["tipo_usuario_id"] == 2:
+         return RedirectResponse(url='/cotizaciones/cliente', status_code=status.HTTP_303_SEE_OTHER)
+
+
 # artesano gestion cotizaciones #
 @router.get('/artesano')
 def ver_cotizaciones_artesano(request: Request, info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):

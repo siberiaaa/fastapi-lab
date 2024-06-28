@@ -22,7 +22,13 @@ def crear_factura(db: Session, factura: schemas.FacturaCrear):
     db.add(db_factura)
     db.commit()
     db.refresh(db_factura)
-    return db_factura
+
+    factura = schemas.Factura(id=db_factura.id,
+                            fecha_entrega=db_factura.fecha_entrega, 
+                            cotizacion_id=db_factura.cotizacion_id,  
+                            metodo_envio_id=db_factura.metodo_envio_id, 
+                            metodo_pago_id=db_factura.metodo_pago_id) 
+    return Respuesta[schemas.Factura](ok=True, mensaje='Factura encontrada', data=factura)
 
 def listar_facturas(db: Session): 
     return db.query(models.Factura).all()
@@ -80,8 +86,13 @@ def listar_facturas_cliente(db: Session, cedula: str):
             for factura in facturas: 
                 cotizacion_dela_factura = db.query(cotizacion_models.Cotizacion).filter(cotizacion_models.Cotizacion.id == factura.cotizacion_id).first()
                 if cotizacion_dela_factura != None: 
+                    envio = db.query(envios_models.Metodo_Envio).filter(envios_models.Metodo_Envio.id == factura.metodo_envio_id).first()
+                    pago = db.query(pagos_models.Metodo_Pago).filter(usuario_models.Usuario.cedula == factura.metodo_pago_id).first()
+
                     final['factura'] = factura
                     final['cotizacion'] = cotizacion_dela_factura
+                    final['pago'] = envio.nombre
+                    final['envia'] = pago.nombre
                     lista_final.append(final)
         except Exception: 
             continue

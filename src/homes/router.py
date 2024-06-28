@@ -25,13 +25,13 @@ def homes(request: Request, db: Session = Depends(get_db), info=Depends(auth_han
             lista = get_productos_por_artesano(db=db, cedula_artesano=info['cedula'])
             print(lista)
             lista_imagenes = []
-            for esto in lista: 
+            for esto in lista.data: 
                 real = bytes(esto.imagen).decode()
                 lista_imagenes.append(real)
             return templates.TemplateResponse('/homes/artesanos.html', 
                                               {'request': request, 
                                                "info": info, 
-                                               'lista': lista, 
+                                               'lista': lista.data, 
                                                'imagenes': lista_imagenes})
         elif info["tipo_usuario_id"] == 2: 
             lista = listar_artesanos(db=db)

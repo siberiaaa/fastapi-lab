@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, Request, Form, status
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 import facturas.models as models 
@@ -33,6 +34,27 @@ def get_db():
         db.close()
 
 # 
+
+@router.get('')
+def ver_facturas(request: Request, info=Depends(auth_handler.auth_wrapper)):
+    if info["tipo_usuario_id"] == 1:
+         return RedirectResponse(url='/facturas/artesano', status_code=status.HTTP_303_SEE_OTHER)
+    
+    if info["tipo_usuario_id"] == 2:
+         return RedirectResponse(url='/facturas/cliente', status_code=status.HTTP_303_SEE_OTHER)
+    
+# cliente gestion facturas #
+@router.get('/cliente')
+def ver_facturas_cliente(request: Request, info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):
+    if info["tipo_usuario_id"] != 2: 
+             raise No_Cliente_Exception
+    
+    respuesta = service.listar_facturas_cliente(db=db, cedula=info['cedula'])
+
+    if (respuesta.ok):
+        return templates.TemplateResponse(request=request, name="facturas/ver_facturas_usuarios.html", context={'facturas':respuesta.data, 'tipo_usuario': info["tipo_usuario_id"]})  
+    else:
+        raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
 
 # artesano gestion facturas #
 @router.get('/artesano')
@@ -84,19 +106,6 @@ def realizar_facturar_artesano(request: Request, id_cotizacion: int,
 
 
 
-# cliente gestion facturas #
-@router.get('/cliente')
-def ver_facturas_cliente(request: Request, info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):
-    if info["tipo_usuario_id"] != 2: 
-             raise No_Cliente_Exception
-    
-    respuesta = service.listar_facturas_cliente(db=db, cedula=info['cedula'])
-
-    if (respuesta.ok):
-        return templates.TemplateResponse(request=request, name="facturas/ver_facturas_usuarios.html", context={'facturas':respuesta.data, 'tipo_usuario': info["tipo_usuario_id"]})  
-    else:
-        raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
-    
 
 #@router.get('', response_model=list[schemas.Factura])
 # def listar_facturas(db: Session = Depends(get_db)):
