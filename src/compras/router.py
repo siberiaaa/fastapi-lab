@@ -9,6 +9,7 @@ import compras.models as models
 import compras.schemas as schemas
 import compras.service as service
 
+import productos.service as producto_service
 import cotizaciones.service as cotizacion_service
 import cotizaciones.schemas as cotizacion_schema
 
@@ -136,12 +137,15 @@ def revisar_compra_artesano(id_compra: int, request: Request, info=Depends(auth_
              raise No_Artesano_Exception
     
     respuesta = service.get_compra(db=db, id=id_compra)
-
-    if (respuesta.ok):
-        return templates.TemplateResponse(request=request, name="compras/revisar_compra_artesano.html", context={'compra':respuesta.data, 'caracteristicas':'ja'})  
-    else:
-        raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
+    if not respuesta.ok:
+         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
     
+    producto_respuesta = producto_service.get_producto(db=db, id=respuesta.data.producto_id)
+    if not producto_respuesta.ok:
+         raise Message_Redirection_Exception(message=producto_respuesta.mensaje, path_message='Volver a home', path_route='/home')
+
+    return templates.TemplateResponse(request=request, name="compras/revisar_compra_artesano.html", context={'compra':respuesta.data, 'producto':producto_respuesta.data})  
+
 @router.post('/artesano/{id_compra}')
 def revisar_compra_artesano_cotizar(request: Request, id_compra: int,  cotizar: float = Form(...), precio: float = Form(...), cantidad: int = Form(...), info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):
     if info["tipo_usuario_id"] != 1: 
@@ -187,18 +191,18 @@ def revisar_compra_artesano_cotizar(request: Request, id_compra: int,  cotizar: 
     
 
 
-@router.get('', response_model=list[schemas.Compra])
-def listar_compras(db: Session = Depends(get_db)):
-    return service.listar_compras(db=db)
+# @router.get('', response_model=list[schemas.Compra])
+# def listar_compras(db: Session = Depends(get_db)):
+#     return service.listar_compras(db=db)
 
 
 @router.post('', response_model=schemas.Compra)
 def crear_compra(compra: schemas.CompraCrear, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
     return service.realizar_compra(db=db, compra=compra)
 
-@router.get('/{id}', response_model=schemas.Compra)
-def buscar_compra(id : int, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 
-    return service.get_compra(db=db, id=id)
+# @router.get('/{id}', response_model=schemas.Compra)
+# def buscar_compra(id : int, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 
+#     return service.get_compra(db=db, id=id)
 
 @router.put('/{id}', response_model=schemas.Compra)
 def modificar_compra(id : int, compra: schemas.CompraCrear, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 

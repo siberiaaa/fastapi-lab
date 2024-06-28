@@ -119,16 +119,16 @@ async def iniciar_sesion(request: Request, response: Response, cedula: str = For
             atoken = auth_handler.create_access_token(data={'cedula': usuario.cedula, 'nombre_completo': nombre_completo, 'tipo_usuario_id': usuario.tipo_id})
             if usuario.tipo_id == 1: 
                 response = templates.TemplateResponse("success.html", 
-                    {"request": request, "nombre_completo": nombre_completo, "success_msg": "Welcome back! ",
-                    "path_route": '/private', "path_msg": "Go to your private page!"})
+                    {"request": request, "nombre_completo": nombre_completo, "success_msg": "Bienvenido, ve a tu página de inicio ",
+                    "path_route": '/home', "path_msg": "Home"})
             elif usuario.tipo_id == 2: 
                 response = templates.TemplateResponse("success.html", 
-                    {"request": request, "nombre_completo": nombre_completo, "success_msg": "Welcome back! ",
-                    "path_route": '/private', "path_msg": "Go to your private page!"})
+                    {"request": request, "nombre_completo": nombre_completo, "success_msg": "Bienvenido, ve a tu página de inicio ",
+                    "path_route": '/home', "path_msg": "Home"})
             else: 
                 response = templates.TemplateResponse("success.html", 
-                    {"request": request, "nombre_completo": nombre_completo, "success_msg": "Welcome back! ",
-                    "path_route": '/private', "path_msg": "Go to your private page!"})
+                    {"request": request, "nombre_completo": nombre_completo, "success_msg": "Bienvenido, ve a tu página de inicio ",
+                    "path_route": '/home', "path_msg": "Home"})
             
             response.set_cookie(key="Authorization", value= f"{atoken}", httponly=True)
             return response
@@ -140,6 +140,13 @@ async def iniciar_sesion(request: Request, response: Response, cedula: str = For
         return templates.TemplateResponse("error.html",
             {"request": request, 'detail': 'Incorrect Username or Password', 'status_code': 401 })
         
+@router.get('/logout')
+async def logout(request: Request, response: Response):
+    response = templates.TemplateResponse("success.html", 
+                    {"request": request, "nombre_completo": "", "success_msg": "Hasta luego vuelve pronto",
+                    "path_route": '/', "path_msg": "Inicio"})
+    response.delete_cookie(key="Authorization")
+    return response
 
 #prueba prueba 
 @router.get("/private", response_class=HTMLResponse)

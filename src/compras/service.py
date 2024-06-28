@@ -206,6 +206,7 @@ def listar_compras_para_cliente(db: Session, cedula: str):
         producto = db.query(producto_models.Producto).filter(producto_models.Producto.id == compra.producto_id).first()
 
         compra_info['producto'] = producto
+        compra_info['compra'] = compra
 
         compras.append(compra_info)
 

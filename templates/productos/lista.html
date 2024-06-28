@@ -70,7 +70,7 @@
     <div>
         <img src=""> <!-- img vacía mientras se ve como implementarlo -->
         <h3> {{ producto.nombre }}</h3>
-        <button onclick="consultar_producto({{ producto.id }})">Ver producto</button>
+        <button onclick="location.href='/productos/{{ producto.id }}'">Ver producto</button>
     </div>
     {% endfor %}
     

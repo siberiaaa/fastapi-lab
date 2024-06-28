@@ -14,20 +14,25 @@
         <legend>Datos del Encargo</legend>
         {% endif %}
 
-        
-        <label for="cedula">
-            <span>Cédula del cliente</span>
-            <input type="text" name="cedula" value="{{ compra }}" required readonly>
-        </label>
 
         <label for="id_producto">
             <span>Id del producto</span>
-            <input type="number" name="id_producto" value="{{ compra }}" required readonly>
+            <input type="number" name="id_producto" value="{{ compra.producto_id }}" required readonly>
+        </label>
+
+        <label for="nombre">
+            <span>Nombre del producto</span>
+            <input type="text" name="nombre" value="{{ producto.nombre }}" required readonly>
+        </label>
+        
+        <label for="descripcion">
+            <span>Descripcion del producto</span>
+            <input type="text" name="descripcion" value="{{ producto.descripcion }}" required readonly>
         </label>
 
         <label for="cantidad">
             <span>Cantidad </span>
-            <input type="number" name="cantidad" value="{{ compra }}" required >
+            <input type="number" name="cantidad" value="{{ compra.cantidad }}" required >
             <span>Puedes editar la cantidad para cotizar una cantidad diferente a la que pidió el cliente</span>
         </label>>
 
@@ -37,7 +42,7 @@
         </label>
 
         
-
+        {#
         {% if compra.tipo_compra_id == 2 %}
         <!-- tabla con las caracteristicas y checkboxes -->
         <table style="width:100%">
@@ -60,6 +65,7 @@
         {% endfor %}
             
         {% endif %}
+        #}
 
 
         <label for="aprobar">

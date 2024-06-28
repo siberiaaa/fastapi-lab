@@ -9,6 +9,9 @@ import compras.models as compra_models
 import usuarios.models as usuario_models
 import cotizaciones.models as cotizacion_models
 
+import metodos_envios.models as envios_models
+import metodos_pagos.models as pagos_models
+
 
 def crear_factura(db: Session, factura: schemas.FacturaCrear):
     db_factura = models.Factura(
@@ -90,19 +93,31 @@ def listar_facturas_cliente(db: Session, cedula: str):
 def listar_facturas_artesano(db: Session, cedula: str): 
     lista = db.query(models.Factura).all()
     lista_final = []
+    
     for esto in lista: 
         try: 
             cotizacion = db.query(cotizacion_models.Cotizacion).filter(cotizacion_models.Cotizacion.id == esto.cotizacion_id).first()
             compra = db.query(compra_models.Compra).filter(compra_models.Compra.id == cotizacion.compra_id).first()
             producto = db.query(producto_models.Producto).filter(producto_models.Producto.id == compra.producto_id).first()
             usuario = db.query(usuario_models.Usuario).filter(usuario_models.Usuario.cedula == producto.usuario_cedula).first()
+
             if usuario.cedula == cedula: 
+                factura = db.query(models.Factura).filter(models.Factura.cotizacion_id == cotizacion.id).first()
+                envio = db.query(envios_models.Metodo_Envio).filter(envios_models.Metodo_Envio.id == factura.metodo_envio_id).first()
+                pago = db.query(pagos_models.Metodo_Pago).filter(usuario_models.Usuario.cedula == factura.metodo_pago_id).first()
+
                 final = {}
                 final['producto'] = producto
                 final['compra'] = compra
-                final['factura'] = db.query(models.Factura).filter(models.Factura.cotizacion_id == cotizacion.id).first()
+                final['factura'] = factura
                 final['cotizacion'] = cotizacion
+                final['pago'] = envio.nombre
+                final['envia'] = pago.nombre
                 lista_final.append(final)
+
         except Exception: 
             continue
-    return lista_final
+
+    respuesta = Respuesta[list[dict]](ok=True, mensaje='Lista de las facturas del cliente encontrada', data=lista_final)
+    return respuesta
+ 
