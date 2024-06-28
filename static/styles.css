@@ -48,6 +48,7 @@ h1, h2, h3 {
     border-radius: 5px;
     text-align: center;
     padding: 1%;
+    margin: 3%;
     text-align: center;
 }
 
@@ -104,6 +105,7 @@ nav {
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
+    flex-wrap: wrap;
 }
 
 nav span {
