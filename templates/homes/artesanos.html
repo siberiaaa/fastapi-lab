@@ -2,7 +2,7 @@
 {% block content %}
 <h1>Lista de productos</h1> 
 <h2>Estos son tus productos {{ info.nombre_completo }}</h2>
-<section>
+<section class="productos">
     {% for i in range(lista.__len__()) %}
     <div>
         <img src="{{ imagenes[i] }}" alt="{{ lista[i].nombre }}">
