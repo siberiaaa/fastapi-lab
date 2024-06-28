@@ -6,26 +6,79 @@
 
 {% block content %}
 
-    <h2> {{ producto.nombre }}</h2>
-        <img src=""> <!-- img vacía mientras se ve como implementarlo -->
+    <h2> {{ producto['nombre'] }}</h2>
+    <img src="{{ imagen }}"> <!-- img vacía mientras se ve como implementarlo -->
 
-        <h3> {{ descripcion.nombre }}</h3>
-        <h3> {{ categoria }}</h3>
-        <h3> {{ tipo }}</h3>
+    <h3> {{ producto['descripcion'] }}</h3>
+    <h3>Categoría de artesanía: {{ categoria }}</h3>
+    <h3>Tipo de artesanía: {{ tipo }}</h3>
 
-        <h3> {{ altura_cm.nombre }}</h3>
-        <h3> {{ anchura_cm.nombre }}</h3>
-        <h3> {{ profundidad_cm.nombre }}</h3>
-        <h3> {{ producto.peso_gramo }}</h3>
-        <h3> {{ producto.nombre }}</h3>
-        <h3> {{ producto.nombre }}</h3>
+    <h3> {{ producto['altura_cm'] }}</h3>
+    <h3> {{ producto['anchura_cm'] }}</h3>
+    <h3> {{ producto['profundidad_cm'] }}</h3>
+    <h3> {{ producto['peso_gramo'] }}</h3>
 
-        <a href="/productos/artesano/{{ usuario_cedula }}'"> Ver más productos del artesano {{ artesano }}</a>
+    {% for esto in reseñas %}
+    <h2>Reseña #{{ esto['id'] }}:</h2>
+    <p>Invención: {{ esto['invencion'] }}</p>
+    <p>Inventor: {{ esto['inventor'] }}</p>
+    <p>Años de producción: {{ esto['años_produccion'] }}</p>
+    {% endfor %}
 
-        <button onclick="location.href='/compras/pedido/crear?product_id={{ producto.id }}'">Realizar pedido</button>
-        <button onclick="location.href='/compras/encargo/crear?product_id={{ producto.id }}'">Realizar encargo</button>
-        <br>
+    {% if info['tipo_usuario_id'] == 1 %}
+    <details>
+        <summary>Añadir una reseña</summary>
+    </details>
+    {% elif info['tipo_usuario_id'] == 2 %}
+    <a href="/productos/artesano/{{ usuario_cedula }}'"> Ver más productos del artesano {{ artesano }}</a>
 
-        <h2>Calificaciones</h2>
+    <button onclick="location.href='/compras/pedido/crear?product_id={{ producto.id }}'">Realizar pedido</button>
+    <button onclick="location.href='/compras/encargo/crear?product_id={{ producto.id }}'">Realizar encargo</button>
+    <br>
+    {% endif %}
+
+    <h2>Calificaciones</h2>
+
+    {% if info['tipo_usuario_id'] == 2 %}
+    <details>
+        <summary>Agregar calificación</summary>
+        <form action="/calificaciones" method="post">
+            <label for="titulo">
+                <span>Título</span>
+                <input type="text" name="titulo" id="titulo" required>
+            </label>
+            <label for="comentario">
+                <span>Comentario</span>
+                <input type="text" name="comentario" id="comentario" required>
+            </label>
+            <label for="estrellas">
+                <span>Estrellas</span>
+                <input type="number" name="estrellas" id="estrellas" min="0" max="5" step="1" required>
+            </label>
+            <label for="emoticono">
+                <span>Emoticono</span>
+                <input type="text" name="emoticono" id="emoticono">
+            </label>
+            <input type="hidden" name="producto" id="producto" value="{{ producto['id'] }}" required>
+            <button type="submit">Agregar calificación</button>
+        </form>
+    </details>
+    {% endif %}
+
+    <section class="calificaciones">
+        {% for esto in calificaciones %}
+        <div>
+            <p> 
+                {{ esto['emoticono'] }} 
+                Estrellas: 
+                {% for estrella in esto['estrellas'] %}
+                ⭐
+                {% endfor %}
+            </p>
+            <p>Título: {{ esto['titulo'] }}</p>
+            <p>Comentario: {{ esto['comentario'] }}</p>
+        </div>
+        {% endfor %}
+    </section>
 
 {% endblock %}

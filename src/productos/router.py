@@ -10,6 +10,9 @@ import productos.service as service
 import usuarios.service as usuario_service
 import categorias.service as categoria_service
 import tipos_producto.service as tipo_producto_service
+import calificaciones.service as calificacion_service
+import reseñas.service as reseña_service
+import anecdotas.service as anecdota_service
 
 from exceptions import No_Artesano_Exception, Message_Redirection_Exception
 from usuarios.service import AuthHandler
@@ -72,11 +75,20 @@ def get_producto(request: Request, id : int, db: Session = Depends(get_db), info
     if (not tipo_producto.ok):
         raise Message_Redirection_Exception(message=tipo_producto.mensaje, path_message='Volver a inicio', path_route='/')
 
-    categoria = categoria_service.get_categoria(db=db, id=producto_respuesta.data.categoria_id)
-    if (not categoria.ok):
+    categoria = categoria_service.get_categoria(db=db, categoria_id=producto_respuesta.data.categoria_id)
+    if (not categoria):
         raise Message_Redirection_Exception(message=categoria.mensaje, path_message='Volver a inicio', path_route='/')
+    
+    calificaciones = calificacion_service.listar_calificaciones_productos(db=db, id=producto_respuesta.data.id)
 
-    return templates.TemplateResponse(request=request, name="productos/ver_producto.html", context={"producto":producto_respuesta.data, "categoria": categoria.data.nombre, "tipo": tipo_producto.data.nombre, "artesano": f'{artesano.data.nombres} {artesano.data.apellidos}'})
+    reseñas = reseña_service.listar_reseñas_productos(db=db, id=producto_respuesta.data.id)
+    
+    imagen = bytes(producto_respuesta.data.imagen).decode()
+
+    return templates.TemplateResponse(request=request, name="productos/ver_producto.html", context={
+        "producto":producto_respuesta.data, "categoria": categoria.data.nombre, 
+        "tipo": tipo_producto.data.nombre, "artesano": f'{artesano.data.nombres} {artesano.data.apellidos}', 
+        'imagen': imagen, 'info': info, 'calificaciones': calificaciones, 'reseñas': reseñas})
 
         
 @router.get('/artesano/{cedula_artesano}')

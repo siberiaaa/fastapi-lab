@@ -6,8 +6,10 @@
 <section class="productos">
     {% for i in range(lista.__len__()) %}
     <div>
-        <img src="{{ imagenes[i] }}" alt="{{ lista[i].nombre }}">
-        <p>{{ lista[i].nombre }}</p>
+        <a href="/productos/{{ lista[i].id }}">
+            <img src="{{ imagenes[i] }}" alt="{{ lista[i].nombre }}">
+            <p>{{ lista[i].nombre }}</p>
+        </a>
     </div>
     {% endfor %}
 </section>

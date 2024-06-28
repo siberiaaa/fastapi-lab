@@ -57,6 +57,10 @@ h1, h2, h3 {
     height: 50%;
 }
 
+.productos a {
+    text-decoration: none;
+}
+
 table, td, th {
     margin-right: auto;
     margin-left: auto;
@@ -133,6 +137,7 @@ header {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 header input {
