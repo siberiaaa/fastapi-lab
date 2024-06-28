@@ -16,6 +16,9 @@ models.Base.metadata.create_all(bind=engine)
 
 router = APIRouter()
 
+
+templates = Jinja2Templates(directory="../templates")
+
 # Dependency
 def get_db():
     db = SessionLocal()
@@ -23,6 +26,21 @@ def get_db():
         yield db
     finally:
         db.close()
+
+# cliente gestion cotizaciones #
+@router.get('/cliente')
+def ver_cotizaciones_artesano(request: Request, info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):
+    if info["tipo_usuario_id"] != 2: 
+             raise No_Cliente_Exception
+    
+    respuesta = service.listar_compras_para_cliente(db=db, cedula=info['cedula'])
+
+    if (respuesta.ok):
+        return templates.TemplateResponse(request=request, name="compras/ver_compras_cliente.html", context={'compras':respuesta.data})  
+    else:
+        raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
+    
+
 
 @router.get('', response_model=list[schemas.Cotizacion])
 def listar_cotizaciones(db: Session = Depends(get_db)):

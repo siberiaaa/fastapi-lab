@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from datetime import datetime
 from schemas import Respuesta
 import compras.models as models
@@ -167,46 +167,47 @@ def eliminar_compra(db: Session, id: int):
 
 
 
-
-def listar_compras_para_artesano(db: Session, cedula: int): 
-    #super duper query con join
-    returned = db.query(models.Compra, producto_models.Producto).\
-        join(producto_models.Producto, models.Compra.producto_id == producto_models.Producto.id).\
-        filter(producto_models.Producto.usuario_cedula == cedula).all()
+#solicitudes de compra
+def listar_compras_para_artesano(db: Session, cedula: str): 
+    # #super duper query con join
+    # returned = db.query(models.Compra, producto_models.Producto).\
+    #     join(producto_models.Producto, models.Compra.producto_id == producto_models.Producto.id).\
+    #     filter(producto_models.Producto.usuario_cedula == cedula).all()
     
 
-    compras = []
+    # Obtener todas las compras realizadas a productos cuyos productos tengan la cedula del artesano 
+    productos = db.query(producto_models.Producto).filter(producto_models.Producto.usuario_cedula == cedula).all()
 
-    #ver si asignar producto no explota
-    for com in returned:
-        compra = schemas.CompraInfo(producto=com.producto,
-                            id=com.id, 
-                            cantidad=com.cantidad, 
-                            cliente_cedula=com.cliente_cedula, 
-                            producto_id=com.id, 
-                            tipo_compra_id=com.tipo_compra_id, 
-                            estado_compra_id=com.estado_compra_id) 
-        compras.append(compra)
+    compras_info = []
 
-    respuesta = Respuesta[list[schemas.CompraInfo]](ok=True, mensaje='Lista de las compras solicitadas al artesano encontrada', data=compras)
-    return respuesta
+    for producto in productos:
+        # Obtener todas las compras asociadas a cada producto
+        compras = db.query(models.Compra).filter(models.Compra.producto_id == producto.id).all()
+        
+        for compra in compras:
+            compra_diccionario = {}
+            compra_diccionario['producto'] = producto
+            compra_diccionario['compra'] = compra
 
+            compras_info.append(compra_diccionario)
 
-def listar_compras_para_cliente(db: Session, cedula: int): 
+        respuesta = Respuesta[list[dict]](ok=True, mensaje='Lista de las compras solicitadas por el cliente encontrada', data=compras_info)
+        return respuesta
+
+def listar_compras_para_cliente(db: Session, cedula: str): 
     returned = db.query(models.Compra).filter(models.Compra.cliente_cedula == cedula).all()
-    
+
     compras = []
 
-    #ver que no explote asignacion de producto x2
-    for com in returned:
-        compra = schemas.CompraInfo(producto=com.producto,
-                            id=com.id, 
-                            cantidad=com.cantidad, 
-                            cliente_cedula=com.cliente_cedula, 
-                            producto_id=com.id, 
-                            tipo_compra_id=com.tipo_compra_id, 
-                            estado_compra_id=com.estado_compra_id) 
-        compras.append(compra)
+    for compra in returned:
+        compra_info = {}
 
-    respuesta = Respuesta[list[schemas.CompraInfo]](ok=True, mensaje='Lista de las compras solicitadas por el cliente encontrada', data=compras)
+        # Obtener producto asociado a la compra
+        producto = db.query(producto_models.Producto).filter(producto_models.Producto.id == compra.producto_id).first()
+
+        compra_info['producto'] = producto
+
+        compras.append(compra_info)
+
+    respuesta = Respuesta[list[dict]](ok=True, mensaje='Lista de las compras solicitadas por el cliente encontrada', data=compras)
     return respuesta

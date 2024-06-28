@@ -3,6 +3,8 @@ from schemas import Respuesta
 import cotizaciones.models as models
 import cotizaciones.schemas as schemas
 
+import productos.models as producto_models
+import compras.models as compra_models
 import compras.service as compra_service
 import caracteristicas.service as caracteristica_service
 #import estados_cotizacion.service as estado_cotizacion_service
@@ -94,6 +96,7 @@ def rechazar_cotizacion(db: Session, id_cotizacion: int):
 
 def listar_cotizaciones(db: Session): 
     return db.query(models.Cotizacion).all()
+    
 
 def buscar_cotizacion(db: Session, id: int): 
     cotizacion = db.query(models.Cotizacion).filter(models.Cotizacion.id == id).first()
@@ -130,3 +133,57 @@ def eliminar_cotizacion(db: Session, id: int):
     db.delete(cotizacion)
     db.commit()
     return cotizacion
+
+
+
+def listar_cotizaciones_para_artesanos(db: Session, cedula: str): 
+
+    cotizaciones_query = db.query(models.Cotizacion).all()
+
+    cotizaciones_lista = []
+
+    for cotizacion in cotizaciones_query:
+
+        # Obtener la compra asociada a la cotización
+        compra = db.query(compra_models.Compra).filter(compra_models.Compra.id == cotizacion.compra_id).first()
+        
+        # Obtener el producto asociado a la compra
+        producto = db.query(producto_models.Producto).filter(producto_models.Producto.id == compra.producto_id).first()
+
+        if producto.usuario_cedula == cedula:
+            diccionario = {}
+
+            diccionario['cotizacion'] = cotizacion
+            diccionario['compra'] = compra
+            diccionario['producto'] = producto
+
+            cotizaciones_lista.append(diccionario)
+            
+    respuesta = Respuesta[list[dict]](ok=True, mensaje='Lista de las cotizaciones solicitadas por el cliente encontrada', data=cotizaciones_lista)
+    return respuesta
+
+
+
+
+def listar_cotizaciones_para_cliente(db: Session, cedula: str): 
+
+    compras = db.query(compra_models.Compra).filter(compra_models.Compra.cliente_cedula == cedula).all()
+
+    cotizaciones_lista = []
+
+    for compra in compras:
+        cotizaciones = db.query(models.Cotizacion).filter(models.Cotizacion.compra_id == compra.id).all()
+
+        for cotizacion in cotizaciones:
+
+            diccionario = {}
+
+            diccionario['cotizacion'] = cotizacion
+            diccionario['compra'] = compra
+            diccionario['producto'] = db.query(producto_models.Producto).filter(producto_models.Producto.id == compra.producto_id).first()
+
+            cotizaciones_lista.append(diccionario)
+
+
+    respuesta = Respuesta[list[dict]](ok=True, mensaje='Lista de las cotizaciones solicitadas por el cliente encontrada', data=cotizaciones_lista)
+    return respuesta
