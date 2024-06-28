@@ -69,7 +69,7 @@ def aprobar_cotizacion(db: Session, id_cotizacion: int):
     
     ### ------------ ###
 
-    cotizacion_found.estado_cotizacion = 2
+    cotizacion_found.estado_cotizacion_id = 2
     db.commit()
 
     return Respuesta[schemas.Cotizacion](ok=True, mensaje='Cotización aprobada exitosamente')
@@ -89,7 +89,7 @@ def rechazar_cotizacion(db: Session, id_cotizacion: int):
      
     ### ------------ ###
 
-    cotizacion_found.estado_cotizacion = 3
+    cotizacion_found.estado_cotizacion_id = 3
     db.commit()
 
     return Respuesta[schemas.Cotizacion](ok=True, mensaje='Cotización rechazada exitosamente')

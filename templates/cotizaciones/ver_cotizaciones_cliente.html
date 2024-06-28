@@ -28,13 +28,13 @@
         
 
 
-        {% if cotizacion.estado_cotizacion_id == 1 %}
+        {% if cotizacion['cotizacion'].estado_cotizacion_id == 1 %}
         <td>Pendiente por revisar</td>
-        <td><button onclick="location.href='/cotizaciones/cliente/{{ cotizacion.id }}'">Revisar</button></td>
-        {% elif cotizacion.estado_cotizacion_id == 2 %}
+        <td><button onclick="location.href='/cotizaciones/cliente/{{ cotizacion['cotizacion'].id }}'">Revisar</button></td>
+        {% elif cotizacion['cotizacion'].estado_cotizacion_id == 2 %}
         <td>Aprobado</td>
         <td>Opciones no disponibles</td>
-        {% elif cotizacion.estado_cotizacion_id == 3 %}
+        {% elif cotizacion['cotizacion'].estado_cotizacion_id == 3 %}
         <td>Rechazado</td>
         <td>Opciones no disponibles</td>
         {% endif %}

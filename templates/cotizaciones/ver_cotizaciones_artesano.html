@@ -3,7 +3,7 @@
 
 {% block content %}
 <h1>
-    Cotizaciones que has solicitado
+    Cotizaciones que has enviado
 </h1>
 
 
@@ -14,6 +14,7 @@
         <td>Precio</td>
         <td>Precio total</td>
         <td>Estado de la cotizacion</td>
+        <td>Opciones</td>
     </tr>
 
 {% for cotizacion in cotizaciones %}
@@ -26,14 +27,14 @@
         
 
 
-        {% if cotizacion.estado_cotizacion_id == 1 %}
+        {% if cotizacion['cotizacion'].estado_cotizacion_id == 1 %}
         <td>Pendiente por recibir confirmación</td>
-        {% elif cotizacion.estado_cotizacion_id == 2 %}
+        <td>Opciones no disponibles</td>
+        {% elif cotizacion['cotizacion'].estado_cotizacion_id == 2 %}
         <td>Aprobado</td>
-        <td>Opciones no disponibles</td>
-        {% elif cotizacion.estado_cotizacion_id == 3 %}
+        <td><button onclick="location.href='/facturas/artesano/{{ cotizacion['cotizacion'].id }}'">Realizar factura</button></td>
+        {% elif cotizacion['cotizacion'].estado_cotizacion_id == 3 %}
         <td>Rechazado</td>
-        <td>Opciones no disponibles</td>
         {% endif %}
 
 

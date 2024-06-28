@@ -18,24 +18,22 @@
 
 {% for compra in compras %}
     <tr>
-        <td>{{ compra.producto_nombre }}</td>
-        <td>{{ compra.fecha }}</td>
-        <td>{{ compra.cantidad }}</td>
+        <td>{{ compra['producto'].nombre }}</td>
+        <td>{{ compra['compra'].fecha }}</td>
+        <td>{{ compra['compra'].cantidad }}</td>
 
-        <td>{{ compra.fecha }}</td>
-
-        {% if compra.tipo_compra_id == 1 %}
+        {% if compra['compra'].tipo_compra_id == 1 %}
         <td>Pedido</td>
-        {% elif compra.tipo_compra_id == 2 %}
+        {% elif compra['compra'].tipo_compra_id == 2 %}
         <td>Encargo</td>
         {% endif %}
 
-        {% if compra.estado_compra_id == 1 %}
+        {% if compra['compra'].estado_compra_id == 1 %}
         <td>Pendiente</td>
-        {% elif compra.estado_compra_id == 2 %}
+        {% elif compra['compra'].estado_compra_id == 2 %}
         <td>Aprobado</td>
         <td>Opciones no disponibles</td>
-        {% elif compra.estado_compra_id == 3 %}
+        {% elif compra['compra'].estado_compra_id == 3 %}
         <td>Rechazado</td>
         <td>Opciones no disponibles</td>
         {% endif %}

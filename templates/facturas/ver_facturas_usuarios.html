@@ -1,0 +1,49 @@
+{% extends "base.html" %} 
+
+
+{% block content %}
+
+    {% if tipo_usuario == 1 %}
+    <h1>
+        Facturas que has enviado
+    </h1>
+    {% elif tipo_usuario == 2 %}
+    <h1>
+        Facturas que has recibido
+    </h1>
+    {% else %}
+    <h1>
+        No deberías estar viendo esto
+    </h1>
+    {% endif %}
+
+
+<table style="width:100%">
+    <tr>
+        <td>Producto</td>
+        <td>Cantidad</td>
+        <td>Precio</td>
+        <td>Precio total</td>
+        <td>Fecha entrega</td>
+        <td>Metodo de pago</td>
+        <td>Metodo de envío</td>
+
+    </tr>
+
+{% for factura in facturas %}
+    <tr> 
+        <!--  -->
+        <td>{{ factura['producto'].nombre }}</td>
+        <td>{{ factura['compra'].cantidad }}</td>
+        <td>{{ factura['cotizacion'].precio }}</td>
+        <td>{{ factura['cotizacion'].precio * factura['compra'].cantidad}}</td>
+        <td>{{ factura['factura'].fecha }}</td>
+        <td>{{ factura['pago'] }}</td>
+        <td>{{ factura['envia'] }}</td>
+        
+    </tr>
+    
+    <div style="margin-bottom: 10px;"></div>
+{% endfor %}
+
+{% endblock %}

@@ -34,7 +34,7 @@ def realizar_compra(db: Session, compra: schemas.CompraCrear):
 
     db_compra = models.Compra(
         cantidad=compra.cantidad, 
-        fecha=datetime.now, 
+        fecha=datetime.now(), 
         cliente_cedula=compra.cliente_cedula, 
         producto_id=compra.producto_id, 
         tipo_compra_id=compra.tipo_compra_id, 
@@ -169,21 +169,17 @@ def eliminar_compra(db: Session, id: int):
 
 #solicitudes de compra
 def listar_compras_para_artesano(db: Session, cedula: str): 
-    # #super duper query con join
-    # returned = db.query(models.Compra, producto_models.Producto).\
-    #     join(producto_models.Producto, models.Compra.producto_id == producto_models.Producto.id).\
-    #     filter(producto_models.Producto.usuario_cedula == cedula).all()
-    
 
-    # Obtener todas las compras realizadas a productos cuyos productos tengan la cedula del artesano 
+    # Obtener todas los prodcutos cuyos productos tengan la cedula del artesano 
     productos = db.query(producto_models.Producto).filter(producto_models.Producto.usuario_cedula == cedula).all()
 
+    compras = []
     compras_info = []
 
     for producto in productos:
         # Obtener todas las compras asociadas a cada producto
         compras = db.query(models.Compra).filter(models.Compra.producto_id == producto.id).all()
-        
+
         for compra in compras:
             compra_diccionario = {}
             compra_diccionario['producto'] = producto
@@ -191,8 +187,12 @@ def listar_compras_para_artesano(db: Session, cedula: str):
 
             compras_info.append(compra_diccionario)
 
-        respuesta = Respuesta[list[dict]](ok=True, mensaje='Lista de las compras solicitadas por el cliente encontrada', data=compras_info)
-        return respuesta
+        print('UNA ITERACION') #!BORRAR
+   
+
+
+    respuesta = Respuesta[list[dict]](ok=True, mensaje='Lista de las compras solicitadas por el cliente encontrada', data=compras_info)
+    return respuesta
 
 def listar_compras_para_cliente(db: Session, cedula: str): 
     returned = db.query(models.Compra).filter(models.Compra.cliente_cedula == cedula).all()
@@ -206,8 +206,10 @@ def listar_compras_para_cliente(db: Session, cedula: str):
         producto = db.query(producto_models.Producto).filter(producto_models.Producto.id == compra.producto_id).first()
 
         compra_info['producto'] = producto
+        compra_info['compra'] = compra
 
         compras.append(compra_info)
+        
 
     respuesta = Respuesta[list[dict]](ok=True, mensaje='Lista de las compras solicitadas por el cliente encontrada', data=compras)
     return respuesta

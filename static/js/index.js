@@ -8,10 +8,6 @@ function delete_tipo_producto(id) {
     .then(location.reload(true));
 }
 
-function consultar_producto(id){
-    fetch('/productos/' + id, {method:'GET'})
-    .then(location.reload(true));
-}
 
 function mostrar_imagen() {
     var input = document.getElementById("extraccion");

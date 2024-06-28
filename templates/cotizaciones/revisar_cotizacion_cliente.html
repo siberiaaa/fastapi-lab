@@ -5,7 +5,7 @@
 <h1 class="nosabe">Enviar cotización</h1>
 
 
-<form action="/cliente/{{ cotizacion.id }}" method="post">
+<form action="/cotizaciones/cliente/{{ cotizacion.id }}" method="post">
     <fieldset>
 
         <legend>Datos de la cotizacion</legend>
@@ -18,7 +18,7 @@
         <label for="cantidad">
             <span>Cantidad</span>
             <input type="number" name="cantidad" value="{{ compra.cantidad }}" required readonly>
-        </label>>
+        </label>
 
         <label for="precio">
             <span>Precio unitario del producto:</span>

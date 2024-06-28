@@ -75,7 +75,7 @@ def get_producto(request: Request, id : int, db: Session = Depends(get_db), info
     if (not tipo_producto.ok):
         raise Message_Redirection_Exception(message=tipo_producto.mensaje, path_message='Volver a inicio', path_route='/')
 
-    categoria = categoria_service.get_categoria(db=db, categoria_id=producto_respuesta.data.categoria_id)
+    categoria = categoria_service.get_categoria(db=db, categoria_categoria_id=producto_respuesta.data.categoria_id)
     if (not categoria):
         raise Message_Redirection_Exception(message=categoria.mensaje, path_message='Volver a inicio', path_route='/')
     
@@ -88,7 +88,7 @@ def get_producto(request: Request, id : int, db: Session = Depends(get_db), info
     return templates.TemplateResponse(request=request, name="productos/ver_producto.html", context={
         "producto":producto_respuesta.data, "categoria": categoria.data.nombre, 
         "tipo": tipo_producto.data.nombre, "artesano": f'{artesano.data.nombres} {artesano.data.apellidos}', 
-        'imagen': imagen, 'info': info, 'calificaciones': calificaciones, 'reseñas': reseñas})
+        'imagen': imagen, 'info': info, 'calificaciones': calificaciones, 'reseñas': reseñas, "usuario_cedula":info['cedula']})
 
         
 @router.get('/artesano/{cedula_artesano}')

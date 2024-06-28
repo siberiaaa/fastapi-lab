@@ -1,0 +1,43 @@
+{% extends "base.html" %} 
+
+
+{% block content %}
+<h1 class="nosabe">Realizar factura</h1>
+
+
+<form action="/facturas/artesano/{{ id_cotizacion }}" method="post">
+    <fieldset>
+
+        <legend>Selecciona datos para enviar en la factura</legend>
+
+        <label for="cotizacion">
+            <span>Id de la cotización a facturar</span>
+            <input type="number" name="cotizacion" value="{{ id_cotizacion }}" required readonly>
+        </label>
+
+        <label for="entrega">
+            <span>Fecha de entrega</span>
+            <input type="date" name="entrega" required>
+        </label>
+        
+        <select name="envio" required>
+            <option value="">-Selecciona método de envío-</option>
+            {% for envio in metodos_envio %}
+            <option value={{ envio.id }}>{{ envio.nombre }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="pago" required>
+            <option value="">-Selecciona método de pago-</option>
+            {% for pago in metodos_pago %}
+            <option value={{ pago.id }}>{{ pago.nombre }}</option>
+            {% endfor %}
+        </select>
+        
+        <button type="submit">Enviar factura</button>
+
+    </fieldset>
+</form>
+
+
+{% endblock %}

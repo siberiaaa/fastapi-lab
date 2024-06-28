@@ -1,4 +1,6 @@
 from sqlalchemy.orm import Session
+from schemas import Respuesta
+
 import metodos_envios.models as models
 import metodos_envios.schemas as schemas
 
@@ -12,4 +14,13 @@ def crear_metodo_envio(db: Session, metodo_envio: schemas.Metodo_EnvioCrear):
     return db_metodo_envio
 
 def listar_metodos_envios(db: Session): 
-    return db.query(models.Metodo_Envio).all()
+    returned = db.query(models.Metodo_Envio).all()
+
+    envios = []
+
+    for env in returned:
+        envio = schemas.Metodo_Envio(nombre=env.nombre, descripcion=env.descripcion, id=env.id) 
+        envios.append(envio)
+
+    respuesta = Respuesta[list[schemas.Metodo_Envio]](ok=True, mensaje='Métodos de envío encontrados', data=envios)
+    return respuesta
