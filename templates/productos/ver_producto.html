@@ -13,21 +13,72 @@
     <h3>Categoría de artesanía: {{ categoria }}</h3>
     <h3>Tipo de artesanía: {{ tipo }}</h3>
 
-    <h3> {{ producto['altura_cm'] }}</h3>
-    <h3> {{ producto['anchura_cm'] }}</h3>
-    <h3> {{ producto['profundidad_cm'] }}</h3>
-    <h3> {{ producto['peso_gramo'] }}</h3>
+    <h3>Altura en centímetros: {{ producto['altura_cm'] }}</h3>
+    <h3>Anchura en centímetros: {{ producto['anchura_cm'] }}</h3>
+    <h3>Profundidad en centímetros: {{ producto['profundidad_cm'] }}</h3>
+    <h3>Peso en gramos: {{ producto['peso_gramo'] }}</h3>
 
-    {% for esto in reseñas %}
-    <h2>Reseña #{{ esto['id'] }}:</h2>
-    <p>Invención: {{ esto['invencion'] }}</p>
-    <p>Inventor: {{ esto['inventor'] }}</p>
-    <p>Años de producción: {{ esto['años_produccion'] }}</p>
-    {% endfor %}
+    <section class="reseñas">
+        {% for i in range(reseñas.__len__()) %}
+        <div>
+            <h2>Reseña #{{ reseñas[i]['id'] }}:</h2>
+            <p>Invención: {{ reseñas[i]['invencion'] }}</p>
+            <p>Inventor: {{ reseñas[i]['inventor'] }}</p>
+            <p>Años de producción: {{ reseñas[i]['años_produccion'] }}</p>
+            {% if info['tipo_usuario_id'] == 1 %}
+            <details>
+                <summary>Añadir anécdota</summary>
+                <form action="/anecdotas" method="post">
+                    <fieldset>
+                        <legend>Añadir anécdota</legend>
+                        <label for="nombre">
+                            <span>Nombre: </span>
+                            <input type="text" name="nombre" id="nombre" required>
+                        </label>
+                        <label for="descripcion">
+                            <span>Descripción: </span>
+                            <input type="text" name="descripcion" id="descripcion" required>
+                        </label>
+                        <input type="hidden" name="reseña" id="reseña" value="{{ reseñas[i]['id'] }}" required>
+                        <input type="hidden" name="actual" id="actual" value="{{ producto['id'] }}" required>
+                        <button type="submit">Añadir anécdota</button>
+                    </fieldset>
+                </form>
+            </details>
+            {% endif %}
+            {% for esto in anecdotas[i] %}
+            <div>
+                <h3>Anecdotas #{{ esto['id'] }}:</h3>
+                <p>Nombre: {{ esto['nombre'] }}</p>
+                <p>Descripción: {{ esto['descripcion'] }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </section>
 
     {% if info['tipo_usuario_id'] == 1 %}
     <details>
         <summary>Añadir una reseña</summary>
+        <form action="/reseñas" method="post">
+            <fieldset>
+                <legend>Añadir una reseña</legend>
+                <label for="invencion">
+                    <span>Fecha de invención: </span>
+                    <input type="date" name="invencion" id="invencion" required>
+                </label>
+                <label for="inventor">
+                    <span>Nombre del inventor: </span>
+                    <input type="text" name="inventor" id="inventor" required>
+                </label>
+                <label for="años_produccion">
+                    <span>Años de producción: </span>
+                    <input type="number" name="años_produccion" id="años_produccion" min="0" step="0.5" required>
+                </label>
+                <input type="hidden" name="producto_real" id="producto_real" value="{{ producto['id'] }}" required>
+                <button type="submit">Añadir una reseña</button>
+            </fieldset>
+        </form>
     </details>
     {% elif info['tipo_usuario_id'] == 2 %}
     <a href="/productos/artesano/{{ usuario_cedula }}'"> Ver más productos del artesano {{ artesano }}</a>
@@ -43,40 +94,46 @@
     <details>
         <summary>Agregar calificación</summary>
         <form action="/calificaciones" method="post">
-            <label for="titulo">
-                <span>Título</span>
-                <input type="text" name="titulo" id="titulo" required>
-            </label>
-            <label for="comentario">
-                <span>Comentario</span>
-                <input type="text" name="comentario" id="comentario" required>
-            </label>
-            <label for="estrellas">
-                <span>Estrellas</span>
-                <input type="number" name="estrellas" id="estrellas" min="0" max="5" step="1" required>
-            </label>
-            <label for="emoticono">
-                <span>Emoticono</span>
-                <input type="text" name="emoticono" id="emoticono">
-            </label>
-            <input type="hidden" name="producto" id="producto" value="{{ producto['id'] }}" required>
-            <button type="submit">Agregar calificación</button>
+            <fieldset>
+                <legend>Agregar Calificación</legend>
+                <label for="titulo">
+                    <span>Título</span>
+                    <input type="text" name="titulo" id="titulo" required>
+                </label>
+                <label for="comentario">
+                    <span>Comentario</span>
+                    <input type="text" name="comentario" id="comentario" required>
+                </label>
+                <label for="estrellas">
+                    <span>Estrellas</span>
+                    <input type="number" name="estrellas" id="estrellas" min="0" max="5" step="1" required>
+                </label>
+                <label for="emoticono">
+                    <span>Emoticono</span>
+                    <input type="text" name="emoticono" id="emoticono">
+                </label>
+                <input type="hidden" name="producto" id="producto" value="{{ producto['id'] }}" required>
+                <button type="submit">Agregar calificación</button>
+            </fieldset>
         </form>
     </details>
     {% endif %}
 
     <section class="calificaciones">
-        {% for esto in calificaciones %}
+        {% for i in range(calificaciones.__len__()) %}
         <div>
+            <p><b>{{ calificadores[i]['nombres'] }} {{ calificadores[i]['apellidos'] }}</b></p>
+            {% if calificaciones[i]['emoticono'] != '' %}
+            <p>Emoción: {{ calificaciones[i]['emoticono'] }} </p>
+            {% endif %}
             <p> 
-                {{ esto['emoticono'] }} 
                 Estrellas: 
-                {% for estrella in esto['estrellas'] %}
+                {% for estrella in range(calificaciones[i]['estrellas']) %}
                 ⭐
                 {% endfor %}
             </p>
-            <p>Título: {{ esto['titulo'] }}</p>
-            <p>Comentario: {{ esto['comentario'] }}</p>
+            <p>Título: {{ calificaciones[i]['titulo'] }}</p>
+            <p>Comentario: {{ calificaciones[i]['comentario'] }}</p>
         </div>
         {% endfor %}
     </section>

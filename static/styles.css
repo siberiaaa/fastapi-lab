@@ -61,6 +61,16 @@ h1, h2, h3 {
     text-decoration: none;
 }
 
+.calificaciones {
+    
+}
+
+.calificaciones div {
+    border-radius: 5px;
+    background-color: grey;
+    padding: 2%;
+}
+
 table, td, th {
     margin-right: auto;
     margin-left: auto;

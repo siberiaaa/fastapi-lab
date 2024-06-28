@@ -1,7 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Form, status
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from typing import Annotated
 from database import SessionLocal, engine
+from datetime import datetime
 import reseñas.models as models 
 import reseñas.schemas as schemas
 import reseñas.service as service
@@ -30,9 +32,22 @@ def listar_reseñas(db: Session = Depends(get_db), info=Depends(auth_handler.aut
 def listar_reseñas(id: int, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
     return service.listar_reseñas_productos(db=db, id=id)
 
-@router.post('', response_model=schemas.Reseña)
-def crear_reseña(reseña: schemas.ReseñaCrear, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
-    return service.crear_reseña(db=db, reseña=reseña)
+@router.post('')
+def crear_reseña(invencion: datetime = Form(...), 
+                 inventor: str = Form(...), 
+                 años_produccion: float = Form(...), 
+                 producto_real: int = Form(...), 
+                 db: Session = Depends(get_db), 
+                 info=Depends(auth_handler.auth_wrapper)): 
+    print(invencion)
+    reseña = schemas.ReseñaCrear(
+        invencion=invencion, 
+        inventor=inventor, 
+        años_produccion=años_produccion, 
+        producto_id=producto_real
+    )
+    service.crear_reseña(db=db, reseña=reseña)
+    return RedirectResponse(url=f'/productos/{producto_real}', status_code=status.HTTP_304_NOT_MODIFIED)
 
 @router.get('/{id}', response_model=schemas.Reseña)
 def buscar_reseña(id : int, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 

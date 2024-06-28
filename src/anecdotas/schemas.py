@@ -3,7 +3,6 @@ from pydantic import BaseModel
 class AnecdotaBase(BaseModel):
     nombre: str
     descripcion: str
-    años_produccion: float
     reseña_id: int
 
 class AnecdotaCrear(AnecdotaBase):
