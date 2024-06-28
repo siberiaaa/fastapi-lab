@@ -62,13 +62,41 @@ h1, h2, h3 {
 }
 
 .calificaciones {
-    
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
 }
 
 .calificaciones div {
     border-radius: 5px;
     background-color: grey;
     padding: 2%;
+    margin: 2%;
+}
+
+.reseñas {
+    
+}
+
+.reseñas h2, .reseñas h3 {
+    text-align: left;
+}
+
+.reseñas > div {
+    border-radius: 5px;
+    border: 1px dotted black;
+    background-color: lemonchiffon;
+    padding: 2%;
+    margin: 2%;
+}
+
+.reseñas > div > div {
+    border-radius: 5px;
+    border: 1px dotted black;
+    background-color: honeydew;
+    padding: 2%;
+    margin: 2%;
 }
 
 table, td, th {

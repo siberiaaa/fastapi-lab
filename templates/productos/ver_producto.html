@@ -5,9 +5,9 @@
 {% endblock %}
 
 {% block content %}
-
+<section>
     <h2> {{ producto['nombre'] }}</h2>
-    <img src="{{ imagen }}"> <!-- img vacía mientras se ve como implementarlo -->
+    <img src="{{ imagen }}">
 
     <h3> {{ producto['descripcion'] }}</h3>
     <h3>Categoría de artesanía: {{ categoria }}</h3>
@@ -56,7 +56,7 @@
         </div>
         {% endfor %}
     </section>
-
+</section>
     {% if info['tipo_usuario_id'] == 1 %}
     <details>
         <summary>Añadir una reseña</summary>
