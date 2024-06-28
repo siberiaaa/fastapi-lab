@@ -14,8 +14,6 @@
         <td>Precio</td>
         <td>Precio total</td>
         <td>Estado de la cotizacion</td>
-        
-        <td>Opciones</td>
     </tr>
 
 {% for cotizacion in cotizaciones %}
@@ -29,8 +27,7 @@
 
 
         {% if cotizacion.estado_cotizacion_id == 1 %}
-        <td>Pendiente por revisar</td>
-        <td><button onclick="location.href='/cotizaciones/cliente/{{ cotizacion.id }}'">Revisar</button></td>
+        <td>Pendiente por recibir confirmación</td>
         {% elif cotizacion.estado_cotizacion_id == 2 %}
         <td>Aprobado</td>
         <td>Opciones no disponibles</td>

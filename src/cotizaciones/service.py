@@ -99,8 +99,17 @@ def listar_cotizaciones(db: Session):
     
 
 def buscar_cotizacion(db: Session, id: int): 
-    cotizacion = db.query(models.Cotizacion).filter(models.Cotizacion.id == id).first()
-    return cotizacion
+    returned = db.query(models.Cotizacion).filter(models.Cotizacion.id == id).first()
+
+    if returned == None:
+        return Respuesta[schemas.Cotizacion](ok=False, mensaje='Cotización no encontrada')
+
+    cotizacion = schemas.Cotizacion(id=returned.id, 
+                            compra_id=returned.compra_id,
+                            precio=returned.precio, 
+                            estado_cotizacion_id=returned.estado_cotizacion_id) 
+    
+    return Respuesta[schemas.Cotizacion](ok=True, mensaje='Cotización encontrada', data=cotizacion)
 
 def listar_cotizaciones_compras(db: Session, id: int): 
     cotizaciones = db.query(models.Cotizacion).filter(models.Cotizacion.compra_id == id).all()

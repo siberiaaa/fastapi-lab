@@ -1,0 +1,46 @@
+{% extends "base.html" %} 
+
+
+{% block content %}
+<h1 class="nosabe">Enviar cotización</h1>
+
+
+<form action="/cliente/{{ cotizacion.id }}" method="post">
+    <fieldset>
+
+        <legend>Datos de la cotizacion</legend>
+
+        <label for="nombre">
+            <span>Nombre del producto</span>
+            <input type="text" name="nombre" value="{{ producto.nombre }}" required readonly>
+        </label>
+
+        <label for="cantidad">
+            <span>Cantidad</span>
+            <input type="number" name="cantidad" value="{{ compra.cantidad }}" required readonly>
+        </label>>
+
+        <label for="precio">
+            <span>Precio unitario del producto:</span>
+            <input type="number" name="precio" min="0.5" value="{{ cotizacion.precio }}" required readonly>
+        </label>
+
+        <br>
+        
+        <label for="aprobar">
+            <span>Aprobar cotización</span>
+            <input type="radio" id="aprobar" name="pedir_factura" value=True required>
+        </label>
+        <br>
+        <label for="rechazar">
+            <span>Rechazar cotización</span>
+            <input type="radio" id="rechazar" name="pedir_factura" value=False required>
+        </label>
+
+        <button type="submit">Enviar respuesta</button>
+
+    </fieldset>
+</form>
+
+
+{% endblock %}
