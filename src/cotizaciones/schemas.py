@@ -11,9 +11,6 @@ class CotizacionBase(BaseModel):
 class CotizacionCrear(CotizacionBase):
     pass
 
-class CotizacionInfo(CotizacionBase):
-    compra: producto_schema.CompraInfo
-
 class Cotizacion(CotizacionBase):
     id: int
 

@@ -2,7 +2,6 @@ from pydantic import BaseModel
 from typing import Union
 from datetime import datetime
 
-import productos.schemas as producto_schema
 class CompraBase(BaseModel):
     cantidad: int
     fecha: Union[datetime, None] = None
@@ -13,9 +12,6 @@ class CompraBase(BaseModel):
 
 class CompraCrear(CompraBase):
     pass
-
-class CompraInfo(CompraBase):
-    producto: producto_schema.Producto
 
 class Compra(CompraBase):
     id: int
