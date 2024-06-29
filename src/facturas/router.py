@@ -138,6 +138,6 @@ def realizar_facturar_artesano(request: Request, id_cotizacion: int,
 # def modificar_factura(id : int, factura: schemas.FacturaCrear, db: Session = Depends(get_db)): 
 #     return service.modificar_factura(db=db, id=id, factura=factura)
 
-# @router.delete('/{id}', response_model=schemas.Factura)
-# def eliminar_factura(id : int, db: Session = Depends(get_db)): 
-#     return service.eliminar_factura(db=db, id=id)
+@router.delete('/{id}', response_model=schemas.Factura)
+def eliminar_factura(id : int, db: Session = Depends(get_db)): 
+    return service.eliminar_factura(db=db, id=id)

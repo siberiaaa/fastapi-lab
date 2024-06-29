@@ -62,6 +62,7 @@ def get_productos(db: Session):
 def get_productos_por_artesano(db: Session, cedula_artesano: str): 
     returned = db.query(models.Producto).filter(models.Producto.usuario_cedula == cedula_artesano).all()
     productos = []
+    print(returned)
 
     for prod in returned:
         producto = schemas.Producto(
@@ -79,6 +80,7 @@ def get_productos_por_artesano(db: Session, cedula_artesano: str):
         
         productos.append(producto)
 
+    
     respuesta = Respuesta[list[schemas.Producto]](ok=True, mensaje='Productos encontrados', data=productos)
     return respuesta
 

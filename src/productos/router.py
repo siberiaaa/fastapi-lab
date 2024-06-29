@@ -98,13 +98,13 @@ def get_producto(request: Request, id : int, db: Session = Depends(get_db), info
 
     return templates.TemplateResponse(request=request, name="productos/ver_producto.html", context={
         "producto":producto_respuesta.data, "categoria": categoria.data.nombre, 
-        "tipo": tipo_producto.data.nombre, "artesano": f'{artesano.data.nombres} {artesano.data.apellidos}', 
+        "tipo": tipo_producto.data.nombre, "artesano": f'{artesano.data.nombres} {artesano.data.apellidos}', "cedula_artesano": artesano.data.cedula,
         'imagen': imagen, 'info': info, 'calificaciones': calificaciones, 'reseñas': reseñas, "usuario_cedula":info['cedula'], 
         'calificadores': lista_calificadores, 'anecdotas': anecdotas})
 
         
 @router.get('/artesano/{cedula_artesano}')
-def get_productos_artesano(request: Request, cedula_artesano : int, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 
+def get_productos_artesano(request: Request, cedula_artesano : str, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 
     lista_productos_respuesta = service.get_productos_por_artesano(db=db, cedula_artesano=cedula_artesano)
     
     artesano = usuario_service.buscar_usuario(db=db, cedula=cedula_artesano)
@@ -112,7 +112,7 @@ def get_productos_artesano(request: Request, cedula_artesano : int, db: Session 
     if (not artesano.ok):
         raise Message_Redirection_Exception(message=artesano.mensaje, path_message='Volver a inicio', path_route='/')
 
-
+    
     if (lista_productos_respuesta.ok):
             return templates.TemplateResponse(request=request, name="productos/lista.html", context={"productos":lista_productos_respuesta.data, "artesano":True, "nombre": f'{artesano.data.nombres} {artesano.data.apellidos}'})
     else:
