@@ -74,6 +74,21 @@ def aprobar_cotizacion(db: Session, id_cotizacion: int):
 
     return Respuesta[schemas.Cotizacion](ok=True, mensaje='Cotización aprobada exitosamente')
 
+def aprobar_facturada_cotizacion(db: Session, id_cotizacion: int):
+    #Existe cotización
+    cotizacion_found = db.query(models.Cotizacion).filter(models.Cotizacion.id == id_cotizacion).first()
+
+    if cotizacion_found == None:
+        return Respuesta[schemas.Cotizacion](ok=False, mensaje='Cotización a aprobar no encontrada')
+     
+    
+    ### ------------ ###
+
+    cotizacion_found.estado_cotizacion_id = 4
+    db.commit()
+
+    return Respuesta[schemas.Cotizacion](ok=True, mensaje='Cotización aprobada exitosamente')
+
 def rechazar_cotizacion(db: Session, id_cotizacion: int):
     ### Validaciones ###
 

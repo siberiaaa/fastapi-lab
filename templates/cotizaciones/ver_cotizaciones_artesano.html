@@ -35,6 +35,10 @@
         <td><button onclick="location.href='/facturas/artesano/{{ cotizacion['cotizacion'].id }}'">Realizar factura</button></td>
         {% elif cotizacion['cotizacion'].estado_cotizacion_id == 3 %}
         <td>Rechazado</td>
+        <td>Opciones no disponibles</td>
+        {% elif cotizacion['cotizacion'].estado_cotizacion_id == 4 %}
+        <td>Aprobado y facturado</td>
+        <td>Opciones no disponibles</td>
         {% endif %}
 
 
