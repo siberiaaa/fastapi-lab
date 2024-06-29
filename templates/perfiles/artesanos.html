@@ -1,7 +1,7 @@
 {% extends "base.html" %} 
 {% block content %}
 <div class="titulo">
-    <h1>TU PERFIL</h1> 
+    <h1>MI PERFIL</h1> 
 </div>
 <section class="perfil">
     <div>
@@ -33,7 +33,9 @@
         <input type="text" name="tipo" id="tipo" value="Artesano" readonly>
     </div>
 </section>
-<h3>Tus ventas</h3>
+<div class="titulo">
+    <h3>MIS VENTAS</h3>
+</div>
 <table>
     <tr>
         <th>Producto</th>
@@ -45,7 +47,7 @@
     <tr>
         <td> {{ esto['producto'].nombre }} </td>
         <td> {{ esto['cantidad'] }} </td>
-        <td> {{ esto['estado'].nombres }} </td>
+        <td> {{ esto['estado'].nombre }} </td>
         <td> {{ esto['monto_total'] }} </td>
     </tr>
     {% endfor %}

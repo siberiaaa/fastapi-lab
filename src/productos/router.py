@@ -34,7 +34,11 @@ def get_db():
 
 @router.get('')
 def get_productos(request: Request, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
-    lista_productos_respuesta = service.get_productos(db=db)
+    lista_productos_respuesta = service.get_productos(db=db) 
+    imagenes = []
+    for esto in lista_productos_respuesta.data: 
+        imagen = bytes(esto.imagen).decode()
+        imagenes.append(imagen)
     categorias = categoria_service.get_categorias(db=db)
     print(categorias.data)
     tipos = tipo_producto_service.get_tipos_producto(db=db)
@@ -45,18 +49,20 @@ def get_productos(request: Request, db: Session = Depends(get_db), info=Depends(
         info['tipo_usuario_id'] == 1): 
         print('Eres artesano :D')
         return templates.TemplateResponse(request=request, name="productos/lista.html", context={
-            "productos":lista_productos_respuesta.data, 
+            "productos": lista_productos_respuesta.data, 
             "artesano": True, 
             'categorias': categorias.data, 
-            'tipos': tipos.data})
+            'tipos': tipos.data, 
+            'imagenes': imagenes})
     elif (lista_productos_respuesta.ok and
         info['tipo_usuario_id'] == 2): 
         print('Eres cliente :D')
         return templates.TemplateResponse(request=request, name="productos/lista.html", context={
-            "productos":lista_productos_respuesta.data, 
+            "productos": lista_productos_respuesta.data, 
             "artesano": False, 
             'categorias': [], 
-            'tipos': []})
+            'tipos': [], 
+            'imagenes': imagenes})
     else:
         raise Message_Redirection_Exception(message=lista_productos_respuesta.mensaje, path_message='Volver a inicio', path_route='/')
 

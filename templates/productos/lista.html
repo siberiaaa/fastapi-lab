@@ -1,9 +1,5 @@
 {% extends "base.html" %} 
 
-{% block headblock %}
-<script src="{{ url_for('static', path='js/index.js') }}" defer></script>
-{% endblock %}
-
 {% block content %}
     {% if artesano %}
         <h2>Productos del artesano {{ nombre }}</h2>
@@ -66,12 +62,15 @@
             </form>
         </details>
     {% endif %}
-    {% for producto in productos %}
-    <div>
-        <img src=""> <!-- img vacía mientras se ve como implementarlo -->
-        <h3> {{ producto.nombre }}</h3>
-        <button onclick="location.href='/productos/{{ producto.id }}'">Ver producto</button>
-    </div>
-    {% endfor %}
+    <section class="productos">
+        {% for i in range(productos.__len__()) %}
+        <div>
+            <a href="/productos/{{ productos[i].id }}">
+                <img src="{{ imagenes[i] }}" alt="{{ productos[i].nombre }}"> 
+                <h3> {{ productos[i].nombre }}</h3>
+            </a>
+        </div>
+        {% endfor %}
+    </section>
     
 {% endblock %}
