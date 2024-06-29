@@ -77,7 +77,7 @@
         </form>
     </details>
     {% elif info['tipo_usuario_id'] == 2 %}
-    <a href="/productos/artesano/{{ usuario_cedula }}'"> Ver más productos del artesano {{ artesano }}</a>
+    <a href="/productos/artesano/{{ cedula_artesano }}"> Ver más productos del artesano {{ artesano }}</a>
 
     <button onclick="location.href='/compras/pedido/crear?product_id={{ producto.id }}'">Realizar pedido</button>
     <button onclick="location.href='/compras/encargo/crear?product_id={{ producto.id }}'">Realizar encargo</button>
