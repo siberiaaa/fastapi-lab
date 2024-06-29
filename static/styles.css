@@ -108,6 +108,12 @@ h1, h2, h3 {
     padding: 1%;
 }
 
+.contactar {
+    background-color: #f9d387;
+    background-image: url('ciudad_pequeña.png');
+    height: 150%;
+}
+
 table {
     width: 100%;
 }
