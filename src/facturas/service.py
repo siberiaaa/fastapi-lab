@@ -76,7 +76,7 @@ def listar_facturas_cliente(db: Session, cedula: str):
 
     lista_final = []
     for compra in lista: 
-        try: 
+  
             final = {}
             final['producto'] = db.query(producto_models.Producto).filter(producto_models.Producto.id == compra.producto_id).first()
             final['compra'] = compra
@@ -87,15 +87,13 @@ def listar_facturas_cliente(db: Session, cedula: str):
                 cotizacion_dela_factura = db.query(cotizacion_models.Cotizacion).filter(cotizacion_models.Cotizacion.id == factura.cotizacion_id).first()
                 if cotizacion_dela_factura != None: 
                     envio = db.query(envios_models.Metodo_Envio).filter(envios_models.Metodo_Envio.id == factura.metodo_envio_id).first()
-                    pago = db.query(pagos_models.Metodo_Pago).filter(usuario_models.Usuario.cedula == factura.metodo_pago_id).first()
+                    pago = db.query(pagos_models.Metodo_Pago).filter(pagos_models.Metodo_Pago.id == factura.metodo_pago_id).first()
 
                     final['factura'] = factura
                     final['cotizacion'] = cotizacion_dela_factura
-                    final['pago'] = envio.nombre
-                    final['envia'] = pago.nombre
+                    final['pago'] = pago.nombre
+                    final['envia'] = envio.nombre
                     lista_final.append(final)
-        except Exception: 
-            continue
 
     respuesta = Respuesta[list[dict]](ok=True, mensaje='Lista de las facturas del cliente encontrada', data=lista_final)
     return respuesta
@@ -106,7 +104,7 @@ def listar_facturas_artesano(db: Session, cedula: str):
     lista_final = []
     
     for esto in lista: 
-        try: 
+      
             cotizacion = db.query(cotizacion_models.Cotizacion).filter(cotizacion_models.Cotizacion.id == esto.cotizacion_id).first()
             compra = db.query(compra_models.Compra).filter(compra_models.Compra.id == cotizacion.compra_id).first()
             producto = db.query(producto_models.Producto).filter(producto_models.Producto.id == compra.producto_id).first()
@@ -115,19 +113,16 @@ def listar_facturas_artesano(db: Session, cedula: str):
             if usuario.cedula == cedula: 
                 factura = db.query(models.Factura).filter(models.Factura.cotizacion_id == cotizacion.id).first()
                 envio = db.query(envios_models.Metodo_Envio).filter(envios_models.Metodo_Envio.id == factura.metodo_envio_id).first()
-                pago = db.query(pagos_models.Metodo_Pago).filter(usuario_models.Usuario.cedula == factura.metodo_pago_id).first()
+                pago = db.query(pagos_models.Metodo_Pago).filter(pagos_models.Metodo_Pago.id == factura.metodo_pago_id).first()
 
                 final = {}
                 final['producto'] = producto
                 final['compra'] = compra
                 final['factura'] = factura
                 final['cotizacion'] = cotizacion
-                final['pago'] = envio.nombre
-                final['envia'] = pago.nombre
+                final['pago'] = pago.nombre
+                final['envia'] = envio.nombre
                 lista_final.append(final)
-
-        except Exception: 
-            continue
 
     respuesta = Respuesta[list[dict]](ok=True, mensaje='Lista de las facturas del cliente encontrada', data=lista_final)
     return respuesta

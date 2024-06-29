@@ -9,6 +9,7 @@ import facturas.service as service
 from schemas import Respuesta
 from datetime import datetime
 
+import cotizaciones.service as cotizacion_service
 import compras.service as compra_service
 import productos.service as producto_service
 import metodos_envios.service as envio_service
@@ -95,6 +96,15 @@ def realizar_facturar_artesano(request: Request, id_cotizacion: int,
     if info["tipo_usuario_id"] != 1: 
              raise No_Artesano_Exception
     
+    cotizacion_respuesta = cotizacion_service.aprobar_facturada_cotizacion(db=db, id_cotizacion=id_cotizacion)
+    if not cotizacion_respuesta.ok:
+         raise Message_Redirection_Exception(message=cotizacion_respuesta.mensaje, path_message='Volver a home', path_route='/home')
+
+    envio_respuesta = envio_service.listar_metodos_envios(db=db)
+    if not envio_respuesta.ok:
+         raise Message_Redirection_Exception(message=envio_respuesta.mensaje, path_message='Volver a home', path_route='/home')
+    
+
     factura = schemas.FacturaCrear(fecha_entrega=entrega, cotizacion_id=id_cotizacion, metodo_envio_id=envio, metodo_pago_id=pago)
     respuesta =  service.crear_factura(db=db, factura=factura)
     if (respuesta.ok):
