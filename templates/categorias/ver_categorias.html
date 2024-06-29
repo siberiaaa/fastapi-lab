@@ -1,9 +1,4 @@
 {% extends "base.html" %} 
-
-{% block headblock %}
-<script src="{{ url_for('static', path='js/index.js') }}" defer></script>
-{% endblock %}
-
 {% block content %}
 <h1>
     Categorias
@@ -12,11 +7,11 @@
 <button onclick="location.href='/categorias/crear'">Crear categoría</button>
 
 
-<table style="width:100%">
+<table>
     <tr>
-        <td>Nombre</td>
-        <td>Descripcion</td>
-        <td>Opciones</td>
+        <th>Nombre</th>
+        <th>Descripcion</th>
+        <th>Opciones</th>
     </tr>
 
 {% for categoria in categorias %}
@@ -28,5 +23,5 @@
     
     <div style="margin-bottom: 10px;"></div>
 {% endfor %}
-
+</table>
 {% endblock %}

@@ -1,9 +1,5 @@
 {% extends "base.html" %} 
 
-{% block headblock %}
-<script src="{{ url_for('static', path='js/index.js') }}" defer></script>
-{% endblock %}
-
 {% block content %}
 <h2> {{ producto['nombre'] }}</h2>
 <section class="producto">

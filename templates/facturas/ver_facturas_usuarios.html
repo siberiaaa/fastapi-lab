@@ -18,21 +18,18 @@
     {% endif %}
 
 
-<table style="width:100%">
+<table>
     <tr>
-        <td>Producto</td>
-        <td>Cantidad</td>
-        <td>Precio</td>
-        <td>Precio total</td>
-        <td>Fecha entrega</td>
-        <td>Metodo de pago</td>
-        <td>Metodo de envío</td>
-
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio</th>
+        <th>Precio total</th>
+        <th>Fecha entrega</th>
+        <th>Metodo de pago</th>
+        <th>Metodo de envío</th>
     </tr>
-
 {% for factura in facturas %}
     <tr> 
-        <!--  -->
         <td>{{ factura['producto'].nombre }}</td>
         <td>{{ factura['compra'].cantidad }}</td>
         <td>{{ factura['cotizacion'].precio }}</td>
@@ -40,10 +37,8 @@
         <td>{{ factura['factura'].fecha }}</td>
         <td>{{ factura['pago'] }}</td>
         <td>{{ factura['envia'] }}</td>
-        
     </tr>
-    
     <div style="margin-bottom: 10px;"></div>
 {% endfor %}
-
+</table>
 {% endblock %}

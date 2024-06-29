@@ -1,10 +1,8 @@
 {% extends "base.html" %} 
 
-
 {% block content %}
+
 <h1 class="nosabe">Realizar factura</h1>
-
-
 <form action="/facturas/artesano/{{ id_cotizacion }}" method="post">
     <fieldset>
 
@@ -30,7 +28,7 @@
         <select name="pago" required>
             <option value="">-Selecciona método de pago-</option>
             {% for pago in metodos_pago %}
-            <option value={{ pago.id }}>{{ pago.nombre }}</option>
+            <option value="{{ pago.id }}">{{ pago.nombre }}</option>
             {% endfor %}
         </select>
         

@@ -1,40 +1,35 @@
 {% extends "base.html" %} 
 
-{% block headblock %}
-<script src="{{ url_for('static', path='js/index.js') }}" defer></script>
-{% endblock %}
-
 {% block content %}
-<h1>
-    Tipos de producto
-</h1>
+    <h1>
+        Tipos de producto
+    </h1>
 
-<button onclick="location.href='/tipos_productos/crear'">Crear categoría</button>
+    <button onclick="location.href='/tipos_productos/crear'">Crear categoría</button>
 
+    <table>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+            <th>Funcional o decorativo</th>
+            <th>Opciones</th>
+        </tr>
 
-<table style="width:100%">
-    <tr>
-        <td>Nombre</td>
-        <td>Descripcion</td>
-        <td>Funcional o decorativo</td>
-        <td>Opciones</td>
-    </tr>
+    {% for tipo in tipos %}
+        <tr>
+            <td>{{ tipo.nombre }}</td>
+            <td>{{ tipo.descripcion }}</td>
 
-{% for tipo in tipos %}
-    <tr>
-        <td>{{ tipo.nombre }}</td>
-        <td>{{ tipo.descripcion }}</td>
+            {% if tipo.funcionalidad %}
+            <td>Funcional</td>
+            {% else %}
+            <td>Decorativo</td>
+            {% endif %}
 
-        {% if tipo.funcionalidad %}
-        <td>Funcional</td>
-        {% else %}
-        <td>Decorativo</td>
-        {% endif %}
-
-        <td> <button onclick="delete_tipo_producto({{ tipo.id }})">Eliminar</button></td>
-    </tr>
-    
-    <div style="margin-bottom: 10px;"></div>
-{% endfor %}
+            <td> <button onclick="delete_tipo_producto({{ tipo.id }})">Eliminar</button></td>
+        </tr>
+        <div style="margin-bottom: 10px;"></div>
+    {% endfor %}
+    </table>
 
 {% endblock %}

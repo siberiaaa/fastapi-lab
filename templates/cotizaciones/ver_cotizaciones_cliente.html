@@ -7,15 +7,15 @@
 </h1>
 
 
-<table style="width:100%">
+<table>
     <tr>
-        <td>Producto</td>
-        <td>Cantidad</td>
-        <td>Precio</td>
-        <td>Precio total</td>
-        <td>Estado de la cotizacion</td>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio</th>
+        <th>Precio total</th>
+        <th>Estado de la cotizacion</th>
         
-        <td>Opciones</td>
+        <th>Opciones</th>
     </tr>
 
 {% for cotizacion in cotizaciones %}
@@ -44,5 +44,5 @@
     
     <div style="margin-bottom: 10px;"></div>
 {% endfor %}
-
+</table>
 {% endblock %}

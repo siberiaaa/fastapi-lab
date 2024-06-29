@@ -1,21 +1,17 @@
 {% extends "base.html" %} 
-
-
 {% block content %}
 <h1>
     Compras que te han solicitado
 </h1>
-
-
-<table style="width:100%">
+<table>
     <tr>
-        <td>Producto</td>
-        <td>Fecha</td>
-        <td>Cantidad</td>
-        <td>Tipo de compra</td>
-        <td>Estado de la compra</td>
+        <th>Producto</th>
+        <th>Fecha</th>
+        <th>Cantidad</th>
+        <th>Tipo de compra</th>
+        <th>Estado de la compra</th>
         
-        <td>Opciones</td>
+        <th>Opciones</th>
     </tr>
 
 {% for compra in compras %}
@@ -41,11 +37,8 @@
         <td>Rechazado</td>
         <td>Opciones no disponibles</td>
         {% endif %}
-
-
     </tr>
-    
     <div style="margin-bottom: 10px;"></div>
 {% endfor %}
-
+</table>
 {% endblock %}
