@@ -75,10 +75,6 @@ h1, h2, h3 {
     margin: 2%;
 }
 
-.reseñas {
-    
-}
-
 .reseñas h2, .reseñas h3 {
     text-align: left;
 }
@@ -97,6 +93,19 @@ h1, h2, h3 {
     background-color: honeydew;
     padding: 2%;
     margin: 2%;
+}
+
+.producto {
+    display: flex; 
+    flex-wrap: wrap;
+}
+
+.producto h3 {
+    text-align: left;
+}
+
+.producto img {
+    padding: 1%;
 }
 
 table, td, th {
