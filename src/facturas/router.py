@@ -91,7 +91,7 @@ def realizar_facturar_artesano(id_cotizacion: int, request: Request, info=Depend
     if not pago_respuesta.ok:
          raise Message_Redirection_Exception(message=pago_respuesta.mensaje, path_message='Volver a home', path_route='/home')
   
-    return templates.TemplateResponse(request=request, name="facturas/realizar_factuas_artesano.html", context={
+    return templates.TemplateResponse(request=request, name="facturas/realizar_facturas_artesano.html", context={
          'id_cotizacion':id_cotizacion, 
          'metodos_envio':envio_respuesta.data, 
          'metodos_pago':pago_respuesta.data, 
