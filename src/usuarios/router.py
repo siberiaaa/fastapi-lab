@@ -77,7 +77,9 @@ def get_db():
 @router.get('/registrar', response_class=HTMLResponse)
 def registrar_usuario(request: Request, db: Session = Depends(get_db)):
     lista = listar_tipos_usuarios(db=db)
-    return templates.TemplateResponse("registrar.html", {'request': request, 'lista': lista})      
+    return templates.TemplateResponse("registrar.html", {
+        'request': request, 
+        'lista': lista})      
 
 @router.post('/registrar', response_class=HTMLResponse)
 def registrar_usuario(request: Request, 

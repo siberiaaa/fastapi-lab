@@ -53,7 +53,10 @@ def ver_facturas_cliente(request: Request, info=Depends(auth_handler.auth_wrappe
     respuesta = service.listar_facturas_cliente(db=db, cedula=info['cedula'])
 
     if (respuesta.ok):
-        return templates.TemplateResponse(request=request, name="facturas/ver_facturas_usuarios.html", context={'facturas':respuesta.data, 'tipo_usuario': info["tipo_usuario_id"]})  
+        return templates.TemplateResponse(request=request, name="facturas/ver_facturas_usuarios.html", context={
+             'facturas':respuesta.data, 
+             'tipo_usuario': info["tipo_usuario_id"], 
+             'info': info})  
     else:
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
 
@@ -66,7 +69,10 @@ def ver_facturas_artesano(request: Request, info=Depends(auth_handler.auth_wrapp
     respuesta = service.listar_facturas_artesano(db=db, cedula=info['cedula'])
 
     if (respuesta.ok):
-        return templates.TemplateResponse(request=request, name="facturas/ver_facturas_usuarios.html", context={'facturas':respuesta.data, 'tipo_usuario': info["tipo_usuario_id"]})  
+        return templates.TemplateResponse(request=request, name="facturas/ver_facturas_usuarios.html", context={
+             'facturas':respuesta.data, 
+             'tipo_usuario': info["tipo_usuario_id"], 
+             'info': info})  
     else:
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
 
@@ -85,7 +91,11 @@ def realizar_facturar_artesano(id_cotizacion: int, request: Request, info=Depend
     if not pago_respuesta.ok:
          raise Message_Redirection_Exception(message=pago_respuesta.mensaje, path_message='Volver a home', path_route='/home')
   
-    return templates.TemplateResponse(request=request, name="facturas/realizar_factuas_artesano.html", context={'id_cotizacion':id_cotizacion, 'metodos_envio':envio_respuesta.data, 'metodos_pago':pago_respuesta.data})  
+    return templates.TemplateResponse(request=request, name="facturas/realizar_factuas_artesano.html", context={
+         'id_cotizacion':id_cotizacion, 
+         'metodos_envio':envio_respuesta.data, 
+         'metodos_pago':pago_respuesta.data, 
+         'info': info})  
    
 @router.post('/artesano/{id_cotizacion}')
 def realizar_facturar_artesano(request: Request, id_cotizacion: int,

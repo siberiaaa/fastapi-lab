@@ -38,7 +38,9 @@ def ver_cotizaciones_cliente(request: Request, info=Depends(auth_handler.auth_wr
     respuesta = service.listar_cotizaciones_para_cliente(db=db, cedula=info['cedula'])
 
     if (respuesta.ok):
-        return templates.TemplateResponse(request=request, name="cotizaciones/ver_cotizaciones_cliente.html", context={'cotizaciones':respuesta.data})  
+        return templates.TemplateResponse(request=request, name="cotizaciones/ver_cotizaciones_cliente.html", context={
+             'cotizaciones':respuesta.data, 
+             'info': info})  
     else:
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
     
@@ -62,7 +64,11 @@ def revisar_compra_cliente(id_cotizacion: int, request: Request, info=Depends(au
     if not producto_respuesta.ok:
          raise Message_Redirection_Exception(message=producto_respuesta.mensaje, path_message='Volver a home', path_route='/home')
   
-    return templates.TemplateResponse(request=request, name="cotizaciones/revisar_cotizacion_cliente.html", context={'cotizacion':cotizacion_respuesta.data, 'compra':compra_respuesta.data, 'producto':producto_respuesta.data})  
+    return templates.TemplateResponse(request=request, name="cotizaciones/revisar_cotizacion_cliente.html", context={
+         'cotizacion':cotizacion_respuesta.data, 
+         'compra':compra_respuesta.data, 
+         'producto':producto_respuesta.data, 
+         'info': info})  
    
 @router.post('/cliente/{id_cotizacion}')
 def revisar_compra_cliente_facturar(request: Request, id_cotizacion: int,  pedir_factura: bool = Form(...), info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):
@@ -101,7 +107,9 @@ def ver_cotizaciones_artesano(request: Request, info=Depends(auth_handler.auth_w
     respuesta = service.listar_cotizaciones_para_artesanos(db=db, cedula=info['cedula'])
 
     if (respuesta.ok):
-        return templates.TemplateResponse(request=request, name="cotizaciones/ver_cotizaciones_artesano.html", context={'cotizaciones':respuesta.data})  
+        return templates.TemplateResponse(request=request, name="cotizaciones/ver_cotizaciones_artesano.html", context={
+             'cotizaciones':respuesta.data, 
+             'info': info})  
     else:
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
     

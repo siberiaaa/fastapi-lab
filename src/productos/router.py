@@ -53,7 +53,8 @@ def get_productos(request: Request, db: Session = Depends(get_db), info=Depends(
             "artesano": True, 
             'categorias': categorias.data, 
             'tipos': tipos.data, 
-            'imagenes': imagenes})
+            'imagenes': imagenes, 
+            'info': info})
     elif (lista_productos_respuesta.ok and
         info['tipo_usuario_id'] == 2): 
         print('Eres cliente :D')
@@ -62,7 +63,8 @@ def get_productos(request: Request, db: Session = Depends(get_db), info=Depends(
             "artesano": False, 
             'categorias': [], 
             'tipos': [], 
-            'imagenes': imagenes})
+            'imagenes': imagenes, 
+            'info': info})
     else:
         raise Message_Redirection_Exception(message=lista_productos_respuesta.mensaje, path_message='Volver a inicio', path_route='/')
 
@@ -120,7 +122,11 @@ def get_productos_artesano(request: Request, cedula_artesano : int, db: Session 
 
 
     if (lista_productos_respuesta.ok):
-            return templates.TemplateResponse(request=request, name="productos/lista.html", context={"productos":lista_productos_respuesta.data, "artesano":True, "nombre": f'{artesano.data.nombres} {artesano.data.apellidos}'})
+            return templates.TemplateResponse(request=request, name="productos/lista.html", context={
+                "productos":lista_productos_respuesta.data, 
+                "artesano":True, 
+                "nombre": f'{artesano.data.nombres} {artesano.data.apellidos}', 
+                'info': info})
     else:
         raise Message_Redirection_Exception(message=lista_productos_respuesta.mensaje, path_message='Volver a inicio', path_route='/')
 

@@ -186,6 +186,9 @@ header, footer {
 
 footer {
     background-color: #ffbd59;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 header {
@@ -225,5 +228,9 @@ header img {
 }
 
 footer img {
-    width: 4%;
+    width: 18%;
+}
+
+footer p {
+    color: #9c7c3b;
 }

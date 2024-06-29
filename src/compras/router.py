@@ -40,7 +40,10 @@ def crear_pedido(request: Request, product_id: int = -1, info=Depends(auth_handl
     if info["tipo_usuario_id"] != 2: 
              raise No_Cliente_Exception()
     
-    return templates.TemplateResponse(request=request, name="compras/crear_pedidos.html", context={'cedula_cliente':info['cedula'], 'producto_id':product_id})  
+    return templates.TemplateResponse(request=request, name="compras/crear_pedidos.html", context={
+         'cedula_cliente': info['cedula'], 
+         'producto_id':product_id, 
+         'info': info})  
 
 @router.post('/pedido/crear')
 def crear_encargo(request: Request, db: Session = Depends(get_db),
@@ -63,7 +66,12 @@ def crear_encargo(request: Request, db: Session = Depends(get_db),
     respuesta = service.realizar_compra(db=db, compra=compra)
     
     if (respuesta.ok):
-        return templates.TemplateResponse("message-redirection.html", {"request": request, "message": 'Pedido realizado correctamente', "path_route": '/home', "path_message": 'Volver a home'})
+        return templates.TemplateResponse("message-redirection.html", {
+             "request": request, 
+             "message": 'Pedido realizado correctamente', 
+             "path_route": '/home', 
+             "path_message": 'Volver a home', 
+             'info': info})
     else:
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
 
@@ -75,7 +83,10 @@ def crear_encargo(request: Request, product_id: int = -1, info=Depends(auth_hand
     if info["tipo_usuario_id"] != 2: 
              raise No_Cliente_Exception()
     
-    return templates.TemplateResponse(request=request, name="compras/crear_encargos.html", context={'cedula_cliente':info['cedula'], 'producto_id':product_id})  
+    return templates.TemplateResponse(request=request, name="compras/crear_encargos.html", context={
+         'cedula_cliente': info['cedula'], 
+         'producto_id':product_id, 
+         'info': info})  
 
 @router.post('/encargo/crear')
 def crear_encargo(request: Request, db: Session = Depends(get_db),
@@ -121,7 +132,9 @@ def ver_compras_artesano(request: Request, info=Depends(auth_handler.auth_wrappe
     respuesta = service.listar_compras_para_cliente(db=db, cedula=info['cedula'])
 
     if (respuesta.ok):
-        return templates.TemplateResponse(request=request, name="compras/ver_compras_cliente.html", context={'compras':respuesta.data})  
+        return templates.TemplateResponse(request=request, name="compras/ver_compras_cliente.html", context={
+             'compras':respuesta.data, 
+             'info': info})  
     else:
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
     
@@ -136,7 +149,9 @@ def ver_compras_artesano(request: Request, info=Depends(auth_handler.auth_wrappe
     
 
     if (respuesta.ok):
-        return templates.TemplateResponse(request=request, name="compras/ver_compras_artesano.html", context={'compras':respuesta.data})  
+        return templates.TemplateResponse(request=request, name="compras/ver_compras_artesano.html", context={
+             'compras':respuesta.data, 
+             'info': info})  
     else:
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
     
@@ -153,7 +168,10 @@ def revisar_compra_artesano(id_compra: int, request: Request, info=Depends(auth_
     if not producto_respuesta.ok:
          raise Message_Redirection_Exception(message=producto_respuesta.mensaje, path_message='Volver a home', path_route='/home')
 
-    return templates.TemplateResponse(request=request, name="compras/revisar_compra_artesano.html", context={'compra':respuesta.data, 'producto':producto_respuesta.data})  
+    return templates.TemplateResponse(request=request, name="compras/revisar_compra_artesano.html", context={
+         'compra':respuesta.data, 
+         'producto':producto_respuesta.data, 
+         'info': info})  
 
 @router.post('/artesano/{id_compra}')
 def revisar_compra_artesano_cotizar(request: Request, id_compra: int,  cotizar: bool = Form(...), precio: float = Form(...), cantidad: int = Form(...), info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):

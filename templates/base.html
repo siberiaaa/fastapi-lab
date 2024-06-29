@@ -19,6 +19,7 @@
                 <h1>ARTESANOS</h1>
             </a>
         </div>
+        {% if info != None %}
         <div>
             <button>Invitar amigos</button>
         </div>
@@ -27,6 +28,18 @@
                 <span>Cerrar sesión</span>
             </a>
         </div>
+        {% else %}
+        <div>
+            <a href="/registrar">
+                <button>Registrar</button>
+            </a>
+        </div>
+        <div>
+            <a href="/iniciar_sesion">
+                <button>Iniciar sesión</button>
+            </a>
+        </div>
+        {% endif %}
     </header>
     <nav>
         <a href="/perfil">
@@ -50,11 +63,10 @@
         {% block content %} {% endblock %}
     </main>
     <footer>
-        <div>
-            <a href="/">
-                <img src="{{ url_for('static', path='artesanal.ico') }}" alt="Ícono bonito">
-            </a>
-        </div>
+        <a href="/">
+            <img src="{{ url_for('static', path='artesanal.ico') }}" alt="Ícono bonito">
+        </a>
+        <p>ARTESANÍAS DESDE TU CIUDAD</p>
     </footer>
 </body>
 </html>

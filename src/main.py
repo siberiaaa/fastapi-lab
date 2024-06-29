@@ -61,8 +61,9 @@ app.include_router(perfiles.router)
 
 
 @app.get('/')
-async def home():
-    return {'hola': 'mundo :3'}
+async def home(request: Request):
+    return templates.TemplateResponse('/usuarios/principal.html', {
+        'request': request, 'info': None})
 
 @app.exception_handler(RequiresLoginException)
 async def exception_handler(request: Request, exc: RequiresLoginException) -> Response:

@@ -33,7 +33,9 @@ def get_categorias(request: Request, db: Session = Depends(get_db), info=Depends
         lista_categorias_respuesta = service.get_categorias(db=db)
 
         if (lista_categorias_respuesta.ok):
-            return templates.TemplateResponse(request=request, name="categorias/ver_categorias.html", context={"categorias":lista_categorias_respuesta.data})
+            return templates.TemplateResponse(request=request, name="categorias/ver_categorias.html", context={
+                 "categorias":lista_categorias_respuesta.data, 
+                 'info': info})
         else:
             raise Message_Redirection_Exception(message=lista_categorias_respuesta.mensaje, path_message='Volver a inicio', path_route='/')
 
@@ -41,7 +43,9 @@ def get_categorias(request: Request, db: Session = Depends(get_db), info=Depends
 def crear_categoria(request: Request, info=Depends(auth_handler.auth_wrapper)):
     if info["tipo_usuario_id"] != 1: 
              raise No_Artesano_Exception()
-    return templates.TemplateResponse(request=request, name="categorias/crear_categorias.html")  
+    return templates.TemplateResponse(request=request, name="categorias/crear_categorias.html", context={
+         'info': info
+    })  
 
 @router.post('/crear')
 def crear_categoria(request: Request, 

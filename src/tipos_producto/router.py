@@ -36,7 +36,9 @@ def get_tipos_productos(request: Request, db: Session = Depends(get_db), info=De
     lista_tipos_respuesta = service.get_tipos_producto(db=db)
 
     if (lista_tipos_respuesta.ok):
-        return templates.TemplateResponse(request=request, name="tipos_productos/ver_tipos.html", context={"tipos":lista_tipos_respuesta.data})
+        return templates.TemplateResponse(request=request, name="tipos_productos/ver_tipos.html", context={
+             "tipos":lista_tipos_respuesta.data, 
+             'info': info})
     else:
         raise Message_Redirection_Exception(message=lista_tipos_respuesta.mensaje, path_message='Volver a inicio', path_route='/')
 
@@ -44,7 +46,7 @@ def get_tipos_productos(request: Request, db: Session = Depends(get_db), info=De
 def crear_tipos_productos(request: Request, info=Depends(auth_handler.auth_wrapper)):
     if info["tipo_usuario_id"] != 1: 
              raise No_Artesano_Exception()
-    return templates.TemplateResponse(request=request, name="tipos_productos/crear_tipos.html")  
+    return templates.TemplateResponse(request=request, name="tipos_productos/crear_tipos.html", context={'info': info})  
 
 @router.post('/crear')
 def crear_tipos_productos(request: Request, 
