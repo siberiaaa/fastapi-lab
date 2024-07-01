@@ -57,6 +57,20 @@ h1, h2, h3 {
     height: 50%;
 }
 
+.artesanos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-around;
+}
+
+.artesanos div {
+    border-radius: 5px;
+    border: 2px dotted chocolate;
+    background-color: cornsilk;
+    padding: 1%;
+}
+
 .productos a {
     text-decoration: none;
 }
@@ -233,7 +247,7 @@ header img {
 }
 
 footer img {
-    width: 18%;
+    width: 12%;
 }
 
 footer p {

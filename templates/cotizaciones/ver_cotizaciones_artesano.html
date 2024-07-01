@@ -32,7 +32,11 @@
         <td>Opciones no disponibles</td>
         {% elif cotizacion['cotizacion'].estado_cotizacion_id == 2 %}
         <td>Aprobado</td>
-        <td><button onclick="location.href='/facturas/artesano/{{ cotizacion['cotizacion'].id }}'">Realizar factura</button></td>
+        <td>
+            <a href="/facturas/artesano/{{ cotizacion['cotizacion'].id }}">
+                <button>Realizar factura</button>
+            </a>
+        </td>
         {% elif cotizacion['cotizacion'].estado_cotizacion_id == 3 %}
         <td>Rechazado</td>
         <td>Opciones no disponibles</td>

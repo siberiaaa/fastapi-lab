@@ -119,14 +119,18 @@ def get_productos_artesano(request: Request, cedula_artesano : str, db: Session 
 
     if (not artesano.ok):
         raise Message_Redirection_Exception(message=artesano.mensaje, path_message='Volver a inicio', path_route='/')
-
+    
+    imagenes = []
+    for esto in lista_productos_respuesta.data: 
+        imagen = bytes(esto.imagen).decode()
+        imagenes.append(imagen)
     
     if (lista_productos_respuesta.ok):
             return templates.TemplateResponse(request=request, name="productos/lista.html", context={
                 "productos":lista_productos_respuesta.data, 
                 "artesano":True, 
                 "nombre": f'{artesano.data.nombres} {artesano.data.apellidos}', 
-                'info': info})
+                'info': info, 'imagenes': imagenes})
     else:
         raise Message_Redirection_Exception(message=lista_productos_respuesta.mensaje, path_message='Volver a inicio', path_route='/')
 

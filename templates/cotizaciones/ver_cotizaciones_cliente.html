@@ -30,7 +30,11 @@
 
         {% if cotizacion['cotizacion'].estado_cotizacion_id == 1 %}
         <td>Pendiente por revisar</td>
-        <td><button onclick="location.href='/cotizaciones/cliente/{{ cotizacion['cotizacion'].id }}'">Revisar</button></td>
+        <td>
+            <a href="/cotizaciones/cliente/{{ cotizacion['cotizacion'].id }}">
+                <button>Revisar</button>
+            </a>
+        </td>
         {% elif cotizacion['cotizacion'].estado_cotizacion_id == 2 %}
         <td>Aprobado</td>
         <td>Opciones no disponibles</td>

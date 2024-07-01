@@ -3,10 +3,12 @@
 <div class="titulo">
     <h1>ARTESANOS</h1>
 </div>
-<section>
+<section class="artesanos">
     {% for esto in lista %}
     <div>
-        <p>{{ esto.nombres }} {{ esto.apellidos }}</p>
+        <a href="productos/artesano/{{ esto['cedula'] }}">
+            <p>{{ esto.nombres }} {{ esto.apellidos }}</p>
+        </a>
     </div>
     {% endfor %}
 </section>
