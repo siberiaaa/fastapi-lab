@@ -12,7 +12,9 @@
     <header>
         <img src="{{ url_for('static', path='artesanal.png') }}" alt="Ícono bonito">
         <div>
-            <input type="search" name="buscar" id="buscar" placeholder="🔍 BUSCAR PRODUCTO">
+            <form id="buscar_productos" action="/productos/buscar/" method="get">
+                <input type="search" name="buscar" id="buscar" placeholder="🔍 BUSCAR PRODUCTO" onchange="buscar_productos(this)">
+            </form>
         </div>
         <div>
             <a href="/home">

@@ -31,3 +31,11 @@ function deimaginar() {
     externa.src = ''
     vistas.value = ''
 }
+
+function buscar_productos(data) {
+    console.log(data);
+    console.log(data.form);
+    let resultado = data.value 
+    data.form.action = '/productos/buscar/' + String(resultado)
+    data.form.submit()
+}

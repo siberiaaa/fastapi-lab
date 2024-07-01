@@ -154,3 +154,7 @@ def delete_producto(db: Session, id: int):
     db.commit()
     
     return Respuesta[schemas.Producto](ok=True, mensaje='Producto eliminado')
+
+def buscar_productos(db: Session, data: str): 
+    productos = db.query(models.Producto).filter(models.Producto.nombre in data).all()
+    return productos
