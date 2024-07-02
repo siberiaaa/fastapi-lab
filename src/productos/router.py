@@ -110,6 +110,21 @@ def get_producto(request: Request, id : int, db: Session = Depends(get_db), info
         'imagen': imagen, 'info': info, 'calificaciones': calificaciones, 'reseñas': reseñas, "usuario_cedula":info['cedula'], 
         'calificadores': lista_calificadores, 'anecdotas': anecdotas})
 
+
+@router.post('/buscar')
+def buscar_productos(request: Request, data: str = Form(...), db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 
+    print(data)
+    productos = service.buscar_productos(db=db, data=data)
+    imagenes = []
+    for esto in productos: 
+        imagen = bytes(esto.imagen).decode()
+        imagenes.append(imagen)
+    return templates.TemplateResponse(request=request, name="productos/lista.html", context={
+                "productos": productos, 
+                "artesano": info['tipo_usuario_id'] == 1, 
+                'info': info, 
+                'imagenes': imagenes})
+
         
 @router.get('/artesano/{cedula_artesano}')
 def get_productos_artesano(request: Request, cedula_artesano : str, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 
@@ -159,19 +174,6 @@ def create_producto(nombre: str = Form(...),
     )
     service.create_producto(db=db, producto=nuevo)
     return RedirectResponse(url='/productos', status_code=status.HTTP_303_SEE_OTHER)
-
-@router.get('/buscar')
-def buscar_productos(request: Request, buscar: str = Form(...), db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 
-    productos = service.buscar_productos(db=db, buscar=buscar)
-    imagenes = []
-    for esto in productos: 
-        imagen = bytes(esto.imagen).decode()
-        imagenes.append(imagen)
-    return templates.TemplateResponse(request=request, name="productos/lista.html", context={
-                "productos": productos, 
-                "artesano": info['tipo_usuario_id'] == 1, 
-                'info': info, 
-                'imagenes': imagenes})
 
 @router.put('/{id}', response_model=Respuesta[schemas.Producto])
 def update_producto(id : int, producto: schemas.ProductoCrear, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 
