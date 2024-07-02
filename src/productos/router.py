@@ -160,7 +160,7 @@ def create_producto(nombre: str = Form(...),
     service.create_producto(db=db, producto=nuevo)
     return RedirectResponse(url='/productos', status_code=status.HTTP_303_SEE_OTHER)
 
-@router.post('/buscar')
+@router.get('/buscar')
 def buscar_productos(request: Request, buscar: str = Form(...), db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 
     productos = service.buscar_productos(db=db, buscar=buscar)
     imagenes = []
