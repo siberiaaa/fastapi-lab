@@ -23,6 +23,7 @@ from cotizaciones import router as cotizaciones
 from facturas import router as facturas
 from homes import router as homes
 from perfiles import router as perfiles
+from invitar import router as invitar
 
 from usuarios.service import AuthHandler, listar_artesanos, LoginExpired, RequiresLoginException
 from exceptions import No_Artesano_Exception, No_Cliente_Exception
@@ -58,6 +59,7 @@ app.include_router(cotizaciones.router, prefix='/cotizaciones')
 app.include_router(facturas.router, prefix='/facturas')
 app.include_router(homes.router)
 app.include_router(perfiles.router)
+app.include_router(invitar.router)
 
 
 @app.get('/')

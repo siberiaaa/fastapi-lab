@@ -1,7 +1,9 @@
 from typing import List
-from fastapi import BackgroundTasks, APIRouter, File, Form, UploadFile
-from fastapi.responses import JSONResponse
+from fastapi.templating import Jinja2Templates
+from fastapi import BackgroundTasks, APIRouter, File, Form, UploadFile, Depends, Request, status
+from fastapi.responses import JSONResponse, RedirectResponse
 from pydantic import BaseModel
+from usuarios.service import AuthHandler
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
 from pydantic import EmailStr
 
@@ -9,20 +11,22 @@ from pydantic import EmailStr
 # https://www.geeksforgeeks.org/sending-email-using-fastapi-framework-in-python/
 # https://www.hostinger.es/tutoriales/como-usar-el-servidor-smtp-gmail-gratuito/
 
+auth_handler = AuthHandler()
+
 router = APIRouter()
+
+templates = Jinja2Templates(directory="../templates")
 
 class EmailSchema(BaseModel):
     email: List[EmailStr]
 
-    #JesusDevChrist7*
-
 conf = ConnectionConfig(
-    MAIL_USERNAME = "abnersaavedra777@gmail.com",
-    MAIL_PASSWORD = "qwuk uuif spgj zwzb",
-    MAIL_FROM = "abnersaavedra777@gmail.com",
+    MAIL_USERNAME = "empresamariamoonlit72@gmail.com",
+    MAIL_PASSWORD = "qmoz cnct ebek jnkn",
+    MAIL_FROM = "empresamariamoonlit72@gmail.com",
     MAIL_PORT = 587,
     MAIL_SERVER = "smtp.gmail.com",
-    MAIL_FROM_NAME="Desired Name",
+    MAIL_FROM_NAME="Artesanal",
     MAIL_STARTTLS = True,
     MAIL_SSL_TLS = False,
     USE_CREDENTIALS = True,
@@ -31,22 +35,37 @@ conf = ConnectionConfig(
 
 router = APIRouter()
 
+@router.get('/invitar')
+def invitar(request: Request, info=Depends(auth_handler.auth_wrapper)): 
+    return templates.TemplateResponse('/invitar/invitar.html', {
+        'request': request, 'info': info
+    })
 
-
-@router.post("/email")
-async def simple_send(email: EmailSchema) -> JSONResponse:
-    html = """<p>Hi this test mail, thanks for using Fastapi-mail</p> """
-
+@router.post("/mandar_correo")
+async def mandar_simple(original: EmailStr = Form(...), info=Depends(auth_handler.auth_wrapper)) -> JSONResponse:
+    emailFinal = EmailSchema(
+        email= [
+            original
+        ]
+    )
+    html = f"""
+    <h1>Invitación cordial a Artesanal</h1>
+    <p>
+        Hoy has sido cordialmente invitado a nuestra aplicación 'Artesanal' por {info['nombre_completo']} <br>
+        Que tenga un maravilloso día. 
+    </p>
+    """
     message = MessageSchema(
-        subject="Fastapi-Mail module",
-        recipients=email.dict().get("email"),
+        subject="Invitación cordial a Artesanal",
+        recipients=emailFinal.model_dump().get('email'),
         body=html,
         subtype=MessageType.html)
 
     fm = FastMail(conf)
     print("Fast mail: ", fm)
     await fm.send_message(message)
-    return JSONResponse(status_code=200, content={"message": "email has been sent"})
+    # return JSONResponse(status_code=200, content={"message": "email has been sent"})
+    return RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
 
 @router.post("/emailbackground")
 async def send_in_background(
@@ -55,9 +74,9 @@ async def send_in_background(
     ) -> JSONResponse:
 
     message = MessageSchema(
-        subject="Fastapi mail module",
-        recipients=email.dict().get("email"),
-        body="Simple background task",
+        subject="Saludos desde artesanal",
+        recipients=email.model_dump().get('email'),
+        body="Hola queridaaaaaaaaa :3",
         subtype=MessageType.plain)
 
     fm = FastMail(conf)
@@ -66,22 +85,22 @@ async def send_in_background(
 
     return JSONResponse(status_code=200, content={"message": "email has been sent"})
 
-@router.post("/file")
-async def send_file(
-    background_tasks: BackgroundTasks,
-    file: UploadFile = File(...),
-    email:EmailStr = Form(...)
-    ) -> JSONResponse:
+# @router.post("/file")
+# async def send_file(
+#     background_tasks: BackgroundTasks,
+#     file: UploadFile = File(...),
+#     email: EmailStr = Form(...)
+#     ) -> JSONResponse:
 
-    message = MessageSchema(
-            subject="Fastapi mail module",
-            recipients=[email],
-            body="Simple background task",
-            subtype=MessageType.html,
-            attachments=[file])
+#     message = MessageSchema(
+#             subject="Fastapi mail module",
+#             recipients=[email],
+#             body="Simple background task",
+#             subtype=MessageType.html,
+#             attachments=[file])
 
-    fm = FastMail(conf)
+#     fm = FastMail(conf)
 
-    background_tasks.add_task(fm.send_message,message)
+#     background_tasks.add_task(fm.send_message,message)
 
-    return JSONResponse(status_code=200, content={"message": "email has been sent"})
+#     return JSONResponse(status_code=200, content={"message": "email has been sent"})

@@ -1,1 +1,17 @@
 {% extends 'base.html' %}
+{% block content %}
+<div class="titulo">
+    <h1>¡Invita a un amigo desde correo electrónico!</h1>
+</div>
+
+<form action="/mandar_correo" method="post">
+    <fieldset>
+        <legend>Invitar a un amigo a nuestra página</legend>
+        <label for="original">
+            <span>Correo del invitado: </span>
+            <input type="email" name="original" id="original">
+        </label>
+        <button type="submit">¡Invitar!</button>
+    </fieldset>
+</form>
+{% endblock %}
