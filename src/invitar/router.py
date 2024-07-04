@@ -42,7 +42,10 @@ def invitar(request: Request, info=Depends(auth_handler.auth_wrapper)):
     })
 
 @router.post("/mandar_correo")
-async def mandar_simple(original: EmailStr = Form(...), info=Depends(auth_handler.auth_wrapper)) -> JSONResponse:
+async def mandar_simple(
+        request: Request, 
+        original: EmailStr = Form(...), 
+        info=Depends(auth_handler.auth_wrapper)):
     emailFinal = EmailSchema(
         email= [
             original
@@ -65,7 +68,8 @@ async def mandar_simple(original: EmailStr = Form(...), info=Depends(auth_handle
     print("Fast mail: ", fm)
     await fm.send_message(message)
     # return JSONResponse(status_code=200, content={"message": "email has been sent"})
-    return RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
+    return templates.TemplateResponse('/usuarios/principal.html', {
+        'request': request, 'info': info})
 
 @router.post("/emailbackground")
 async def send_in_background(

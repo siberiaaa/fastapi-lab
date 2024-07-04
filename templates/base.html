@@ -49,6 +49,16 @@
         <a href="/home">
             <span>Home</span>
         </a>
+        {% if info != None %}
+        {% if info['tipo_usuario_id'] == 1 %}
+        <a href="/categorias">
+            <span>Categorías</span>
+        </a>
+        <a href="/tipos_productos">
+            <span>Tipos de productos</span>
+        </a>
+        {% endif %}
+        {% endif %}
         <a href="/perfil">
             <span>Perfil</span>
         </a>
