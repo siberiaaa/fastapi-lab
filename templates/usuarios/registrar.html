@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-
+    <link rel="shortcut icon" href="{{ url_for('static', path='/artesanal.ico') }}" type="image/x-icon">
     <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
 </head>
 <body>
-    <h1 class="nosabe">no viva</h1>
+    <h1 class="nosabe">Registro de usuario</h1>
 
     <form action="/registrar" method="post">
         <fieldset>
@@ -40,7 +40,7 @@
     
             <label for="nacimiento">
                 <span>Fecha de nacimiento</span>
-                <input type="date" name="nacimiento" placeholder="fechanacimiento" required>
+                <input type="date" name="nacimiento" placeholder="fechanacimiento" max="{{ hoy }}" required>
             </label>
             <label for="tipo_id">
                 <span>Tipo de usuario</span>

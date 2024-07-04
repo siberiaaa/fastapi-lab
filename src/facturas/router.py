@@ -90,12 +90,15 @@ def realizar_facturar_artesano(id_cotizacion: int, request: Request, info=Depend
     pago_respuesta = pago_service.listar_metodos_pagos(db=db)
     if not pago_respuesta.ok:
          raise Message_Redirection_Exception(message=pago_respuesta.mensaje, path_message='Volver a home', path_route='/home')
+    
+    hoy = datetime.now()
+    hoy = hoy.strftime('%Y-%m-%d')
   
     return templates.TemplateResponse(request=request, name="facturas/realizar_facturas_artesano.html", context={
          'id_cotizacion':id_cotizacion, 
          'metodos_envio':envio_respuesta.data, 
-         'metodos_pago':pago_respuesta.data, 
-         'info': info})  
+         'metodos_pago': pago_respuesta.data, 
+         'info': info, 'hoy': hoy})  
    
 @router.post('/artesano/{id_cotizacion}')
 def realizar_facturar_artesano(request: Request, id_cotizacion: int,

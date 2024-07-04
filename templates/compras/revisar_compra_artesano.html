@@ -14,11 +14,7 @@
         <legend>Datos del Encargo</legend>
         {% endif %}
 
-
-        <label for="id_producto">
-            <span>Id del producto</span>
-            <input type="number" name="id_producto" id="id_producto" value="{{ compra.producto_id }}" required readonly>
-        </label>
+        <input type="hidden" name="id_producto" id="id_producto" value="{{ compra.producto_id }}" required readonly>
 
         <label for="nombre">
             <span>Nombre del producto</span>
@@ -32,7 +28,7 @@
 
         <label for="cantidad">
             <span>Cantidad </span>
-            <input type="number" name="cantidad" id="cantidad" value="{{ compra.cantidad }}" required >
+            <input type="number" name="cantidad" id="cantidad" value="{{ compra.cantidad }}" placeholder="{{ compra.cantidad }}" min="1" step="1" required >
             <span>Puedes editar la cantidad para cotizar una cantidad diferente a la que pidió el cliente</span>
         </label>
 

@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-
+    <link rel="shortcut icon" href="{{ url_for('static', path='/artesanal.ico') }}" type="image/x-icon">
     <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
 </head>
 <body>
-    <h1 class="nosabe">no viva</h1>
+    <h1 class="nosabe">Inicio de sesión</h1>
 
     <form action="/iniciar_sesion" method="post">
         <fieldset>
@@ -31,5 +31,20 @@
         </fieldset>
         <br>
     </form>
+
+    <!-- <form action="/linear" method="post">
+        <fieldset disabled>
+            <legend>Buscar lineas</legend>
+            <label for="lineas">
+                <span>Lista de texto</span>
+                <select name="lineas" id="lineas" multiple>
+                    <option value="hola">Como estas</option>
+                    <option value="adios">Hasta luego</option>
+                </select>
+            </label>
+            <button type="submit">Obtener lineas</button>
+        </fieldset>
+        <br>
+    </form> -->
 </body>
 </html>

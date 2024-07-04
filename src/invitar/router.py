@@ -35,6 +35,10 @@ conf = ConnectionConfig(
 
 router = APIRouter()
 
+@router.post('/linear')
+def lineas(request: Request, lineas : list[str] = Form(...)): 
+    return {'lineas': lineas}
+
 @router.get('/invitar')
 def invitar(request: Request, info=Depends(auth_handler.auth_wrapper)): 
     return templates.TemplateResponse('/invitar/invitar.html', {

@@ -9,6 +9,7 @@
 
 <table>
     <tr>
+        <th>Identificación</th>
         <th>Producto</th>
         <th>Cantidad</th>
         <th>Precio</th>
@@ -20,6 +21,7 @@
 {% for cotizacion in cotizaciones %}
     <tr> 
         <!--  -->
+        <td>{{ cotizacion['cotizacion'].id }}</td>
         <td>{{ cotizacion['producto'].nombre }}</td>
         <td>{{ cotizacion['compra'].cantidad }}</td>
         <td>{{ cotizacion['cotizacion'].precio }}</td>

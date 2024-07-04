@@ -86,7 +86,9 @@ def get_productos_por_artesano(db: Session, cedula_artesano: str):
 
 
 def get_producto(db: Session, id: int): 
+    print(id)
     returned = db.query(models.Producto).filter(models.Producto.id == id).first()
+    print(returned)
     
     if returned == None:
         return Respuesta[schemas.Producto](ok=False, mensaje='Producto no encontrado')

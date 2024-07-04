@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 from schemas import Respuesta
+from datetime import datetime
 import productos.models as models
 import productos.schemas as schemas
 import productos.service as service
@@ -104,11 +105,14 @@ def get_producto(request: Request, id : int, db: Session = Depends(get_db), info
     
     imagen = bytes(producto_respuesta.data.imagen).decode()
 
+    hoy = datetime.now()
+    hoy = hoy.strftime('%Y-%m-%d')
+
     return templates.TemplateResponse(request=request, name="productos/ver_producto.html", context={
         "producto":producto_respuesta.data, "categoria": categoria.data.nombre, 
         "tipo": tipo_producto.data.nombre, "artesano": f'{artesano.data.nombres} {artesano.data.apellidos}', "cedula_artesano": artesano.data.cedula,
         'imagen': imagen, 'info': info, 'calificaciones': calificaciones, 'reseñas': reseñas, "usuario_cedula":info['cedula'], 
-        'calificadores': lista_calificadores, 'anecdotas': anecdotas})
+        'calificadores': lista_calificadores, 'anecdotas': anecdotas, 'hoy': hoy})
 
 
 @router.post('/buscar')

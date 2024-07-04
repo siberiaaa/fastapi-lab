@@ -15,22 +15,29 @@
 
         <label for="entrega">
             <span>Fecha de entrega</span>
-            <input type="date" name="entrega" required>
+            <input type="date" name="entrega" min="{{ hoy }}" required>
+        </label>
+
+        <label for="envio">
+            <span>Método de envío: </span>
+            <select name="envio" required>
+                <option value="">-Selecciona método de envío-</option>
+                {% for envio in metodos_envio %}
+                <option value="{{ envio.id }}">{{ envio.nombre }}</option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label for="pago">
+            <span>Método de pago: </span>
+            <select name="pago" required>
+                <option value="">-Selecciona método de pago-</option>
+                {% for pago in metodos_pago %}
+                <option value="{{ pago.id }}">{{ pago.nombre }}</option>
+                {% endfor %}
+            </select>
         </label>
         
-        <select name="envio" required>
-            <option value="">-Selecciona método de envío-</option>
-            {% for envio in metodos_envio %}
-            <option value={{ envio.id }}>{{ envio.nombre }}</option>
-            {% endfor %}
-        </select>
-
-        <select name="pago" required>
-            <option value="">-Selecciona método de pago-</option>
-            {% for pago in metodos_pago %}
-            <option value="{{ pago.id }}">{{ pago.nombre }}</option>
-            {% endfor %}
-        </select>
         
         <button type="submit">Enviar factura</button>
 

@@ -34,16 +34,17 @@ def get_db():
 
 
 @router.get('/pedido/crear')
-def crear_pedido(request: Request, product_id: int = -1, info=Depends(auth_handler.auth_wrapper)):
+def crear_pedido(request: Request, db : Session = Depends(get_db), product_id: int = -1, info=Depends(auth_handler.auth_wrapper)):
     if product_id == -1:
          raise Message_Redirection_Exception(message='Link de compra inválido', path_message='Volver a inicio', path_route='/')
     if info["tipo_usuario_id"] != 2: 
              raise No_Cliente_Exception()
-    
+    producto = producto_service.get_producto(db=db, id=product_id)
     return templates.TemplateResponse(request=request, name="compras/crear_pedidos.html", context={
          'cedula_cliente': info['cedula'], 
          'producto_id':product_id, 
-         'info': info})  
+         'info': info, 
+         'producto': producto.data})  
 
 @router.post('/pedido/crear')
 def crear_encargo(request: Request, db: Session = Depends(get_db),
@@ -156,15 +157,17 @@ def ver_compras_artesano(request: Request, info=Depends(auth_handler.auth_wrappe
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
     
 @router.get('/artesano/{id_compra}')
-def revisar_compra_artesano(id_compra: int, request: Request, info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):
+def revisar_compra_artesano(id_compra: int, request: Request, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)):
     if info["tipo_usuario_id"] != 1: 
              raise No_Artesano_Exception
     
     respuesta = service.get_compra(db=db, id=id_compra)
+    print(respuesta)
     if not respuesta.ok:
          raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
     
     producto_respuesta = producto_service.get_producto(db=db, id=respuesta.data.producto_id)
+    print(producto_respuesta)
     if not producto_respuesta.ok:
          raise Message_Redirection_Exception(message=producto_respuesta.mensaje, path_message='Volver a home', path_route='/home')
 

@@ -136,7 +136,7 @@ def get_compra(db: Session, id: int):
     compra = schemas.Compra(id=returned.id, 
                             cantidad=returned.cantidad, 
                             cliente_cedula=returned.cliente_cedula, 
-                            producto_id=returned.id, 
+                            producto_id=returned.producto_id, 
                             tipo_compra_id=returned.tipo_compra_id, 
                             estado_compra_id=returned.estado_compra_id) 
     return Respuesta[schemas.Compra](ok=True, mensaje='Compra encontrada', data=compra)
