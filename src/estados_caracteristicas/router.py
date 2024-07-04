@@ -23,9 +23,18 @@ def listar_estados_caracteristicas(db : Session = Depends(get_db)):
     return estados_carateristicas
 
 @router.post('', response_model=schemas.Estado_Caracteristica)
-def crear_estado_caracteristica(estado_caracteristica: schemas.Estado_CaracteristicaCrear, db: Session = Depends(get_db)):
+def crear_estado_caracteristica(estado_caracteristica: schemas.Estado_CaracteristicaCrear, db : Session = Depends(get_db)):
     return service.crear_estado_caracteristica(db=db, estado_caracteristica=estado_caracteristica)
 
 @router.get('/{id}', response_model=schemas.Estado_Caracteristica)
 def buscar_estado_caracteristica(id : int, db : Session = Depends(get_db)): 
-    return
+    estado = service.buscar_estado_caracteristica(db=db, id=id)
+    return estado
+
+@router.put('/{id}', response_model=schemas.Estado_Caracteristica)
+def modificar_estado_caracteristica(id: int, estado : schemas.Estado_CaracteristicaCrear, db : Session = Depends(get_db)): 
+    return service.modificar_estado_caracteristica(db=db, id=id, estado=estado)
+
+@router.delete('/{id}', response_model=schemas.Estado_Caracteristica)
+def eliminar_estado_caracteristica(id : int, db : Session = Depends(get_db)): 
+    return service.eliminar_estado_caracteristica(db=db, id=id)

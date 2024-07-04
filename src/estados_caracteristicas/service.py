@@ -19,8 +19,16 @@ def buscar_estado_caracteristica(db: Session, id: int):
 
 def modificar_estado_caracteristica(db: Session, id: int, estado: schemas.Estado_CaracteristicaCrear): 
     lista = db.query(models.Estado_Caracteristica).all()
+    for este in lista: 
+        if este.id == id: 
+            este.nombre = estado.nombre
+            este.descripcion = estado.descripcion
+            break
+    db.commit()
+    return este
 
-    for i in range(len(lista)): 
-        if lista[i].id == id: 
-            lista[i].nombre = estado.nombre
-            lista[i].descripcion = estado.descripcion
+def eliminar_estado_caracteristica(db: Session, id: int): 
+    estado = db.query(models.Estado_Caracteristica).filter(models.Estado_Caracteristica.id == id).first()
+    db.delete(estado)
+    db.commit()
+    return estado
