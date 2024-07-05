@@ -59,7 +59,7 @@ async def mandar_simple(
     <h1>Invitación cordial a Artesanal</h1>
     <p>
         Hoy has sido cordialmente invitado a nuestra aplicación 'Artesanal' por {info['nombre_completo']} <br>
-        Que tenga un maravilloso día. 
+        Que tenga un maravilloso día en nuestra aplicación https://anapaulasiberialaboratoriofastapigracoso.onrender.com/
     </p>
     """
     message = MessageSchema(
