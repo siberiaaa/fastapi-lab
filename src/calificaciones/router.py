@@ -49,8 +49,9 @@ def crear_calificacion(titulo: str = Form(...),
         estrellas=estrellas, emoticono=emoticono, 
         usuario_cedula=info['cedula'], producto_id=producto
     )
+    
     service.crear_calificacion(db=db, calificacion=calificacion)
-    return RedirectResponse(url=f'/productos/{producto}', status_code=status.HTTP_304_NOT_MODIFIED)
+    return RedirectResponse(url=f'/productos/{producto}', status_code=status.HTTP_303_SEE_OTHER)
 
 @router.get('/{id}', response_model=schemas.Calificacion)
 def buscar_calificacion(id : int,  db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 

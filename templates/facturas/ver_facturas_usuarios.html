@@ -28,6 +28,7 @@
         <th>Fecha entrega</th>
         <th>Metodo de pago</th>
         <th>Metodo de envío</th>
+        <th>Descargar</th>
     </tr>
 {% for factura in facturas %}
     <tr> 
@@ -38,6 +39,9 @@
         <td>{{ factura['factura'].fecha_entrega }}</td>
         <td>{{ factura['pago'] }}</td>
         <td>{{ factura['envia'] }}</td>
+        <td>
+            <a href="/descargar_factura/{{ factura['factura']['id'] }}">👁</a>
+        </td>
     </tr>
     <div style="margin-bottom: 10px;"></div>
 {% endfor %}

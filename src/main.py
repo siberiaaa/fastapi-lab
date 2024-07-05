@@ -24,6 +24,7 @@ from facturas import router as facturas
 from homes import router as homes
 from perfiles import router as perfiles
 from invitar import router as invitar
+from archivos import router as archivos
 
 from usuarios.service import AuthHandler, listar_artesanos, LoginExpired, RequiresLoginException
 from exceptions import No_Artesano_Exception, No_Cliente_Exception
@@ -60,6 +61,7 @@ app.include_router(facturas.router, prefix='/facturas')
 app.include_router(homes.router)
 app.include_router(perfiles.router)
 app.include_router(invitar.router)
+app.include_router(archivos.router)
 
 
 @app.get('/')

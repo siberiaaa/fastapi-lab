@@ -65,7 +65,26 @@ def eliminar_factura(db: Session, id: int):
     return factura
 
 
+def buscar_factura_diccionario(db: Session, id_factura: int): 
+    factura = db.query(models.Factura).filter(models.Factura.id == id_factura).first()
+    cotizacion = db.query(cotizacion_models.Cotizacion).filter(cotizacion_models.Cotizacion.id == factura.cotizacion_id).first()
+    compra = db.query(compra_models.Compra).filter(compra_models.Compra.id == cotizacion.compra_id).first()
+    
+    envio = db.query(envios_models.Metodo_Envio).filter(envios_models.Metodo_Envio.id == factura.metodo_envio_id).first()
+    pago = db.query(pagos_models.Metodo_Pago).filter(pagos_models.Metodo_Pago.id == factura.metodo_pago_id).first()
 
+    factura_diccionario = {}
+
+    factura_diccionario['producto'] = db.query(producto_models.Producto).filter(producto_models.Producto.id == compra.producto_id).first()
+    factura_diccionario['compra'] = compra
+    factura_diccionario['vendedor'] = db.query(usuario_models.Usuario).filter(usuario_models.Usuario.cedula == factura_diccionario['producto'].usuario_cedula).first()
+    factura_diccionario['factura'] = factura
+    factura_diccionario['cotizacion'] = cotizacion
+    factura_diccionario['pago'] = pago.nombre
+    factura_diccionario['envia'] = envio.nombre
+
+    respuesta = Respuesta[dict](ok=True, mensaje='Datos de la factura encontrado', data=factura_diccionario)
+    return respuesta
 
 
 def listar_facturas_cliente(db: Session, cedula: str): 

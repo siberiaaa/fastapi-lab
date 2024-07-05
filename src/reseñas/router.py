@@ -47,7 +47,7 @@ def crear_reseña(invencion: datetime = Form(...),
         producto_id=producto_real
     )
     service.crear_reseña(db=db, reseña=reseña)
-    return RedirectResponse(url=f'/productos/{producto_real}', status_code=status.HTTP_304_NOT_MODIFIED)
+    return RedirectResponse(url=f'/productos/{producto_real}', status_code=status.HTTP_303_SEE_OTHER)
 
 @router.get('/{id}', response_model=schemas.Reseña)
 def buscar_reseña(id : int, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 

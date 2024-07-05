@@ -44,7 +44,7 @@ def crear_anecdota(nombre: str = Form(...),
         reseña_id=reseña
     )
     service.crear_anecdota(db=db, anecdota=anecdota)
-    return RedirectResponse(url=f'/productos/{actual}', status_code=status.HTTP_304_NOT_MODIFIED)
+    return RedirectResponse(url=f'/productos/{actual}', status_code=status.HTTP_303_SEE_OTHER)
 
 @router.get('/{id}', response_model=schemas.Anecdota)
 def buscar_anecdota(id : int, db: Session = Depends(get_db), info=Depends(auth_handler.auth_wrapper)): 

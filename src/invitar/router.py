@@ -6,6 +6,9 @@ from pydantic import BaseModel
 from usuarios.service import AuthHandler
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
 from pydantic import EmailStr
+from reportlab.lib.pagesizes import LETTER
+from reportlab.lib.units import cm
+from reportlab.pdfgen.canvas import Canvas
 
 
 # https://www.geeksforgeeks.org/sending-email-using-fastapi-framework-in-python/
@@ -35,9 +38,20 @@ conf = ConnectionConfig(
 
 router = APIRouter()
 
+
+
 @router.post('/linear')
 def lineas(request: Request, lineas : list[str] = Form(...)): 
     return {'lineas': lineas}
+
+# @router.get('/descargar_factura')
+# def lineas(): 
+#     canvas = Canvas(f"factura.pdf", pagesize=LETTER)
+
+#     canvas.drawString(2 * cm, 8 * cm, "Hello, Real Python!")
+
+#     canvas.save()
+#     return {'lineas': 'hola'}
 
 @router.get('/invitar')
 def invitar(request: Request, info=Depends(auth_handler.auth_wrapper)): 
