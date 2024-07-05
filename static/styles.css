@@ -276,3 +276,30 @@ footer img {
 footer p {
     color: #9c7c3b;
 }
+
+
+div.container{
+    margin: 100px;
+    padding: 50px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    border-style: solid;
+    border-color: #d96e2a;
+    border-radius: 10px;
+    background-color: #ffd986;
+}
+
+div.container a{
+    background-color: #f47c36;
+    color: white;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+div.container a:hover, div.container a:active {
+    background-color: red;
+  }
