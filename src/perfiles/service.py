@@ -8,22 +8,23 @@ from usuarios.models import Usuario
 from sqlalchemy.orm import Session
 
 def listar_compras_cliente(db: Session, cedula: str): 
-    lista = db.query(Compra).filter(Compra.cliente_cedula == cedula).all()
+    compras = db.query(Compra).filter(Compra.cliente_cedula == cedula).all()
     facturas = db.query(Factura).all()
     lista_final = []
-    for esto in lista: 
-        try: 
-            final = {}
-            final['producto'] = db.query(Producto).filter(Producto.id == esto.producto_id).first()
-            final['cantidad'] = esto.cantidad
-            final['vendedor'] = db.query(Usuario).filter(Usuario.cedula == final['producto'].usuario_cedula).first()
-            for esta in facturas: 
-                real = db.query(Cotizacion).filter(Cotizacion.id == esta.cotizacion_id).first()
-                if real != None: 
-                    final['monto_total'] = final['cantidad'] * real.precio
-                    lista_final.append(final)
-        except Exception: 
-            continue
+    for compra in compras: 
+   
+        final = {}
+        final['producto'] = db.query(Producto).filter(Producto.id == compra.producto_id).first()
+        final['cantidad'] = compra.cantidad
+        final['vendedor'] = db.query(Usuario).filter(Usuario.cedula == final['producto'].usuario_cedula).first()
+
+        for factura in facturas: 
+            real = db.query(Cotizacion).filter(Cotizacion.id == factura.cotizacion_id).filter(Cotizacion.compra_id == compra.id).first()
+            if real != None: 
+                final['monto_total'] = final['cantidad'] * real.precio
+                lista_final.append(final)
+                
+
     return lista_final
 
 def listar_compras_artesano(db: Session, cedula: str): 
