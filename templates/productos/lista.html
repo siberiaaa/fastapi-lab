@@ -2,7 +2,9 @@
 
 {% block content %}
     {% if artesano %}
-        <h2>Productos del artesano {{ nombre }}</h2>
+        <div class="titulo">
+            <h2>Productos del artesano {{ nombre }}</h2>
+        </div>
         {% if info['tipo_usuario'] == 1 %}
         <details>
             <summary>Crear producto</summary>

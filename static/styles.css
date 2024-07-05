@@ -125,6 +125,12 @@ h1, h2, h3 {
 .contactar {
     background-color: #f9d387;
     background-image: url('ciudad_pequeña.png');
+    display: grid;
+    grid-template-rows: 1;
+}
+
+.contactar button {
+    
 }
 
 table {
@@ -135,7 +141,7 @@ table, td, th {
     margin-right: auto;
     margin-left: auto;
     text-align: center;
-    color: goldenrod;
+    color: #3f2b03;
 }
 
 th {

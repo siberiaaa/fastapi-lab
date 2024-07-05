@@ -70,30 +70,27 @@ def eliminar_factura(db: Session, id: int):
 
 def listar_facturas_cliente(db: Session, cedula: str): 
     #listar todas las compras del cliente
-    lista = db.query(compra_models.Compra).filter(compra_models.Compra.cliente_cedula == cedula).all()
+    # lista = db.query(compra_models.Compra).filter(compra_models.Compra.cliente_cedula == cedula).all()
     
     facturas = db.query(models.Factura).all()
 
     lista_final = []
-    for compra in lista: 
-  
+
+    for factura in facturas: 
+        cotizacion = db.query(cotizacion_models.Cotizacion).filter(cotizacion_models.Cotizacion.id == factura.cotizacion_id).first()
+        compra = db.query(compra_models.Compra).filter(compra_models.Compra.id == cotizacion.compra_id).first()
+        if compra.cliente_cedula == cedula: 
             final = {}
+            envio = db.query(envios_models.Metodo_Envio).filter(envios_models.Metodo_Envio.id == factura.metodo_envio_id).first()
+            pago = db.query(pagos_models.Metodo_Pago).filter(pagos_models.Metodo_Pago.id == factura.metodo_pago_id).first()
             final['producto'] = db.query(producto_models.Producto).filter(producto_models.Producto.id == compra.producto_id).first()
             final['compra'] = compra
             final['vendedor'] = db.query(usuario_models.Usuario).filter(usuario_models.Usuario.cedula == final['producto'].usuario_cedula).first()
-
-
-            for factura in facturas: 
-                cotizacion_dela_factura = db.query(cotizacion_models.Cotizacion).filter(cotizacion_models.Cotizacion.id == factura.cotizacion_id).first()
-                if cotizacion_dela_factura != None: 
-                    envio = db.query(envios_models.Metodo_Envio).filter(envios_models.Metodo_Envio.id == factura.metodo_envio_id).first()
-                    pago = db.query(pagos_models.Metodo_Pago).filter(pagos_models.Metodo_Pago.id == factura.metodo_pago_id).first()
-
-                    final['factura'] = factura
-                    final['cotizacion'] = cotizacion_dela_factura
-                    final['pago'] = pago.nombre
-                    final['envia'] = envio.nombre
-                    lista_final.append(final)
+            final['factura'] = factura
+            final['cotizacion'] = cotizacion
+            final['pago'] = pago.nombre
+            final['envia'] = envio.nombre
+            lista_final.append(final)
     print(lista_final)
     
     respuesta = Respuesta[list[dict]](ok=True, mensaje='Lista de las facturas del cliente encontrada', data=lista_final)
