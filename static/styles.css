@@ -125,11 +125,30 @@ h1, h2, h3 {
 .contactar {
     background-color: #f9d387;
     background-image: url('ciudad_pequeña.png');
+    background-repeat: repeat-x;
     display: grid;
     grid-template-rows: 1;
+    padding-bottom: 1%;
 }
 
+.contactar div {
+    text-align: center;
+}
 
+.contactar button {
+    max-width: min-content;
+    background-color: #ebebeb;
+    color: #3f2b03;
+    font-size: large;
+    font-family: fantasy;
+    border: none;
+    border-radius: 10px;
+    padding: 1%;
+}
+
+button, details {
+    cursor: pointer;
+}
 
 table {
     width: 100%;
