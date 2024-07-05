@@ -100,12 +100,7 @@ def crear_encargo(request: Request, db: Session = Depends(get_db),
                 cantidad: int = Form(...), 
                 caracteristicas: list[str] = Form(...), 
                 info=Depends(auth_handler.auth_wrapper)):
-    lista = []
-    print(caracteristicas)
-    for esto in caracteristicas: 
-         nuevo = json.loads(esto)
-         lista.append(nuevo)
-         print(nuevo)
+         
     if info["tipo_usuario_id"] != 2: 
              raise No_Cliente_Exception()
     
@@ -116,14 +111,14 @@ def crear_encargo(request: Request, db: Session = Depends(get_db),
                             producto_id=id_producto, 
                             tipo_compra_id=2, 
                             estado_compra_id=1) 
-    return lista[0]['nombre']
     respuesta = service.realizar_compra(db=db, compra=compra)
 
     if not respuesta.ok:
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
     
-    for caracteristica in caracteristicas:
-        caracteristicacreada = caracteristica_schema.CaracteristicaCrear(nombre=caracteristica, explicacion=caracteristica, encargo_id=respuesta.data.id, estado_caracteristica_id=1)
+    for esto in caracteristicas:
+        caracteristica = json.loads(esto)
+        caracteristicacreada = caracteristica_schema.CaracteristicaCrear(nombre=caracteristica["nombre"], explicacion=caracteristica["explicacion"], encargo_id=respuesta.data.id, estado_caracteristica_id=1)
         creado = caracteristica_service.crear_caracteristica(db=db, caracteristica=caracteristicacreada)
         if not creado.ok:
             raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')

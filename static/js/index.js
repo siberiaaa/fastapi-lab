@@ -42,8 +42,8 @@ function buscar_productos(data) {
 function agregar_nueva_caracteristica() {
     console.log('holaaaaaaaaaaaaa');
     let nombre = document.getElementById('nombre')
-    let descripcion = document.getElementById('descripcion')
-    if (nombre.value == "" || descripcion.value == '') {
+    let explicacion = document.getElementById('explicacion')
+    if (nombre.value == "" || explicacion.value == '') {
         return
     }
     let caracteristicas = document.getElementById('caracteristicas')
@@ -51,14 +51,14 @@ function agregar_nueva_caracteristica() {
     opcion.selected = true
     let nuevo = {
         'nombre': nombre.value, 
-        'descripcion': descripcion.value
+        'explicacion': explicacion.value
     }
     opcion.value = JSON.stringify(nuevo)
     opcion.innerText = nuevo.nombre
     opcion.setAttribute('ondblclick', 'borrar_uno(this);')
     console.log(opcion);
     nombre.value = ''
-    descripcion.value = ''
+    explicacion.value = ''
     caracteristicas.appendChild(opcion)
 }
 function borrar_uno(data) {
