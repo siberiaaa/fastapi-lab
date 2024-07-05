@@ -10,6 +10,8 @@ import compras.schemas as schemas
 import compras.service as service
 import json
 
+import caracteristicas.schemas as caracteristica_schema
+import caracteristicas.service as caracteristica_service
 import productos.service as producto_service
 import cotizaciones.service as cotizacion_service
 import cotizaciones.schemas as cotizacion_schema
@@ -117,11 +119,17 @@ def crear_encargo(request: Request, db: Session = Depends(get_db),
     return lista[0]['nombre']
     respuesta = service.realizar_compra(db=db, compra=compra)
 
-    if (respuesta.ok):
-        return templates.TemplateResponse("message-redirection.html", {"request": request, "message": 'Encargo realizado correctamente', "path_route": '/home', "path_message": 'Volver a home'})
-    else:
+    if not respuesta.ok:
         raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
+    
+    for caracteristica in caracteristicas:
+        caracteristicacreada = caracteristica_schema.CaracteristicaCrear(nombre=caracteristica, explicacion=caracteristica, encargo_id=respuesta.data.id, estado_caracteristica_id=1)
+        creado = caracteristica_service.crear_caracteristica(db=db, caracteristica=caracteristicacreada)
+        if not creado.ok:
+            raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
 
+    return templates.TemplateResponse("message-redirection.html", {"request": request, "message": 'Encargo realizado correctamente', "path_route": '/home', "path_message": 'Volver a home'})
+    
 
 @router.get('')
 def ver_compras(request: Request, info=Depends(auth_handler.auth_wrapper)):
