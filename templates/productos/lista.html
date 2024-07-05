@@ -5,7 +5,7 @@
         <div class="titulo">
             <h2>Productos del artesano {{ nombre }}</h2>
         </div>
-        {% if info['tipo_usuario'] == 1 %}
+        {% if info['tipo_usuario_id'] == 1 %}
         <details>
             <summary>Crear producto</summary>
             <form action="/productos" method="post">
