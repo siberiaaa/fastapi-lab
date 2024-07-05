@@ -49,7 +49,17 @@ def aprobar_caracteristica(db: Session, id_caracteristica: int):
     caracteristica_found.estado_caracteristica_id = 2
     db.commit()
 
-    return Respuesta[schemas.Cotizacion](ok=True, mensaje='Característica aprobada exitosamente')
+    return Respuesta[schemas.Caracteristica](ok=True, mensaje='Característica aprobada exitosamente')
+
+def rechazar_todas_caracteristicas(db: Session, id_encargo: int): 
+    returned = db.query(models.Caracteristica).filter(models.Caracteristica.encargo_id == id_encargo).all()
+
+    for caracteristica in returned:
+        caracteristica.estado_caracteristica_id = 3
+
+    db.commit()
+    return Respuesta[schemas.Caracteristica](ok=True, mensaje='Características rechazadas exitosamente')
+
 
 def rechazar_caracteristica(db: Session, id_caracteristica: int):
     ### Validaciones ###
@@ -59,14 +69,14 @@ def rechazar_caracteristica(db: Session, id_caracteristica: int):
     caracteristica_found = db.query(models.Caracteristica).filter(models.Caracteristica.id == id_caracteristica).first()
 
     if caracteristica_found == None:
-        return Respuesta[schemas.Cotizacion](ok=False, mensaje='Característica a aprobar no encontrada')
+        return Respuesta[schemas.Caracteristica](ok=False, mensaje='Característica a aprobar no encontrada')
 
     ### ------------ ###
 
     caracteristica_found.estado_caracteristica_id = 3
     db.commit()
 
-    return Respuesta[schemas.Cotizacion](ok=True, mensaje='Característica rechazada exitosamente')
+    return Respuesta[schemas.Caracteristica](ok=True, mensaje='Característica rechazada exitosamente')
 
 def get_caracteristicas(db: Session): 
     returned = db.query(models.Caracteristica).all()
@@ -101,6 +111,25 @@ def get_caracteristicas_encargo(db: Session, id_encargo: int):
         caracteristicas.append(caracteristica)
 
     return Respuesta[list[schemas.Caracteristica]](ok=True, mensaje='Características del encargo encontradas', data=caracteristicas)
+
+def get_caracteristicas_aprobadas_encargo(db: Session, id_encargo: int): 
+    returned = db.query(models.Caracteristica).filter(models.Caracteristica.encargo_id == id_encargo).filter(models.Caracteristica.estado_caracteristica_id == 2).all()
+
+    caracteristicas = []
+
+    for cat in returned:
+        caracteristica = schemas.Caracteristica(
+        id=cat.id,
+        nombre=cat.nombre, 
+        explicacion=cat.explicacion, 
+        encargo_id=cat.encargo_id, 
+        estado_caracteristica_id=cat.estado_caracteristica_id)
+    
+        caracteristicas.append(caracteristica)
+
+    return Respuesta[list[schemas.Caracteristica]](ok=True, mensaje='Características aprobadas del encargo encontradas', data=caracteristicas)
+
+
 
 def get_caracteristica(db: Session, id: int): 
     returned = db.query(models.Caracteristica).filter(models.Caracteristica.id == id).first()

@@ -8,6 +8,7 @@ import cotizaciones.schemas as schemas
 import cotizaciones.service as service
 from schemas import Respuesta
 
+import caracteristicas.service as caracteristica_service
 import compras.service as compra_service
 import productos.service as producto_service
 
@@ -63,8 +64,23 @@ def revisar_compra_cliente(id_cotizacion: int, request: Request, info=Depends(au
     producto_respuesta = producto_service.get_producto(db=db, id=compra_respuesta.data.producto_id)
     if not producto_respuesta.ok:
          raise Message_Redirection_Exception(message=producto_respuesta.mensaje, path_message='Volver a home', path_route='/home')
+    
+    #Caracteristicas si es que es un encargo
+    if compra_respuesta.data.tipo_compra_id == 2:
+         respuesta_caracteristicas = caracteristica_service.get_caracteristicas_aprobadas_encargo(db=db, id_encargo=compra_respuesta.data.id)
+
+         if not respuesta_caracteristicas.ok:
+              raise Message_Redirection_Exception(message=respuesta_caracteristicas.mensaje, path_message='Volver a home', path_route='/home')
+         
+         return templates.TemplateResponse(request=request, name="cotizaciones/revisar_cotizacion_cliente.html", context={
+         'caracteristicas':respuesta_caracteristicas.data, 
+         'cotizacion':cotizacion_respuesta.data, 
+         'compra':compra_respuesta.data, 
+         'producto':producto_respuesta.data, 
+         'info': info})  
   
     return templates.TemplateResponse(request=request, name="cotizaciones/revisar_cotizacion_cliente.html", context={
+         'caracteristicas':[], 
          'cotizacion':cotizacion_respuesta.data, 
          'compra':compra_respuesta.data, 
          'producto':producto_respuesta.data, 

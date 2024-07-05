@@ -25,11 +25,12 @@ def crear_cotizacion(db: Session, cotizacion: schemas.CotizacionCrear):
 
     #Verificar que todas las características tengan estado aprobado o rechazado si la compra es de tipo encargo 
     if respuesta_compra.data.tipo_compra_id == 2:
-        caracteristicas = caracteristica_service.get_caracteristicas_encargo(db=db, id_encargo=respuesta_compra.data.id)
+        caracteristicas = caracteristica_service.get_caracteristicas_encargo(db=db, id_encargo=cotizacion.compra_id)
         sinrevisar = False
 
-        for caracteristica in caracteristicas:
-            if caracteristica.estado_caracteristica_id != 2 or caracteristica.estado_caracteristica_id != 3:
+        for caracteristica in caracteristicas.data:
+
+            if caracteristica.estado_caracteristica_id != 2 and caracteristica.estado_caracteristica_id != 3:
                 sinrevisar = True
         
         if sinrevisar:

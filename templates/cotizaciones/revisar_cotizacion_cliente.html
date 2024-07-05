@@ -2,7 +2,7 @@
 
 
 {% block content %}
-<h1 class="nosabe">Enviar cotización</h1>
+<h1 class="nosabe">Aprobar o rechazar cotización</h1>
 
 
 <form action="/cotizaciones/cliente/{{ cotizacion.id }}" method="post">
@@ -25,7 +25,16 @@
             <input type="number" name="precio" min="0.5" step="0.5" value="{{ cotizacion.precio }}" required readonly>
         </label>
 
-        <br>
+        {% if caracteristicas != [] %}
+        <label for="caracteristicas">
+            <span>Caracteristicas que el artesano accedió a realizar: </span>
+            <select name="caracteristicas" id="caracteristicas" disabled multiple required>
+                {% for esto in caracteristicas %}
+                <option value="{{ esto['id'] }}">{{ esto['nombre'] }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        {% endif %}
         
         <label for="aprobar">
             <span>Aprobar cotización</span>

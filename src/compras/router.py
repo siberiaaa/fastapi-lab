@@ -173,28 +173,48 @@ def revisar_compra_artesano(id_compra: int, request: Request, db: Session = Depe
              raise No_Artesano_Exception
     
     respuesta = service.get_compra(db=db, id=id_compra)
-    print(respuesta)
     if not respuesta.ok:
          raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
     
     producto_respuesta = producto_service.get_producto(db=db, id=respuesta.data.producto_id)
-    print(producto_respuesta)
     if not producto_respuesta.ok:
          raise Message_Redirection_Exception(message=producto_respuesta.mensaje, path_message='Volver a home', path_route='/home')
+    
+    if respuesta.data.tipo_compra_id == 2:
+         respuesta_caracteristicas = caracteristica_service.get_caracteristicas_encargo(db=db, id_encargo=id_compra)
+
+         if not respuesta_caracteristicas.ok:
+              raise Message_Redirection_Exception(message=respuesta_caracteristicas.mensaje, path_message='Volver a home', path_route='/home')
+         
+         return templates.TemplateResponse(request=request, name="compras/revisar_compra_artesano.html", context={
+         'caracteristicas':respuesta_caracteristicas.data, 
+         'compra':respuesta.data, 
+         'producto':producto_respuesta.data, 
+         'info': info})  
+         
+
 
     return templates.TemplateResponse(request=request, name="compras/revisar_compra_artesano.html", context={
+         'caracteristicas':[], 
          'compra':respuesta.data, 
          'producto':producto_respuesta.data, 
          'info': info})  
 
+    
+
 @router.post('/artesano/{id_compra}')
-def revisar_compra_artesano_cotizar(request: Request, id_compra: int,  cotizar: bool = Form(...), precio: float = Form(...), cantidad: int = Form(...), info=Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):
+def revisar_compra_artesano_cotizar(request: Request, 
+                                    id_compra: int,  
+                                    cotizar: bool = Form(...), 
+                                    precio: float = Form(...), 
+                                    cantidad: int = Form(...), 
+                                    info=Depends(auth_handler.auth_wrapper), 
+                                    caracteristicas: list[str] = Form(...), 
+                                    db: Session = Depends(get_db)):
     if info["tipo_usuario_id"] != 1: 
              raise No_Artesano_Exception
     
-    #
-    #!Validacion del form para encargos no implementado (y mucho menos la aprobacion de caracteristicas)
-    #
+
     if not cotizar:
          respuesta =  service.rechazar_compra(db=db, id_compra=id_compra)
          if (respuesta.ok):
@@ -202,15 +222,34 @@ def revisar_compra_artesano_cotizar(request: Request, id_compra: int,  cotizar: 
          else:
             raise Message_Redirection_Exception(message=respuesta.mensaje, path_message='Volver a home', path_route='/home')
         
+    
+    #modificar la cantidad de la compra
+    respuesta_modificar = service.modificar_cantidad_compra(db=db, id_compra=id_compra, cantidad=cantidad)
+    if not respuesta_modificar.ok:
+         raise Message_Redirection_Exception(message=respuesta_modificar.mensaje, path_message='Volver a home', path_route='/home')
+    
+    #GESTION CARACTERISTICAS
+    respuesta_compra = service.get_compra(db=db, id=id_compra)
+    if not respuesta_compra.ok:
+         raise Message_Redirection_Exception(message=respuesta_compra.mensaje, path_message='Volver a home', path_route='/home')    
+    
+    if respuesta_compra.data.tipo_compra_id == 2:
+         respuesta_caracteristicas = caracteristica_service.rechazar_todas_caracteristicas(db=db, id_encargo=id_compra)
+
+         if not respuesta_caracteristicas.ok:
+              raise Message_Redirection_Exception(message=respuesta_caracteristicas.mensaje, path_message='Volver a home', path_route='/home')
+         
+         for caracteristica in caracteristicas:
+              respuesta_caracteristica = caracteristica_service.aprobar_caracteristica(db=db, id_caracteristica=caracteristica)
+              if not respuesta_caracteristica.ok:
+                raise Message_Redirection_Exception(message=respuesta_caracteristica.mensaje, path_message='Volver a home', path_route='/home')
+         
+
     #modificar a aprobar
     respuesta_aprobar =  service.aprobar_compra(db=db, id_compra=id_compra)
     if not respuesta_aprobar.ok:
          raise Message_Redirection_Exception(message=respuesta_aprobar.mensaje, path_message='Volver a home', path_route='/home')
 
-    #modificar la cantidad de la compra
-    respuesta_modificar = service.modificar_cantidad_compra(db=db, id_compra=id_compra, cantidad=cantidad)
-    if not respuesta_modificar.ok:
-         raise Message_Redirection_Exception(message=respuesta_modificar.mensaje, path_message='Volver a home', path_route='/home')
 
     #resto de flujo de cosas que deberían suceder
     cotizacion = cotizacion_schema.CotizacionCrear(
@@ -219,6 +258,8 @@ def revisar_compra_artesano_cotizar(request: Request, id_compra: int,  cotizar: 
                             estado_cotizacion_id=1) 
     
     respuesta = cotizacion_service.crear_cotizacion(db=db, cotizacion=cotizacion)
+
+    print(respuesta)
 
     if (respuesta.ok):
         return templates.TemplateResponse("message-redirection.html", {"request": request, "message": 'Cotizacion enviada correctamente', "path_route": '/home', "path_message": 'Volver a home'})

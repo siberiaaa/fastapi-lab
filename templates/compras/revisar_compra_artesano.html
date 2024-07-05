@@ -37,32 +37,16 @@
             <input type="number" name="precio" id="precio" min="0.5" step="0.5" required>
         </label>
 
-        
-        {#
-        {% if compra.tipo_compra_id == 2 %}
-        <!-- tabla con las caracteristicas y checkboxes -->
-        <table style="width:100%">
-            <tr>
-                <td>Nombre</td>
-                <td>Aceptar característica</td>
-            </tr>
-        
-        {% for caracteristica in caracteristicas %}
-            <tr>
-                <td>{{ caracteristica.nombre }}</td>
-
-                <label for="aprobar">
-                    <input type="checkbox" name="{{ caracteristica.id }}" value=True>
-                </label>
-        
-            </tr>
-            
-            <div style="margin-bottom: 10px;"></div>
-        {% endfor %}
-            
+        {% if caracteristicas != [] %}
+        <label for="caracteristicas">
+            <span>Caracteristicas a aceptar (para seleccionar múltiples usar Ctrl y clic): </span>
+            <select name="caracteristicas" id="caracteristicas" multiple required>
+                {% for esto in caracteristicas %}
+                <option value="{{ esto['id'] }}">{{ esto['nombre'] }}</option>
+                {% endfor %}
+            </select>
+        </label>
         {% endif %}
-        #}
-
 
         <label for="aprobar">
             <span>Aprobar y enviar cotización</span>

@@ -94,6 +94,7 @@ def listar_facturas_cliente(db: Session, cedula: str):
                     final['pago'] = pago.nombre
                     final['envia'] = envio.nombre
                     lista_final.append(final)
+    print(lista_final)
     
     respuesta = Respuesta[list[dict]](ok=True, mensaje='Lista de las facturas del cliente encontrada', data=lista_final)
     return respuesta
