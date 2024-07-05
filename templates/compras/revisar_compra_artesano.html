@@ -46,6 +46,8 @@
                 {% endfor %}
             </select>
         </label>
+        {% else %}
+        <input type="hidden" name="caracteristicas" id="caracteristicas" value="No hay nada :v">
         {% endif %}
 
         <label for="aprobar">
