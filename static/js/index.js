@@ -38,3 +38,29 @@ function buscar_productos(data) {
     let resultado = data.value 
     data.form.submit()
 }
+
+function agregar_nueva_caracteristica() {
+    console.log('holaaaaaaaaaaaaa');
+    let nombre = document.getElementById('nombre')
+    let descripcion = document.getElementById('descripcion')
+    if (nombre.value == "" || descripcion.value == '') {
+        return
+    }
+    let caracteristicas = document.getElementById('caracteristicas')
+    let opcion = document.createElement('option')
+    opcion.selected = true
+    let nuevo = {
+        'nombre': nombre.value, 
+        'descripcion': descripcion.value
+    }
+    opcion.value = JSON.stringify(nuevo)
+    opcion.innerText = nuevo.nombre
+    opcion.setAttribute('ondblclick', 'borrar_uno(this);')
+    console.log(opcion);
+    nombre.value = ''
+    descripcion.value = ''
+    caracteristicas.appendChild(opcion)
+}
+function borrar_uno(data) {
+    data.remove()
+}

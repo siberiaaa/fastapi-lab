@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="shortcut icon" href="{{ url_for('static', path='/artesanal.ico') }}" type="image/x-icon">
+    <script src="{{ url_for('static', path='js/index.js') }}" defer></script>
     <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -33,11 +34,11 @@
     </form>
 
     <!-- <form action="/linear" method="post">
-        <fieldset disabled>
+        <fieldset>
             <legend>Buscar lineas</legend>
             <label for="lineas">
                 <span>Lista de texto</span>
-                <select name="lineas" id="lineas" multiple>
+                <select name="lineas" id="lineas" multiple required>
                     <option value="hola">Como estas</option>
                     <option value="adios">Hasta luego</option>
                 </select>

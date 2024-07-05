@@ -5,7 +5,7 @@
 <h1 class="nosabe">Realizar encargo</h1>
 
 
-<form action="/encargo/crear" method="post">
+<form action="/compras/encargo/crear" method="post">
     <fieldset>
         <legend>Datos del encargo</legend>
 
@@ -13,26 +13,36 @@
             <span>Cédula</span>
             <input type="text" name="cedula" id="cedula" value="{{ cedula_cliente }}" required readonly>
         </label>
-
-        <label for="id_producto">
-            <span>Id del producto</span>
-            <input type="number" name="id_producto" id="id_producto" value="{{ producto_id }}" required readonly>
+        <input type="hidden" name="id_producto" id="id_producto" value="{{ producto_id }}" required readonly>
+        <label for="nombre_producto">
+            <span>Nombre del producto</span>
+            <input type="text" name="nombre_producto" id="nombre_producto" value="{{ producto['nombre'] }}">
         </label>
-
         <label for="cantidad">
             <span>Cantidad</span>
-            <input type="number" name="cantidad" id="cantidad" required >
-        </label>>
-
-        <label for="fecha">
-            <span>Fecha del encargo</span>
-            <input type="date" name="fecha" id="fecha" value="{{ fecha }}" required readonly>
+            <input type="number" name="cantidad" id="cantidad" min="1" required >
         </label>
-        
-        <button type="submit">Realizar encargo</button>
 
+        <label for="caracteristicas">
+            <span>Características (para borrar hacer doble clic y para seleccionar múltiples usar Ctrl y clic): </span>
+            <select name="caracteristicas" id="caracteristicas" multiple required>
+            </select>
+        </label>
+
+        <fieldset>
+            <legend>Crear características</legend>
+            <label for="nombre">
+                <span>Nombre: </span>
+                <input type="text" name="nombre" id="nombre">
+            </label>
+            <label for="descripcion">
+                <span>Descripción: </span>
+                <textarea name="descripcion" id="descripcion"></textarea>
+            </label>
+            <button type="button" onclick="agregar_nueva_caracteristica();">Agregar nueva característica</button> 
+        </fieldset>
+        <button type="submit">Realizar encargo</button>
     </fieldset>
 </form>
-
 
 {% endblock %}
