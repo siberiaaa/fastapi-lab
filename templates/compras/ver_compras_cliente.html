@@ -29,9 +29,10 @@
 
         {% if compra['compra'].estado_compra_id == 1 %}
         <td>Pendiente</td>
+        <td>Opciones no disponibles</td>
         {% elif compra['compra'].estado_compra_id == 2 %}
         <td>Aprobado</td>
-        <td>Opciones no disponibles</td>
+        <td>Revisa el apartado de cotizaciones</td>
         {% elif compra['compra'].estado_compra_id == 3 %}
         <td>Rechazado</td>
         <td>Opciones no disponibles</td>
