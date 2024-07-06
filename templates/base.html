@@ -13,7 +13,7 @@
         <img src="{{ url_for('static', path='artesanal.png') }}" alt="Ícono bonito">
         <div>
             <form id="buscar_productos" action="/productos/buscar" method="post">
-                <input type="text" name="data" id="data" placeholder="🔍 BUSCAR PRODUCTO" onchange="buscar_productos(this)">
+                <input type="text" name="data" id="data" placeholder="🔍 BUSCAR PRODUCTO" onchange="buscar_productos(this)" required>
             </form>
         </div>
         <div>
