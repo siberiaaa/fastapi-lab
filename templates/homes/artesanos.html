@@ -3,6 +3,23 @@
 <div class="titulo">
     <h1>MIS PRODUCTOS</h1> 
 </div>
+<details>
+    <summary>Obtener reportes de más vendidos</summary>
+    <form action="/reportes" method="get">
+        <fieldset>
+            <legend>Probar los reportes</legend>
+            <label for="inicio">
+                <span>Fecha de inicio de ventas: </span>
+                <input type="date" name="inicio" id="inicio" required>
+            </label>
+            <label for="final">
+                <span>Fecha de final de ventas: </span>
+                <input type="date" name="final" id="final" required>
+            </label>
+            <button type="submit">¡Reportar!</button>
+        </fieldset>
+    </form>
+</details>
 <section class="productos">
     {% for i in range(lista.__len__()) %}
     <div>

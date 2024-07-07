@@ -6,9 +6,9 @@ from pydantic import BaseModel
 from usuarios.service import AuthHandler
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
 from pydantic import EmailStr
-from reportlab.lib.pagesizes import LETTER
-from reportlab.lib.units import cm
-from reportlab.pdfgen.canvas import Canvas
+# from reportlab.lib.pagesizes import LETTER
+# from reportlab.lib.units import cm
+# from reportlab.pdfgen.canvas import Canvas
 
 
 # https://www.geeksforgeeks.org/sending-email-using-fastapi-framework-in-python/

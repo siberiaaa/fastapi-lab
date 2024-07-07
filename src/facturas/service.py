@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 import facturas.models as models
 import facturas.schemas as schemas
 from schemas import Respuesta
+from datetime import datetime
 
 
 import productos.models as producto_models
@@ -144,4 +145,3 @@ def listar_facturas_artesano(db: Session, cedula: str):
     
     respuesta = Respuesta[list[dict]](ok=True, mensaje='Lista de las facturas del cliente encontrada', data=lista_final)
     return respuesta
- 
